@@ -1,0 +1,23 @@
+
+
+.rw-ui-star.rw-size-large.rw-style-quartz_blue .rw-ui-stars li { background-image: url('//img.rating-widget.com/widget/s/quartz_blue.l.png') !important; }
+.rw-ui-star.rw-size-small.rw-style-quartz_blue .rw-ui-stars li { background-image: url('//img.rating-widget.com/widget/s/quartz_blue.s.png') !important; }
+.rw-ui-nero.rw-size-large.rw-style-thumbs .rw-ui-like-icon,
+.rw-ui-nero.rw-size-large.rw-style-thumbs .rw-ui-dislike-icon
+{ background-image: url('//img.rating-widget.com/widget/s/thumbs.ll.png') !important; }
+.rw-ui-nero.rw-dir-rtl.rw-size-large.rw-style-thumbs .rw-ui-like-icon,
+.rw-ui-nero.rw-dir-rtl.rw-size-large.rw-style-thumbs .rw-ui-dislike-icon
+{ background-image: url('//img.rating-widget.com/widget/s/thumbs.lr.png') !important; }
+.rw-ui-nero.rw-size-small.rw-style-thumbs .rw-ui-like-icon,
+.rw-ui-nero.rw-size-small.rw-style-thumbs .rw-ui-dislike-icon
+{ background-image: url('//img.rating-widget.com/widget/s/thumbs.sl.png') !important; }
+.rw-ui-nero.rw-dir-rtl.rw-size-small.rw-style-thumbs .rw-ui-like-icon,
+.rw-ui-nero.rw-dir-rtl.rw-size-small.rw-style-thumbs .rw-ui-dislike-icon
+{ background-image: url('//img.rating-widget.com/widget/s/thumbs.sr.png') !important; }
+
+/* Loaded flag
+--------------------------------------------------------------------*/
+div#rw-dcss-loaded-flag
+{ 
+    z-index: 12358 !important;
+}

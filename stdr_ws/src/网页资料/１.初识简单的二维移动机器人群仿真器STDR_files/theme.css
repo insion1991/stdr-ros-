@@ -1,0 +1,10 @@
+
+
+.rw-ui-star.rw-size-large.rw-style-quartz_blue .rw-ui-stars li { background-image: url('//img.rating-widget.com/widget/s/quartz_blue.l.png') !important; }
+
+/* Loaded flag
+--------------------------------------------------------------------*/
+div#rw-dcss-loaded-flag
+{ 
+    z-index: 12358 !important;
+}

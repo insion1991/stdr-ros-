@@ -1,0 +1,8 @@
+prefix=/home/feibot/fei_slam/stdr_ws/devel
+
+Name: openslam_gmapping
+Description: Description of openslam_gmapping
+Version: 0.1.2
+Cflags: -I/home/feibot/fei_slam/stdr_ws/src/mapping/openslam_gmapping-master/include
+Libs: -L/home/feibot/fei_slam/stdr_ws/devel/lib -lgridfastslam -lscanmatcher -lsensor_base -lsensor_range -lsensor_odometry -lutils
+Requires: 

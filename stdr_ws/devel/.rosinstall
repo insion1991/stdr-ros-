@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/feibot/fei_slam/stdr_ws/devel/setup.sh

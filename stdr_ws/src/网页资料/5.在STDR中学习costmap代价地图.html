@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#" slick-uniqueid="3" lang="zh-CN"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="profile" href="http://gmpg.org/xfn/11">
+			<link rel="pingback" href="http://www.corvin.cn/xmlrpc.php">
+		<title>5.在STDR中学习costmap代价地图 - ROS小课堂</title>
+          <div id="powrIframeLoader">­<style> .powrLoaded iframe { visibility: hidden; } </style></div><script type="text/javascript" async="" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/external.js" style="color: rgba(3, 7, 17, 0.5);"></script><script id="powr-js" async="" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/powr.js" powr-token="uC9c4Mmy8o1506219569" external-type="wordpress"></script><script>
+            (function(d){
+              var js, id = 'powr-js', ref = d.getElementsByTagName('script')[0];
+              if (d.getElementById(id)) {return;}
+              js = d.createElement('script'); js.id = id; js.async = true;
+              js.src = '//www.powr.io/powr.js';
+              js.setAttribute('powr-token','uC9c4Mmy8o1506219569');
+              js.setAttribute('external-type','wordpress');
+              ref.parentNode.insertBefore(js, ref);
+            }(document));
+          </script>
+          
+<!-- This site is optimized with the Yoast SEO plugin v10.0.1 - https://yoast.com/wordpress/plugins/seo/ -->
+<link rel="canonical" href="http://www.corvin.cn/829.html">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="5.在STDR中学习costmap代价地图 - ROS小课堂">
+<meta property="og:description" content="0x00 什么是costmap代价地图 在机器人进行路径规划时，我们需 阅读更多…">
+<meta property="og:url" content="http://www.corvin.cn/829.html">
+<meta property="og:site_name" content="ROS小课堂">
+<meta property="article:section" content="STDR仿真">
+<meta property="article:published_time" content="2018-07-17T10:41:20+00:00">
+<meta property="article:modified_time" content="2018-08-14T01:00:50+00:00">
+<meta property="og:updated_time" content="2018-08-14T01:00:50+00:00">
+<meta property="og:image" content="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2018/07/Screenshot-from-2018-07-17-180110.png?fit=1433%2C905">
+<meta property="og:image:secure_url" content="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2018/07/Screenshot-from-2018-07-17-180110.png?fit=1433%2C905">
+<meta property="og:image:width" content="1433">
+<meta property="og:image:height" content="905">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:description" content="0x00 什么是costmap代价地图 在机器人进行路径规划时，我们需 阅读更多…">
+<meta name="twitter:title" content="5.在STDR中学习costmap代价地图 - ROS小课堂">
+<meta name="twitter:image" content="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2018/07/Screenshot-from-2018-07-17-180110.png?fit=1433%2C905">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","url":"http://www.corvin.cn/","sameAs":[],"@id":"#person","name":"corvin"}</script>
+<!-- / Yoast SEO plugin. -->
+
+<link rel="dns-prefetch" href="http://s0.wp.com/">
+<link rel="dns-prefetch" href="http://secure.gravatar.com/">
+<link rel="dns-prefetch" href="http://maxcdn.bootstrapcdn.com/">
+<link rel="dns-prefetch" href="http://fonts.googleapis.com/">
+<link rel="dns-prefetch" href="http://css.rating-widget.com/">
+<link rel="dns-prefetch" href="http://s.w.org/">
+<link rel="alternate" type="application/rss+xml" title="ROS小课堂 » Feed" href="http://www.corvin.cn/feed">
+<link rel="alternate" type="application/rss+xml" title="ROS小课堂 » 评论Feed" href="http://www.corvin.cn/comments/feed">
+<link rel="alternate" type="application/rss+xml" title="ROS小课堂 » 5.在STDR中学习costmap代价地图评论Feed" href="http://www.corvin.cn/829.html/feed">
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/11\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/11\/svg\/","svgExt":".svg","source":{"concatemoji":"http:\/\/www.corvin.cn\/wp-includes\/js\/wp-emoji-release.min.js?ver=5.0.4"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56760,9792,65039],[55358,56760,8203,9792,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script><script src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/wp-emoji-release.js" type="text/javascript" defer="defer"></script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel="stylesheet" id="dashicons-css" href="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/dashicons.css" type="text/css" media="all">
+<link rel="stylesheet" id="admin-bar-css" href="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/admin-bar.css" type="text/css" media="all">
+<style id="admin-bar-inline-css" type="text/css">
+
+			.admin-bar {
+				position: inherit !important;
+				top: auto !important;
+			}
+			.admin-bar .goog-te-banner-frame {
+				top: 32px !important
+			}
+			@media screen and (max-width: 782px) {
+				.admin-bar .goog-te-banner-frame {
+					top: 46px !important;
+				}
+			}
+			@media screen and (max-width: 480px) {
+				.admin-bar .goog-te-banner-frame {
+					position: absolute;
+				}
+			}
+		
+</style>
+<link rel="stylesheet" id="wp-block-library-css" href="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/style_003.css" type="text/css" media="all">
+<link rel="stylesheet" id="font-awesome-5-css" href="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/all.css" type="text/css" media="all">
+<link rel="stylesheet" id="font-awesome-4-shims-css" href="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/v4-shims.css" type="text/css" media="all">
+<link rel="stylesheet" id="themeisle-block_styles-css" href="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/style_002.css" type="text/css" media="all">
+<link rel="stylesheet" id="bp-admin-bar-css" href="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/admin-bar_002.css" type="text/css" media="all">
+<link rel="stylesheet" id="bp-legacy-css-css" href="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/buddypress.css" type="text/css" media="screen">
+<link rel="stylesheet" id="rw-site-rating-css" href="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/site-rating.css" type="text/css" media="all">
+<link rel="stylesheet" id="hestia-clients-bar-css" href="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/clients-bar.css" type="text/css" media="all">
+<link rel="stylesheet" id="obfx-module-pub-css-menu-icons-0-css" href="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/font-awesome_002.css" type="text/css" media="all">
+<link rel="stylesheet" id="obfx-module-pub-css-menu-icons-1-css" href="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/public.css" type="text/css" media="all">
+<link rel="stylesheet" id="bootstrap-css" href="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/bootstrap.css" type="text/css" media="all">
+<link rel="stylesheet" id="hestia-font-sizes-css" href="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/font-sizes.css" type="text/css" media="all">
+<link rel="stylesheet" id="font-awesome-css" href="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/font-awesome.css" type="text/css" media="all">
+<link rel="stylesheet" id="hestia_style-css" href="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/style.css" type="text/css" media="all">
+<style id="hestia_style-inline-css" type="text/css">
+.hestia-top-bar, .hestia-top-bar .widget.widget_shopping_cart .cart_list {
+			background-color: #363537
+		}
+		.hestia-top-bar .widget .label-floating input[type=search]:-webkit-autofill {
+			-webkit-box-shadow: inset 0 0 0px 9999px #363537
+		}.hestia-top-bar, .hestia-top-bar .widget .label-floating input[type=search], .hestia-top-bar .widget.widget_search form.form-group:before, .hestia-top-bar .widget.widget_product_search form.form-group:before, .hestia-top-bar .widget.widget_shopping_cart:before {
+			color: #ffffff
+		} 
+		.hestia-top-bar .widget .label-floating input[type=search]{
+			-webkit-text-fill-color:#ffffff !important 
+		}.hestia-top-bar a, .hestia-top-bar .top-bar-nav li a {
+			color: #ffffff
+		}.hestia-top-bar a:hover, .hestia-top-bar .top-bar-nav li a:hover {
+			color: #eeeeee
+		}
+	
+		a, 
+		.navbar .dropdown-menu li:hover > a,
+		.navbar .dropdown-menu li:focus > a,
+		.navbar .dropdown-menu li:active > a,
+		.navbar .navbar-nav > li .dropdown-menu li:hover > a,
+		body:not(.home) .navbar-default .navbar-nav > .active:not(.btn) > a,
+		body:not(.home) .navbar-default .navbar-nav > .active:not(.btn) > a:hover,
+		body:not(.home) .navbar-default .navbar-nav > .active:not(.btn) > a:focus,
+		a:hover, 
+		.card-blog a.moretag:hover, 
+		.card-blog a.more-link:hover, 
+		.widget a:hover,
+		.has-accent-color {
+		    color:#0e6d13;
+		}
+		
+		.pagination span.current, .pagination span.current:focus, .pagination span.current:hover {
+			border-color:#0e6d13
+		}
+		
+		button,
+		button:hover,
+		.woocommerce .track_order button[type="submit"],
+		.woocommerce .track_order button[type="submit"]:hover,
+		div.wpforms-container .wpforms-form button[type=submit].wpforms-submit,
+		div.wpforms-container .wpforms-form button[type=submit].wpforms-submit:hover,
+		input[type="button"],
+		input[type="button"]:hover,
+		input[type="submit"],
+		input[type="submit"]:hover,
+		input#searchsubmit, 
+		.pagination span.current, 
+		.pagination span.current:focus, 
+		.pagination span.current:hover,
+		.btn.btn-primary,
+		.btn.btn-primary:link,
+		.btn.btn-primary:hover, 
+		.btn.btn-primary:focus, 
+		.btn.btn-primary:active, 
+		.btn.btn-primary.active, 
+		.btn.btn-primary.active:focus, 
+		.btn.btn-primary.active:hover,
+		.btn.btn-primary:active:hover, 
+		.btn.btn-primary:active:focus, 
+		.btn.btn-primary:active:hover,
+		.hestia-sidebar-open.btn.btn-rose,
+		.hestia-sidebar-close.btn.btn-rose,
+		.hestia-sidebar-open.btn.btn-rose:hover,
+		.hestia-sidebar-close.btn.btn-rose:hover,
+		.hestia-sidebar-open.btn.btn-rose:focus,
+		.hestia-sidebar-close.btn.btn-rose:focus,
+		.label.label-primary,
+		.hestia-work .portfolio-item:nth-child(6n+1) .label,
+		.nav-cart .nav-cart-content .widget .buttons .button,
+		.has-accent-background-color {
+		    background-color: #0e6d13;
+		}
+		
+		@media (max-width: 768px) { 
+	
+			.navbar-default .navbar-nav>li>a:hover,
+			.navbar-default .navbar-nav>li>a:focus,
+			.navbar .navbar-nav .dropdown .dropdown-menu li a:hover,
+			.navbar .navbar-nav .dropdown .dropdown-menu li a:focus,
+			.navbar button.navbar-toggle:hover,
+			.navbar .navbar-nav li:hover > a i {
+			    color: #0e6d13;
+			}
+		}
+		
+		body:not(.woocommerce-page) button:not([class^="fl-"]):not(.hestia-scroll-to-top):not(.navbar-toggle):not(.close),
+		body:not(.woocommerce-page) .button:not([class^="fl-"]):not(hestia-scroll-to-top):not(.navbar-toggle):not(.add_to_cart_button),
+		div.wpforms-container .wpforms-form button[type=submit].wpforms-submit,
+		input[type="submit"], 
+		input[type="button"], 
+		.btn.btn-primary,
+		.widget_product_search button[type="submit"],
+		.hestia-sidebar-open.btn.btn-rose,
+		.hestia-sidebar-close.btn.btn-rose,
+		.everest-forms button[type=submit].everest-forms-submit-button {
+		    -webkit-box-shadow: 0 2px 2px 0 rgba(14,109,19,0.14),0 3px 1px -2px rgba(14,109,19,0.2),0 1px 5px 0 rgba(14,109,19,0.12);
+		    box-shadow: 0 2px 2px 0 rgba(14,109,19,0.14),0 3px 1px -2px rgba(14,109,19,0.2),0 1px 5px 0 rgba(14,109,19,0.12);
+		}
+		
+		.card .header-primary, .card .content-primary,
+		.everest-forms button[type=submit].everest-forms-submit-button {
+		    background: #0e6d13;
+		}
+		
+		body:not(.woocommerce-page) .button:not([class^="fl-"]):not(.hestia-scroll-to-top):not(.navbar-toggle):not(.add_to_cart_button):hover,
+		body:not(.woocommerce-page) button:not([class^="fl-"]):not(.hestia-scroll-to-top):not(.navbar-toggle):not(.close):hover,
+		div.wpforms-container .wpforms-form button[type=submit].wpforms-submit:hover,
+		input[type="submit"]:hover,
+		input[type="button"]:hover,
+		input#searchsubmit:hover, 
+		.widget_product_search button[type="submit"]:hover,
+		.pagination span.current, 
+		.btn.btn-primary:hover, 
+		.btn.btn-primary:focus, 
+		.btn.btn-primary:active, 
+		.btn.btn-primary.active, 
+		.btn.btn-primary:active:focus, 
+		.btn.btn-primary:active:hover, 
+		.hestia-sidebar-open.btn.btn-rose:hover,
+		.hestia-sidebar-close.btn.btn-rose:hover,
+		.pagination span.current:hover,
+		.everest-forms button[type=submit].everest-forms-submit-button:hover,
+ 		.everest-forms button[type=submit].everest-forms-submit-button:focus,
+ 		.everest-forms button[type=submit].everest-forms-submit-button:active {
+			-webkit-box-shadow: 0 14px 26px -12px rgba(14,109,19,0.42),0 4px 23px 0 rgba(0,0,0,0.12),0 8px 10px -5px rgba(14,109,19,0.2);
+		    box-shadow: 0 14px 26px -12px rgba(14,109,19,0.42),0 4px 23px 0 rgba(0,0,0,0.12),0 8px 10px -5px rgba(14,109,19,0.2);
+			color: #fff;
+		}
+		
+		.form-group.is-focused .form-control {
+			background-image: -webkit-gradient(linear,left top, left bottom,from(#0e6d13),to(#0e6d13)),-webkit-gradient(linear,left top, left bottom,from(#d2d2d2),to(#d2d2d2));
+			background-image: -webkit-linear-gradient(linear,left top, left bottom,from(#0e6d13),to(#0e6d13)),-webkit-linear-gradient(linear,left top, left bottom,from(#d2d2d2),to(#d2d2d2));
+			background-image: linear-gradient(linear,left top, left bottom,from(#0e6d13),to(#0e6d13)),linear-gradient(linear,left top, left bottom,from(#d2d2d2),to(#d2d2d2));
+		}
+		
+		.navbar:not(.navbar-transparent) li:not(.btn):hover > a,
+		.navbar li.on-section:not(.btn) > a, 
+		.navbar.full-screen-menu.navbar-transparent li:not(.btn):hover > a,
+		.navbar.full-screen-menu .navbar-toggle:hover,
+		.navbar:not(.navbar-transparent) .nav-cart:hover, 
+		.navbar:not(.navbar-transparent) .hestia-toggle-search:hover {
+				color:#0e6d13}
+		
+		.header-filter-gradient { 
+			background: linear-gradient(45deg, rgba(168,29,132,1) 0%, rgb(234,57,111) 100%); 
+		}
+		.has-header-gradient-color { color: #a81d84; }
+		.has-header-gradient-background-color { background-color: #a81d84; }
+		 
+		.has-background-color-color { color: #E5E5E5; }
+		.has-background-color-background-color { background-color: #E5E5E5; }
+		
+.btn.btn-primary:not(.colored-button):not(.btn-left):not(.btn-right):not(.btn-just-icon):not(.menu-item), input[type="submit"]:not(.search-submit), body:not(.woocommerce-account) .woocommerce .button.woocommerce-Button, .woocommerce .product button.button, .woocommerce .product button.button.alt, .woocommerce .product #respond input#submit, .woocommerce-cart .blog-post .woocommerce .cart-collaterals .cart_totals .checkout-button, .woocommerce-checkout #payment #place_order, .woocommerce-account.woocommerce-page button.button, .woocommerce .track_order button[type="submit"], .nav-cart .nav-cart-content .widget .buttons .button, .woocommerce a.button.wc-backward, body.woocommerce .wccm-catalog-item a.button, body.woocommerce a.wccm-button.button, form.woocommerce-form-coupon button.button, div.wpforms-container .wpforms-form button[type=submit].wpforms-submit, div.woocommerce a.button.alt, div.woocommerce table.my_account_orders .button, .btn.colored-button, .btn.btn-left, .btn.btn-right, .btn:not(.colored-button):not(.btn-left):not(.btn-right):not(.btn-just-icon):not(.menu-item):not(.hestia-sidebar-open):not(.hestia-sidebar-close){ padding-top:15px;  padding-bottom:15px;  padding-left:33px;  padding-right:33px; }
+.btn.btn-primary:not(.colored-button):not(.btn-left):not(.btn-right):not(.btn-just-icon):not(.menu-item), input[type="submit"]:not(.search-submit), body:not(.woocommerce-account) .woocommerce .button.woocommerce-Button, .woocommerce .product button.button, .woocommerce .product button.button.alt, .woocommerce .product #respond input#submit, .woocommerce-cart .blog-post .woocommerce .cart-collaterals .cart_totals .checkout-button, .woocommerce-checkout #payment #place_order, .woocommerce-account.woocommerce-page button.button, .woocommerce .track_order button[type="submit"], .nav-cart .nav-cart-content .widget .buttons .button, .woocommerce a.button.wc-backward, body.woocommerce .wccm-catalog-item a.button, body.woocommerce a.wccm-button.button, form.woocommerce-form-coupon button.button, div.wpforms-container .wpforms-form button[type=submit].wpforms-submit, div.woocommerce a.button.alt, div.woocommerce table.my_account_orders .button, input[type="submit"].search-submit, .hestia-view-cart-wrapper .added_to_cart.wc-forward, .woocommerce-product-search button, .woocommerce-cart .actions .button, #secondary div[id^=woocommerce_price_filter] .button, .woocommerce div[id^=woocommerce_widget_cart].widget .buttons .button, .searchform input[type=submit], .searchform button, .search-form:not(.media-toolbar-primary) input[type=submit], .search-form:not(.media-toolbar-primary) button, .woocommerce-product-search input[type=submit], .btn.colored-button, .btn.btn-left, .btn.btn-right, .btn:not(.colored-button):not(.btn-left):not(.btn-right):not(.btn-just-icon):not(.menu-item):not(.hestia-sidebar-open):not(.hestia-sidebar-close){border-radius:3px;}
+h1, h2, h3, h4, h5, h6, .hestia-title, .hestia-title.title-in-content, p.meta-in-content , .info-title, .card-title,
+		.page-header.header-small .hestia-title, .page-header.header-small .title, .widget h5, .hestia-title, 
+		.title, .footer-brand, .footer-big h4, .footer-big h5, .media .media-heading, 
+		.carousel h1.hestia-title, .carousel h2.title, 
+		.carousel span.sub-title, .woocommerce.single-product h1.product_title, .woocommerce section.related.products h2, .hestia-about h1, .hestia-about h2, .hestia-about h3, .hestia-about h4, .hestia-about h5 {
+			font-family: Ubuntu Mono;
+		}
+		body, ul, .tooltip-inner {
+			font-family: Ubuntu Mono;
+		}
+@media (min-width: 769px){
+			.page-header.header-small .hestia-title,
+			.page-header.header-small .title,
+			h1.hestia-title.title-in-content,
+			.main article.section .has-title-font-size {
+				font-size: 42px;
+			}}
+
+		.page-template-builder-fullwidth-std .header > .elementor {
+			padding-top: 70px;
+		}
+
+</style>
+<link rel="stylesheet" id="hestia-google-font-ubuntu-mono-css" href="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/css.css" type="text/css" media="all">
+<link rel="stylesheet" id="rw_toprated-css" href="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/toprated.css" type="text/css" media="all">
+<link rel="stylesheet" id="rw_recommendations-css" href="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/recommendations.css" type="text/css" media="all">
+<link rel="stylesheet" id="enlighter-local-css" href="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/EnlighterJS.css" type="text/css" media="all">
+<link rel="stylesheet" id="social-logos-css" href="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/social-logos.css" type="text/css" media="all">
+<link rel="stylesheet" id="jetpack_css-css" href="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/jetpack.css" type="text/css" media="all">
+<script type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/jquery_002.js"></script>
+<script type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/jquery-migrate.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var related_posts_js_options = {"post_heading":"h4"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/related-posts.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var BP_Confirm = {"are_you_sure":"\u786e\u5b9a\uff1f"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/confirm.js"></script>
+<script type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/widget-members.js"></script>
+<script type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/jquery-query.js"></script>
+<script type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/jquery-cookie.js"></script>
+<script type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/jquery-scroll-to.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var BP_DTheme = {"accepted":"\u5df2\u63a5\u53d7","close":"\u5173\u95ed","comments":"\u8bc4\u8bba","leave_group_confirm":"\u60a8\u786e\u5b9a\u8981\u9000\u51fa\u8be5\u7fa4\u5417\uff1f","mark_as_fav":"\u6536\u85cf","my_favs":"\u6211\u7684\u6536\u85cf","rejected":"\u5df2\u62d2\u7edd","remove_fav":"\u79fb\u9664\u6536\u85cf","show_all":"\u663e\u793a\u5168\u90e8","show_all_comments":"\u663e\u793a\u8be5\u8bdd\u9898\u6240\u6709\u8bc4\u8bba","show_x_comments":"Show all comments (%d)","unsaved_changes":"\u60a8\u7684\u4e2a\u4eba\u8d44\u6599\u66f4\u6539\u5c1a\u672a\u4fdd\u5b58\u3002\u5982\u679c\u79bb\u5f00\u6b64\u9875\u9762\uff0c\u60a8\u7684\u66f4\u6539\u5c06\u4f1a\u4e22\u5931\u3002","view":"\u67e5\u770b","store_filter_settings":""};
+/* ]]> */
+</script>
+<script type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/buddypress.js"></script>
+<script type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/jquery.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var IZ = {"with_woocommerce":"0","exchange_thumbnails":"1","woo_categories":"0","enable_mobile":"","options":[],"woo_slider":"0"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/image_zoom-init.js"></script>
+<link rel="https://api.w.org/" href="http://www.corvin.cn/wp-json/">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.corvin.cn/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://www.corvin.cn/wp-includes/wlwmanifest.xml"> 
+<meta name="generator" content="WordPress 5.0.4">
+<link rel="shortlink" href="https://wp.me/p9d5Bf-dn">
+<link rel="alternate" type="application/json+oembed" href="http://www.corvin.cn/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fwww.corvin.cn%2F829.html">
+<link rel="alternate" type="text/xml+oembed" href="http://www.corvin.cn/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fwww.corvin.cn%2F829.html&amp;format=xml">
+
+	<script type="text/javascript">var ajaxurl = 'http://www.corvin.cn/wp-admin/admin-ajax.php';</script>
+
+<script type="text/javascript">
+(function(url){
+	if(/(?:Chrome\/26\.0\.1410\.63 Safari\/537\.31|WordfenceTestMonBot)/.test(navigator.userAgent)){ return; }
+	var addEvent = function(evt, handler) {
+		if (window.addEventListener) {
+			document.addEventListener(evt, handler, false);
+		} else if (window.attachEvent) {
+			document.attachEvent('on' + evt, handler);
+		}
+	};
+	var removeEvent = function(evt, handler) {
+		if (window.removeEventListener) {
+			document.removeEventListener(evt, handler, false);
+		} else if (window.detachEvent) {
+			document.detachEvent('on' + evt, handler);
+		}
+	};
+	var evts = 'contextmenu dblclick drag dragend dragenter dragleave dragover dragstart drop keydown keypress keyup mousedown mousemove mouseout mouseover mouseup mousewheel scroll'.split(' ');
+	var logHuman = function() {
+		if (window.wfLogHumanRan) { return; }
+		window.wfLogHumanRan = true;
+		var wfscr = document.createElement('script');
+		wfscr.type = 'text/javascript';
+		wfscr.async = true;
+		wfscr.src = url + '&r=' + Math.random();
+		(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(wfscr);
+		for (var i = 0; i < evts.length; i++) {
+			removeEvent(evts[i], logHuman);
+		}
+	};
+	for (var i = 0; i < evts.length; i++) {
+		addEvent(evts[i], logHuman);
+	}
+})('//www.corvin.cn/?wordfence_lh=1&hid=C4B621042D9B0A40E507940D830D7D23');
+</script><script type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/a_003.html" async=""></script>
+<link rel="dns-prefetch" href="http://v0.wordpress.com/">
+<link rel="dns-prefetch" href="http://widgets.wp.com/">
+<link rel="dns-prefetch" href="http://s0.wp.com/">
+<link rel="dns-prefetch" href="http://0.gravatar.com/">
+<link rel="dns-prefetch" href="http://1.gravatar.com/">
+<link rel="dns-prefetch" href="http://2.gravatar.com/">
+<link rel="dns-prefetch" href="http://i0.wp.com/">
+<link rel="dns-prefetch" href="http://i1.wp.com/">
+<link rel="dns-prefetch" href="http://i2.wp.com/">
+<style type="text/css">img#wpstats{display:none}</style><style type="text/css" id="custom-background-css">
+body.custom-background { background-image: url("http://www.corvin.cn/wp-content/uploads/2017/11/cropped-timg.jpeg"); background-position: center center; background-size: contain; background-repeat: repeat; background-attachment: fixed; }
+</style>
+<style type="text/css" media="print">#wpadminbar { display:none; }</style>
+<style type="text/css" media="screen">
+	html { margin-top: 32px !important; }
+	* html body { margin-top: 32px !important; }
+	@media screen and ( max-width: 782px ) {
+		html { margin-top: 46px !important; }
+		* html body { margin-top: 46px !important; }
+	}
+</style>
+<link rel="icon" href="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2017/08/cropped-logo.png?fit=32%2C32" sizes="32x32">
+<link rel="icon" href="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2017/08/cropped-logo.png?fit=192%2C192" sizes="192x192">
+<link rel="apple-touch-icon-precomposed" href="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2017/08/cropped-logo.png?fit=180%2C180">
+<meta name="msapplication-TileImage" content="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2017/08/cropped-logo.png?fit=270%2C270">
+<link rel="stylesheet" type="text/css" id="gravatar-card-css" href="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/hovercard.css"><link rel="stylesheet" type="text/css" id="gravatar-card-services-css" href="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/services.css"><script type="text/javascript" async="" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/a_004.html"></script><link type="text/css" rel="stylesheet" href="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/style_004.css" media="screen"><link type="text/css" rel="stylesheet" href="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/theme.css" media="screen"><style type="text/css" id="rw_class_blog-post_custom_style">.rw-class-blog-post.rw-ui-star.rw-ui-container.rw-style-custom .rw-ui-stars li { background-image: url(''); }
+.rw-class-blog-post.rw-rtl.rw-ui-star.rw-ui-container.rw-style-custom .rw-ui-stars li { background-image: url(''); }
+</style></head>
+
+<body class="bp-legacy post-template-default single single-post postid-829 single-format-standard admin-bar no-customize-support custom-background wp-custom-logo blog-post header-layout-default js">
+	<div class="wrapper post-829 post type-post status-publish format-standard has-post-thumbnail hentry category-stdr_simulator default ">
+		<header class="header ">
+					<nav class="navbar navbar-default navbar-fixed-top  hestia_left navbar-not-transparent navbar-scroll-point">
+						<div class="container">
+						<div class="navbar-header">
+			<div class="title-logo-wrapper">
+				<a class="navbar-brand" href="http://www.corvin.cn/" title="ROS小课堂">
+					<img src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/cropped-.png" alt="ROS小课堂"></a>
+			</div>
+								<div class="navbar-toggle-wrapper">
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navigation">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="sr-only">切换导航</span>
+			</button>
+					</div>
+				</div>
+		<div id="main-navigation" class="collapse navbar-collapse"><ul id="menu-%e9%a1%b9%e7%9b%ae%e7%ae%a1%e7%90%86%e7%b3%bb%e7%bb%9f" class="nav navbar-nav"><li id="menu-item-367" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-367"><a title="项目管理系统" href="http://corvin.cn:81/">项目管理系统</a></li>
+<li id="menu-item-371" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-371"><a title="gerrit系统" href="http://corvin.cn:8080/gerrit/">gerrit系统</a></li>
+<li class="hestia-search-in-menu"><div class="hestia-nav-search"><form role="search" method="get" class="search-form form-group" action="http://www.corvin.cn/">
+				<label class="label-floating is-empty form-group">
+					<span class="screen-reader-text">搜索：</span>
+					<label class="control-label"> 搜索… </label><input class="search-field form-control" name="s" type="search">
+				</label>
+				<input class="search-submit" value="搜索" type="submit">
+			</form></div><div class="hestia-toggle-search"><i class="fa fa-search"></i></div></li></ul></div>			</div>
+					</nav>
+		<div style="display: none"></div>		</header>
+<div id="primary" class="boxed-layout-header page-header header-small" data-parallax="active" style="transform: translate3d(0px, 205.667px, 0px);"><div class="container" style="padding-top: 170px;"><div class="row"><div class="col-md-10 col-md-offset-1 text-center"><h1 class="hestia-title entry-title">5.在STDR中学习costmap代价地图</h1><h4 class="author">于<time class="entry-date published" datetime="2018-07-17T18:41:20+00:00" content="2018-07-17">2018-07-17</time><time class="updated hestia-hidden" datetime="2018-08-14T09:00:50+00:00">2018-07-17</time>由<a href="http://www.corvin.cn/author/corvin_zhang" class="vcard author"><strong class="fn">corvin_zhang</strong></a>发布</h4></div></div></div><div class="header-filter" style="background-image: url(http://www.corvin.cn/wp-content/uploads/2017/11/cropped-timg.jpeg);"></div></div>
+<div class="main  main-raised ">
+	<div class="blog-post blog-post-wrapper">
+		<div class="container">
+			<article id="post-829" class="section section-text">
+	<div class="row">
+				<div class="col-md-8 single-post-container" data-layout="sidebar-right">
+			<div class="single-post-wrap entry-content">
+				<table class="rw-rating-table rw-ltr rw-center rw-no-labels"><tbody><tr><td><nobr>&nbsp;</nobr></td><td><div class="rw-center"><div class="rw-ui-container rw-urid-8300 rw-ui-star rw-size-large rw-dir-ltr rw-halign-right rw-valign-middle rw-style-quartz_blue rw-theme-star_quartz_blue rw-active rw-class-blog-post" data-img="http://www.corvin.cn/wp-content/uploads/2018/07/Screenshot-from-2018-07-17-180110.png" data-urid="8300" style=""><div class="rw-action-area"><ul class="rw-ui-stars"><li class="rw-ui-star-0 rw-ui-star-selected"></li><li class="rw-ui-star-1 rw-ui-star-selected"></li><li class="rw-ui-star-2 rw-ui-star-selected"></li><li class="rw-ui-star-3 rw-ui-star-selected"></li><li class="rw-ui-star-4 rw-ui-star-selected"></li><li class="rw-ui-star-5 rw-ui-star-selected"></li><li class="rw-ui-star-6 rw-ui-star-selected"></li><li class="rw-ui-star-7 rw-ui-star-selected"></li><li class="rw-ui-star-8 rw-ui-star-selected"></li><li class="rw-ui-star-9 rw-ui-star-half-selected"></li></ul><a class="rw-report-link" target="_blank" href="http://rating-widget.com/my-rating-report/star/quartz-blue/rating-163089715-10/" rel="nofollow"></a></div><span class="rw-ui-info-container" style="background-color: rgb(255, 255, 255);"><i aria-hidden="true" class="rw-ui-info-nub rw-ui-info-outer-nub" style=""></i><i aria-hidden="true" class="rw-ui-info-nub rw-ui-info-inner-nub" style="border-right-color: rgb(255, 255, 255);"></i><span class="rw-ui-info-inner-container" style="border-color: DARKBLUE;"><span class="rw-ui-info" style="color: DARKBLUE;">评分 (14 投票)</span></span></span></div></div></td></tr></tbody></table><p><strong><span style="font-size: 18px;color: #00B050">0x00 什么是costmap代价地图</span></strong></p>
+<p style="text-indent: 2em">在机器人进行路径规划时，我们需要明白规划算法是依靠什么在地图上来计算出来一条路径的。依靠
+的是gmapping扫描构建的一张环境全局地图，但是仅仅依靠一张原始的全局地图是不行的。因为这张地图是静态的，无法随时来更新地图上的障碍物信息。
+在现实环境中，总会有各种无法预料到的新障碍物出现在当前地图中，或者旧的障碍物现在已经从环境地图中被移除掉了，那么我们就需要来随时更新这张地图。同
+时由于默认的地图是一张黑白灰三色地图，即只会标出障碍物区域、自由移动区域和未被探索区域。机器人在这样的地图中进行路径规划，会导致规划的路径不够安
+全，因为我们的机器人在移动时需要与障碍物之间保持一定的安全缓冲距离，这样机器人在当前地图中移动时就更安全了。</p>
+<p style="text-align: center"><img src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/1531712385705504.png" title="1531712385705504.png" alt="Screenshot from 2018-07-16 11:33:37.png"></p>
+<p style="text-indent: 2em">costmap简单来说就是为了在这张地图上进行各种加工，方便我们后面进行路径规划而存在
+的。那具体该如何实现costmap呢？在ROS中使用costmap_2d这个软件包来实现的，该软件包在原始地图上实现了两张新的地图。一个是
+local_costmap，另外一个就是global_costmap，根据名字大家就可以知道了，两张costmap一个是为局部路径规划准备的，一
+个是为全局路径规划准备的。无论是local_costmap还是global_costmap，都可以配置多个图层，包括下面几种：</p>
+<ul class=" list-paddingleft-2" style="list-style-type: disc">
+<li>
+<p><span style="color: #0070C0">Static Map Layer</span>：静态地图层，基本上不变的地图层，通常都是SLAM建立完成的静态地图。</p>
+</li>
+<li>
+<p><span style="color: #0070C0">Obstacle Map Layer</span>：障碍地图层，用于动态的记录传感器感知到的障碍物信息。</p>
+</li>
+<li>
+<p><span style="color: #0070C0">Inflation Layer</span>：膨胀层，在以上两层地图上进行膨胀（向外扩张），以避免机器人的撞上障碍物。</p>
+</li>
+<li>
+<p><span style="color: #0070C0">Other Layers</span>：你还可以通过插件的形式自己实现costmap，目前已有Social Costmap Layer、Range Sensor Layer等开源插件。</p>
+</li>
+</ul>
+<hr>
+<p><strong><span style="font-size: 18px;color: #00B050">0x01 创建stdr_move_base软件包</span></strong></p>
+<p style="text-indent: 2em">你可能会纳闷，为什么讲costmap会提到move_base这个软件包呢？这是因为move_base软件包是ROS中自动导航的核心软件包，我们可以查看下面这张图大家就会对此软件包有深刻认识了：</p>
+<p><img src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/1531722258772314.png" title="1531722258772314.png" alt="overview_tf (1).png"></p>
+<p style="text-indent: 2em">根据move_base的内部逻辑流程图得知，在进行路径规划时costmap是必不可少的。
+因此我们需要首先创建个stdr_move_base软件包，然后配置costmap相关的参数，这样move_base软件包内的路径规划器才能找到一
+条合适的路径控制机器人移动到达指定的目的地。</p>
+<p style="text-align:center"><img src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/1531723786611542.png" title="1531723786611542.png" alt="Screenshot from 2018-07-16 14:32:24.png"></p>
+<p style="text-indent: 2em">创建好软件包后，接下来就可以来编写launch文件了，命名为stdr_move_base.launch，该launch文件内容如下：</p>
+<pre class="brush:xml;toolbar:false">&lt;!--
+&nbsp;&nbsp;FileName:&nbsp;stdr_move_base.launch
+&nbsp;&nbsp;Copyright:&nbsp;2016-2018&nbsp;ROS小课堂&nbsp;www.corvin.cn
+&nbsp;&nbsp;Author:&nbsp;corvin
+&nbsp;&nbsp;Description:
+&nbsp;&nbsp;&nbsp;&nbsp;启动move_base节点，加载各个配置文件。
+&nbsp;&nbsp;History:
+&nbsp;&nbsp;&nbsp;&nbsp;20180528:&nbsp;initial&nbsp;this&nbsp;file.
+&nbsp;&nbsp;&nbsp;&nbsp;20180530:&nbsp;add&nbsp;arg&nbsp;param&nbsp;to&nbsp;rename&nbsp;all&nbsp;kinds&nbsp;of&nbsp;frames,topics,add&nbsp;load&nbsp;params&nbsp;file.
+--&gt;
+&lt;launch&gt;
+&nbsp;&nbsp;&lt;arg&nbsp;name="odom_frame_id"&nbsp;&nbsp;&nbsp;default="/map_static"/&gt;
+&nbsp;&nbsp;&lt;arg&nbsp;name="base_frame_id"&nbsp;&nbsp;&nbsp;default="/robot0"/&gt;
+&nbsp;&nbsp;&lt;arg&nbsp;name="global_frame_id"&nbsp;default="/map"/&gt;
+
+&nbsp;&nbsp;&lt;arg&nbsp;name="odom_topic"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default="/robot0/odom"/&gt;
+&nbsp;&nbsp;&lt;arg&nbsp;name="cmd_vel_topic"&nbsp;&nbsp;&nbsp;default="/robot0/cmd_vel"/&gt;
+&nbsp;&nbsp;&lt;arg&nbsp;name="map_topic"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default="/amcl/map"/&gt;
+
+&nbsp;&nbsp;&lt;node&nbsp;pkg="move_base"&nbsp;type="move_base"&nbsp;name="stdr_move_base"&nbsp;output="screen"&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;rosparam&nbsp;file="$(find&nbsp;stdr_move_base)/config/costmap_common_params.yaml"&nbsp;command="load"&nbsp;ns="global_costmap"&nbsp;/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;rosparam&nbsp;file="$(find&nbsp;stdr_move_base)/config/costmap_common_params.yaml"&nbsp;command="load"&nbsp;ns="local_costmap"&nbsp;/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;rosparam&nbsp;file="$(find&nbsp;stdr_move_base)/config/local_costmap_params.yaml"&nbsp;&nbsp;command="load"&nbsp;/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;rosparam&nbsp;file="$(find&nbsp;stdr_move_base)/config/global_costmap_params.yaml"&nbsp;command="load"&nbsp;/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;rosparam&nbsp;file="$(find&nbsp;stdr_move_base)/config/dwa_local_planner_params.yaml"&nbsp;&nbsp;&nbsp;&nbsp;command="load"&nbsp;/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;rosparam&nbsp;file="$(find&nbsp;stdr_move_base)/config/move_base_params.yaml"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;command="load"&nbsp;/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;rosparam&nbsp;file="$(find&nbsp;stdr_move_base)/config/global_planner_params.yaml"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;command="load"&nbsp;/&gt;
+&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="global_costmap/global_frame"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value="$(arg&nbsp;global_frame_id)"/&gt;
+&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="global_costmap/robot_base_frame"&nbsp;value="$(arg&nbsp;base_frame_id)"/&gt;
+&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="local_costmap/global_frame"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value="$(arg&nbsp;odom_frame_id)"/&gt;
+&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="local_costmap/robot_base_frame"&nbsp;&nbsp;value="$(arg&nbsp;base_frame_id)"/&gt;
+&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="DWAPlannerROS/global_frame_id"&nbsp;&nbsp;&nbsp;value="$(arg&nbsp;odom_frame_id)"/&gt;
+
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;!--&nbsp;move&nbsp;base&nbsp;default&nbsp;publish&nbsp;cmd&nbsp;to&nbsp;/cmd_vel&nbsp;topic,now&nbsp;remap&nbsp;to&nbsp;/robot0/cmd_vel&nbsp;--&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;remap&nbsp;from="/cmd_vel"&nbsp;to="$(arg&nbsp;cmd_vel_topic)"/&gt;
+
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;!--&nbsp;move_base&nbsp;default&nbsp;subscribe&nbsp;odom&nbsp;topic,now&nbsp;remap&nbsp;to&nbsp;/robot0/odom&nbsp;--&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;remap&nbsp;from="/odom"&nbsp;to="$(arg&nbsp;odom_topic)"/&gt;
+
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;!--&nbsp;move_base&nbsp;default&nbsp;subscribe&nbsp;map&nbsp;topic,now&nbsp;remap&nbsp;to&nbsp;/amcl/map&nbsp;--&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;remap&nbsp;from="/map"&nbsp;to="$(arg&nbsp;map_topic)"/&gt;
+&nbsp;&nbsp;&lt;/node&gt;
+&lt;/launch&gt;</pre>
+<p style="text-indent: 2em">在启动move_base节点时，可以看到我们首先加载了
+costmap_common_params.yaml到global_costmap和local_costmap两个命名空间中，因为该配置文件是一
+个通用的代价地图配置参数，即local_costmap和global_costmap都需要配置的参数。然后下面是
+local_costmap_params.yaml专门为了局部代价地图配置的参数，global_costmap_params.yaml专门为全局
+代价地图配置的参数。</p>
+<hr>
+<p><strong><span style="font-size: 18px;color: #00B050">0x02 配置costmap_common_params.yaml</span></strong></p>
+<p>在config目录下，创建costmap_common_params.yaml文件，配置的参数如下：</p>
+<pre class="brush:xml;toolbar:false">#FileName:&nbsp;costmap_common_params.yaml
+#Copyright:&nbsp;2016-2018&nbsp;ROS小课堂&nbsp;www.corvin.cn
+#Author:&nbsp;corvin
+#Description:
+#&nbsp;代价地图通用参数配置文件,就是全局代价地图和局部代价地图
+#&nbsp;共同都需要配置的参数,各参数意义如下:
+#&nbsp;robot_radius:&nbsp;机器人的半径
+#
+#History:
+#&nbsp;20180613:&nbsp;initial&nbsp;this&nbsp;file.
+
+robot_radius:&nbsp;0.2
+
+obstacle_layer:
+&nbsp;&nbsp;enabled:&nbsp;true
+&nbsp;&nbsp;combination_method:&nbsp;1
+&nbsp;&nbsp;track_unknown_space:&nbsp;true
+&nbsp;&nbsp;obstacle_range:&nbsp;2.5
+&nbsp;&nbsp;raytrace_range:&nbsp;3.0
+&nbsp;&nbsp;observation_sources:&nbsp;laser_scan_sensor
+&nbsp;&nbsp;laser_scan_sensor:&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;sensor_frame:&nbsp;/robot0_laser_0,
+&nbsp;&nbsp;&nbsp;&nbsp;data_type:&nbsp;LaserScan,
+&nbsp;&nbsp;&nbsp;&nbsp;topic:&nbsp;/robot0/laser_0,
+&nbsp;&nbsp;&nbsp;&nbsp;marking:&nbsp;true,
+&nbsp;&nbsp;&nbsp;&nbsp;clearing:&nbsp;true
+&nbsp;&nbsp;}
+
+inflation_layer:
+&nbsp;&nbsp;enabled:&nbsp;true
+&nbsp;&nbsp;cost_scaling_factor:&nbsp;5.0
+&nbsp;&nbsp;inflation_radius:&nbsp;0.36
+
+static_layer:
+&nbsp;&nbsp;enabled:&nbsp;true</pre>
+<p>下面来依次解释下各参数的意义，方便大家以后来根据需要来自行修改调试：</p>
+<ul class=" list-paddingleft-2" style="list-style-type: disc">
+<li>
+<p><span style="color: #0070C0">robot_radius</span>：设置机器人的半径，单位是米。由于在
+stdr中机器人是圆形的，所以可以直接设置该参数。如果你的机器人不是圆形的那就需要使用footprint这个参数，该参数是一个列表，其中的每一个
+坐标代表机器人上的一点，设置机器人的中心为[0,0]，根据机器人不同的形状，找到机器人各凸出的坐标点即可，具体可参考下图来设置：</p>
+</li>
+</ul>
+<p style="text-align:center"><img src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/1531729866777178.png" title="1531729866777178.png" alt="footprint.png"></p>
+<ul class=" list-paddingleft-2" style="list-style-type: disc">
+<li>
+<p><span style="font-size: 16px;color: #0070C0">obstacle_layer</span><span style="font-size: 16px">:配置障碍物图层</span></p>
+<p><span style="color: #0070C0">enabled</span>:是否启用该层</p>
+<p><span style="color: #0070C0">combination_method</span>:只能设置为0或1，用来更新地图上的代价值，一般设置为1;</p>
+<p><span style="color: #0070C0">track_unknown_space</span>:如果设置为false，那么
+地图上代价值就只分为致命碰撞和自由区域两种，如果设置为true，那么就分为致命碰撞，自由区域和未知区域三种。意思是说假如该参数设置为true的
+话，就意味着地图上的未知区域也会被认为是可以自由移动的区域，这样在进行全局路径规划时，可以把一些未探索的未知区域也来参与到路径规划，如果你需要这
+样的话就将该参数设置为false。不过一般情况未探索的区域不应该当作可以自由移动的区域，因此一般将该参数设置为true;</p>
+<p><span style="color: #0070C0">obstacle_range</span>:设置机器人检测障碍物的最大范围，意思是说超过该范围的障碍物，并不进行检测，只有靠近到该范围内才把该障碍物当作影响路径规划和移动的障碍物;</p>
+<p><span style="color: #0070C0">raytrace_range</span>:在机器人移动过程中，实时清除代价地图上的障碍物的最大范围，更新可自由移动的空间数据。假如设置该值为3米，那么就意味着在3米内的障碍物，本来开始时是有的，但是本次检测却没有了，那么就需要在代价地图上来更新，将旧障碍物的空间标记为可以自由移动的空间。</p>
+<p><span style="color: #0070C0">observation_sources</span>:设置导航中所使用的传感器，这里可以用逗号形式来区分开很多个传感器，例如激光雷达，碰撞传感器，超声波传感器等，我们这里只设置了激光雷达;</p>
+<p style="text-indent: 2em"><span style="color: #0070C0">laser_scan_sensor</span>:添加的激光雷达传感器</p>
+<p style="text-indent: 2em"><span style="color: #0070C0">sensor_frame</span>:激光雷达传感器的坐标系名称;</p>
+<p style="text-indent: 2em"><span style="color: #0070C0">data_type</span>:激光雷达数据类型;</p>
+<p style="text-indent: 2em"><span style="color: #0070C0">topic</span>:该激光雷达发布的话题名;</p>
+<p style="text-indent: 2em"><span style="color: #0070C0">marking</span>:是否可以使用该传感器来标记障碍物;</p>
+<p style="text-indent: 2em"><span style="color: #0070C0">clearing</span>:是否可以使用该传感器来清除障碍物标记为自由空间;</p>
+</li>
+<li>
+<p style="text-indent: 0em"><span style="font-size: 16px;color: #0070C0">inflation_layer</span><span style="font-size: 16px">:膨胀层，用于在障碍物外标记一层危险区域，在路径规划时需要避开该危险区域</span></p>
+<p style="text-indent: 0em"><span style="font-size: 16px"></span><span style="color: #0070C0">enabled</span>:是否启用该层;</p>
+<p style="text-indent: 0em"><span style="color: #0070C0">cost_scaling_factor</span>:<span style="text-indent: 0em">膨
+胀过程中应用到代价值的比例因子，代价地图中到实际障碍物距离在内切圆半径到膨胀半径之间的所有cell可以使用如下公式来计算膨胀代
+价：exp(-1.0 * cost_scaling_factor * (distance_from_obstacle – 
+inscribed_radius)) * (costmap_2d::INSCRIBED_INFLATED_OBSTACLE – 
+1),公式中costmap_2d::INSCRIBED_INFLATED_OBSTACLE目前指定为254，注意： 
+由于在公式中cost_scaling_factor被乘了一个负数，所以增大比例因子反而会降低代价</span></p>
+<p style="text-indent: 0em"><span style="color: #0070C0">inflation_radius:</span>膨胀半径，膨胀层会把障碍物代价膨胀直到该半径为止，一般将该值设置为机器人底盘的直径大小。如果机器人经常撞到障碍物就需要增大该值，若经常无法通过狭窄地方就减小该值。</p>
+</li>
+</ul>
+<p style="text-indent: 0em"><span style="text-indent: 0em"></span></p>
+<ul class=" list-paddingleft-2" style="list-style-type: disc">
+<li>
+<p style="text-indent: 0em"><span style="font-size: 16px;color: #0070C0">Static_layer</span><span style="font-size: 16px">:静态地图层，即SLAM中构建的地图层</span></p>
+<p style="text-indent: 0em">enabled:是否启用该地图层;</p>
+</li>
+</ul>
+<p>通过下图来认识下为何要设置膨胀层以及意义：</p>
+<p><img src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/1531814435804297.png" title="1531814435804297.png" alt="Screenshot from 2018-07-17 14:58:40.png"></p>
+<hr>
+<p><strong><span style="font-size: 18px;color: #00B050">0x03 配置global_costmap_params.yaml</span></strong></p>
+<p style="text-indent: 2em">全局代价地图是作为进行全局路径规划时的参考，我们需要在config目录中，创建global_costmap_params.yaml文件，该文件是为全局代价地图配置的参数，具体配置的参数如下：</p>
+<pre class="brush:xml;toolbar:false">#FileName:&nbsp;global_costmap_params.yaml
+#Copyright:&nbsp;2016-2018&nbsp;ROS小课堂&nbsp;www.corvin.cn
+#Author:&nbsp;corvin
+#Description:
+#&nbsp;&nbsp;全局代价地图参数配置文件,各参数的意义如下：
+#&nbsp;&nbsp;global_frame:在全局代价地图中的全局坐标系;
+#&nbsp;&nbsp;robot_base_frame:机器人的基坐标系;
+#
+#History:
+#&nbsp;&nbsp;20180613:&nbsp;initial&nbsp;this&nbsp;file.
+global_costmap:
+&nbsp;&nbsp;global_frame:&nbsp;/map
+&nbsp;&nbsp;robot_base_frame:&nbsp;/robot0
+&nbsp;&nbsp;update_frequency:&nbsp;0.5
+&nbsp;&nbsp;static_map:&nbsp;true
+&nbsp;&nbsp;rolling_window:&nbsp;false
+&nbsp;&nbsp;transform_tolerance:&nbsp;1.0
+&nbsp;&nbsp;plugins:
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;{name:&nbsp;static_layer,&nbsp;&nbsp;&nbsp;&nbsp;type:&nbsp;"costmap_2d::StaticLayer"}
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;{name:&nbsp;obstacle_layer,&nbsp;&nbsp;type:&nbsp;"costmap_2d::ObstacleLayer"}
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;{name:&nbsp;inflation_layer,&nbsp;type:&nbsp;"costmap_2d::InflationLayer"}</pre>
+<p>下面我们来详细解释下该全局代价地图配置文件中各参数的意义：</p>
+<ul class=" list-paddingleft-2" style="list-style-type: disc">
+<li>
+<p><span style="color: #0070C0">global_frame</span>:全局代价地图需要在哪个坐标系下运行;</p>
+</li>
+<li>
+<p><span style="color: #0070C0">robot_base_frame</span>:在全局代价地图中机器人本体的基坐标系，就是机器人上的根坐标系。通过global_frame和robot_base_frame就可以计算两个坐标系之间的变换，得知机器人在全局坐标系中的坐标了。</p>
+</li>
+<li>
+<p><span style="color: #0070C0">update_frequency</span>:全局代价地图更新频率，一般全局代价地图更新频率设置的比较小;</p>
+</li>
+<li>
+<p><span style="color: #0070C0">static_map</span>:配置是否使用map_server提供的地图来初始化，一般全局地图都是静态的，需要设置为true;</p>
+</li>
+<li>
+<p><span style="color: #0070C0">rolling_window</span>:是否在机器人移动过程中需要滚动窗口，始终保持机器人在当前窗口中心位置;</p>
+</li>
+<li>
+<p><span style="color: #0070C0">transform_tolerance</span>:坐标系间的转换可以忍受的最大延时;</p>
+</li>
+<li>
+<p><span style="color: #0070C0">plugins</span>:在global_costmap中使用下面三个插件来融合三个不同图层，分别是static_layer、obstacle_layer和inflation_layer，合成一个master_layer来进行全局路径规划。</p>
+</li>
+</ul>
+<hr>
+<p><strong><span style="font-size: 18px;color: #00B050">0x04 配置local_costmap_params.yaml</span></strong></p>
+<p style="text-indent: 2em">局部代价地图配置参数所建立的地图主要是为局部路径规划所使用，我们可以在config目录下，创建local_costmap_params.yaml文件，完整内容如下：</p>
+<pre class="brush:xml;toolbar:false">#FileName:&nbsp;local_costmap_params.yaml
+#Copyright:&nbsp;2016-2018&nbsp;ROS小课堂&nbsp;www.corvin.cn
+#Author:&nbsp;corvin
+#Description:
+#&nbsp;&nbsp;本地代价地图需要配置的参数，各参数意义如下:
+#&nbsp;&nbsp;global_frame:在本地代价地图中的全局坐标系;
+#&nbsp;&nbsp;robot_base_frame:机器人本体的基坐标系;
+#
+#History:
+#&nbsp;&nbsp;20180613:&nbsp;initial&nbsp;this&nbsp;file.
+
+local_costmap:
+&nbsp;&nbsp;global_frame:&nbsp;/map_static
+&nbsp;&nbsp;robot_base_frame:&nbsp;/robot0
+&nbsp;&nbsp;update_frequency:&nbsp;5.0
+&nbsp;&nbsp;publish_frequency:&nbsp;3.0
+&nbsp;&nbsp;static_map:&nbsp;false
+&nbsp;&nbsp;rolling_window:&nbsp;true
+&nbsp;&nbsp;width:&nbsp;4.0
+&nbsp;&nbsp;height:&nbsp;4.0
+&nbsp;&nbsp;resolution:&nbsp;0.05
+&nbsp;&nbsp;transform_tolerance:&nbsp;0.5
+&nbsp;&nbsp;plugins:
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;{name:&nbsp;obstacle_layer,&nbsp;&nbsp;type:&nbsp;"costmap_2d::ObstacleLayer"}
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;{name:&nbsp;inflation_layer,&nbsp;type:&nbsp;"costmap_2d::InflationLayer"}</pre>
+<p>下面来详细解释下每个参数的意义：</p>
+<ul class=" list-paddingleft-2" style="list-style-type: disc">
+<li>
+<p><span style="color: #0070C0">global_frame</span>:在局部代价地图中的全局坐标系，一般需要设置为odom_frame，但是由于stdr没有这个坐标系，我就拿/map_static来代替了;</p>
+</li>
+<li>
+<p><span style="color: #0070C0">robot_base_frame</span>:机器人本体的基坐标系;</p>
+</li>
+<li>
+<p><span style="color: #0070C0">update_frequency</span>:局部代价地图的更新频率;</p>
+</li>
+<li>
+<p><span style="color: #0070C0">publish_frequency</span>:局部代价地图的发布频率;</p>
+</li>
+<li>
+<p><span style="color: #0070C0">static_map</span>:局部代价地图一般不设置为静态地图，因为需要检测是否在机器人附近有新增的动态障碍物;</p>
+</li>
+<li>
+<p><span style="color: #0070C0">rolling_window</span>:使用滚动窗口，始终保持机器人在当前局部地图的中心位置;</p>
+</li>
+<li>
+<p><span style="color: #0070C0">width</span>:滚动窗口的宽度，单位是米;</p>
+</li>
+<li>
+<p><span style="color: #0070C0">height</span>:滚动窗口的高度，单位是米;</p>
+</li>
+</ul>
+<p>resolution:地图的分辨率，该分辨率可以从加载的地图相对应的配置文件中获取到;</p>
+<p style="text-align: center"><img src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/1531820906653218.png" title="1531820906653218.png" alt="Screenshot from 2018-07-17 17:44:56.png"></p>
+<ul class=" list-paddingleft-2" style="list-style-type: disc">
+<li>
+<p><span style="color: #0070C0">transform_tolerance</span>:局部代价地图中的坐标系之间转换的最大可忍受延时;</p>
+</li>
+<li>
+<p><span style="color: #0070C0">plugins</span>:在局部代价地图中，不需要静态地图层，因为我们使用滚动窗口来不断的扫描障碍物，所以就需要融合两层地图（inflation_layer和obstacle_layer）即可，融合后的地图用于进行局部路径规划;</p>
+</li>
+</ul>
+<hr>
+<p><strong><span style="font-size: 18px;color: #00B050">0x05 在RViz中查看global_costmap和local_costmap</span></strong></p>
+<p style="text-indent: 2em">我们介绍了半天global_costmap和local_costmap的意义及参数如何设置，但是大家应该还是对它们没有一个直观的感受和认识，我们这里就通过在Rviz中来看看这两种代价地图，如下图所示：</p>
+<p style="text-align: center"><img src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/1531823352104951.png" title="1531823352104951.png" alt="Screenshot from 2018-07-17 18:01:10.png"></p>
+<hr>
+<p><strong><span style="font-size: 18px;color: #00B050">0x06 Bibliography</span></strong></p>
+<p>[1] costmap_2d的ROS Wiki主页.&nbsp;<a href="http://wiki.ros.org/costmap_2d/" target="_blank" title="http://wiki.ros.org/costmap_2d/">http://wiki.ros.org/costmap_2d/</a></p>
+<p>[2] move_base软件包的ROS Wiki主页.&nbsp;<a href="http://wiki.ros.org/move_base" target="_blank" title="http://wiki.ros.org/move_base">http://wiki.ros.org/move_base</a></p>
+<p>[3] 机器人操作系统入门中关于costmap的介绍.&nbsp;<a href="https://sychaichangkun.gitbooks.io/ros-tutorial-icourse163/content/chapter10/10.3.html" target="_blank" title="https://sychaichangkun.gitbooks.io/ros-tutorial-icourse163/content/chapter10/10.3.html">https://sychaichangkun.gitbooks.io/ros-tutorial-icourse163/content/chapter10/10.3.html</a></p>
+<p>[4] costmap_2d软件包学习笔记.&nbsp;<a href="https://blog.csdn.net/sonictl/article/details/51518492" target="_blank" title="https://blog.csdn.net/sonictl/article/details/51518492">https://blog.csdn.net/sonictl/article/details/51518492</a></p>
+<p>[5] costmap_2d之inflation层简介.&nbsp;<a href="https://blog.csdn.net/x_r_su/article/details/53420209" target="_blank" title="https://blog.csdn.net/x_r_su/article/details/53420209">https://blog.csdn.net/x_r_su/article/details/53420209</a></p>
+<hr>
+<p><strong><span style="font-size: 18px;color: #00B050">0x07 Feedback</span></strong></p>
+<p style="text-indent: 2em"><span style="font-size: 14px">大家在按照教程操作过程中有任
+何问题，可以关注ROS小课堂的官方微信公众号，在公众号中给我发消息反馈问题即可，我基本上每天都会处理公众号中的留言！当然如果你要是顺便给ROS小
+课堂打个赏，我也会感激不尽的，打赏30块还会邀请进ROS小课堂的微信群与更多志同道合的小伙伴一起学习和交流！&nbsp;</span></p>
+<p style="text-align: center"><span style="font-size: 14px"><img src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/1516851765432601.jpg" alt="1516851765432601.jpg"></span></p>
+<div class="sharedaddy sd-block sd-like jetpack-likes-widget-wrapper jetpack-likes-widget-loaded" id="like-post-wrapper-136106817-829-5cb4453389a4d" data-src="https://widgets.wp.com/likes/#blog_id=136106817&amp;post_id=829&amp;origin=www.corvin.cn&amp;obj_id=136106817-829-5cb4453389a4d" data-name="like-post-frame-136106817-829-5cb4453389a4d"><h3 class="sd-title">赞过：</h3><div class="likes-widget-placeholder post-likes-widget-placeholder" style="height: 55px; display: none;"><span class="button"><span>赞</span></span> <span class="loading">正在加载……</span></div><iframe name="like-post-frame-136106817-829-5cb4453389a4d" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/a.html" scrolling="no" width="100%" height="55px" frameborder="0"></iframe><span class="sd-text-color"></span><a class="sd-link-color"></a></div>
+<div id="jp-relatedposts" class="jp-relatedposts">
+	<h3 class="jp-relatedposts-headline"><em>相关</em></h3>
+</div>								</div>
+			
+		<div class="section section-blog-info">
+			<div class="row">
+				<div class="col-md-6">
+					<div class="entry-categories">分类：						<span class="label label-primary"><a href="http://www.corvin.cn/category/robot-simulator/stdr_simulator">STDR仿真</a></span>					</div>
+									</div>
+							</div>
+			<hr>
+			
+<div id="comments" class="section section-comments">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="media-area">
+				<h3 class="hestia-title text-center">
+									</h3>
+							</div>
+			<div class="media-body">
+					<div id="respond" class="comment-respond">
+		<h3 class="hestia-title text-center">发表评论 <small><a rel="nofollow" id="cancel-comment-reply-link" href="http://www.corvin.cn/829.html#respond" style="display:none;">取消回复</a></small></h3> <span class="pull-left author"> <div class="avatar"><img src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/placeholder.jpg" width="64" height="64"></div> </span>			<form action="http://www.corvin.cn/wp-comments-post.php" method="post" id="commentform" class="form media-body form-group">
+				<p class="comment-notes"><span id="email-notes">电子邮件地址不会被公开。</span> 必填项已用<span class="required">*</span>标注</p><div class="row"> <div class="col-md-4"> <div class="form-group label-floating is-empty"> <label class="control-label">名称 <span class="required">*</span></label><input id="author" name="author" class="form-control" aria-required="true" type="text"> <span class="hestia-input"></span> </div> </div>
+<div class="col-md-4"> <div class="form-group label-floating is-empty"> <label class="control-label">电子邮件 <span class="required">*</span></label><input id="email" name="email" class="form-control" aria-required="true" type="email"> <span class="hestia-input"></span> </div> </div>
+<div class="col-md-4"> <div class="form-group label-floating is-empty"> <label class="control-label">网站</label><input id="url" name="url" class="form-control" aria-required="true" type="url"> <span class="hestia-input"></span> </div> </div> </div>
+<div class="form-group label-floating is-empty"> <label class="control-label">在想些什么？</label><textarea id="comment" name="comment" class="form-control" rows="6" aria-required="true"></textarea><span class="hestia-input"></span> </div><p class="form-submit"></p><p class="comment-subscription-form"><input name="subscribe_comments" id="subscribe_comments" value="subscribe" style="width: auto; -moz-appearance: checkbox; -webkit-appearance: checkbox;" type="checkbox"> <label class="subscribe-label" id="subscribe-label" for="subscribe_comments">通过邮件通知我后续评论</label></p><p class="comment-subscription-form"><input name="subscribe_blog" id="subscribe_blog" value="subscribe" style="width: auto; -moz-appearance: checkbox; -webkit-appearance: checkbox;" type="checkbox"> <label class="subscribe-label" id="subscribe-blog-label" for="subscribe_blog">通过邮件通知我有新文章</label></p><input name="submit" id="submit" class="btn btn-primary pull-right" value="发表评论" type="submit"> <input name="comment_post_ID" value="829" id="comment_post_ID" type="hidden">
+<input name="comment_parent" id="comment_parent" value="0" type="hidden">
+<p></p><p style="display: none;"><input id="akismet_comment_nonce" name="akismet_comment_nonce" value="881f05a35f" type="hidden"></p><p style="display: none;"></p>			<input id="ak_js" name="ak_js" value="1555318068276" type="hidden"></form>
+			</div><!-- #respond -->
+	<p class="akismet_comment_form_privacy_notice">此站点使用Akismet来减少垃圾评论。<a href="https://akismet.com/privacy/" target="_blank" rel="nofollow noopener">了解我们如何处理您的评论数据</a>。</p>							</div>
+		</div>
+	</div>
+</div>
+		</div>
+		</div>	<div class="col-md-3 blog-sidebar-wrapper col-md-offset-1 ">
+		<aside id="secondary" class="blog-sidebar" role="complementary">
+					<div id="recent-posts-2" class="widget widget_recent_entries">		<h5>近期文章</h5>		<ul>
+											<li>
+					<a href="http://www.corvin.cn/1188.html">4.调试人脸跟踪下位机代码</a>
+									</li>
+											<li>
+					<a href="http://www.corvin.cn/1162.html">3.人脸跟踪底层固件代码</a>
+									</li>
+											<li>
+					<a href="http://www.corvin.cn/1139.html">2.人脸跟踪硬件平台搭建</a>
+									</li>
+											<li>
+					<a href="http://www.corvin.cn/1112.html">1.人脸跟踪项目概述</a>
+									</li>
+											<li>
+					<a href="http://www.corvin.cn/1068.html">2.引导ROS2GO启动</a>
+									</li>
+					</ul>
+		</div><div id="categories-2" class="widget widget_categories"><h5>分类目录</h5>		<ul>
+	<li class="cat-item cat-item-61"><a href="http://www.corvin.cn/category/arduino-mega2560">ArduinoMega2560</a>
+</li>
+	<li class="cat-item cat-item-52"><a href="http://www.corvin.cn/category/python-program">Python编程</a>
+</li>
+	<li class="cat-item cat-item-64"><a href="http://www.corvin.cn/category/ros2go-system">ROS2GO系统</a>
+</li>
+	<li class="cat-item cat-item-53"><a href="http://www.corvin.cn/category/ros-basic-knowledge">ROS基础知识</a>
+</li>
+	<li class="cat-item cat-item-62"><a href="http://www.corvin.cn/category/ros-control-handle">ROS控制手柄</a>
+</li>
+	<li class="cat-item cat-item-58"><a href="http://www.corvin.cn/category/robot-simulator/stdr_simulator">STDR仿真</a>
+</li>
+	<li class="cat-item cat-item-55"><a href="http://www.corvin.cn/category/laser-radar/ydlidar-x4">YDLIDAR_X4</a>
+</li>
+	<li class="cat-item cat-item-41"><a href="http://www.corvin.cn/category/threeomniwheeelsrobot">三轮全向机器人</a>
+</li>
+	<li class="cat-item cat-item-67"><a href="http://www.corvin.cn/category/face-tracker">人脸跟踪</a>
+</li>
+	<li class="cat-item cat-item-40"><a href="http://www.corvin.cn/category/code-maintenance">代码维护</a>
+</li>
+	<li class="cat-item cat-item-48"><a href="http://www.corvin.cn/category/setup-config_system">安装配置系统</a>
+</li>
+	<li class="cat-item cat-item-45"><a href="http://www.corvin.cn/category/imu">惯性测量单元</a>
+</li>
+	<li class="cat-item cat-item-50"><a href="http://www.corvin.cn/category/robot-vision">机器视觉</a>
+</li>
+	<li class="cat-item cat-item-60"><a href="http://www.corvin.cn/category/raspberrypi/rasp_ros_develop">树莓派ROS开发</a>
+</li>
+	<li class="cat-item cat-item-59"><a href="http://www.corvin.cn/category/raspberrypi/rasp_ros_image">树莓派ROS镜像</a>
+</li>
+	<li class="cat-item cat-item-54"><a href="http://www.corvin.cn/category/laser-radar">激光雷达</a>
+</li>
+	<li class="cat-item cat-item-19"><a href="http://www.corvin.cn/category/website_broadcast">网站公告</a>
+</li>
+	<li class="cat-item cat-item-49"><a href="http://www.corvin.cn/category/voice-interactive-system">语音交互系统</a>
+</li>
+	<li class="cat-item cat-item-46"><a href="http://www.corvin.cn/category/download-document">资料下载</a>
+</li>
+		</ul>
+</div>		</aside><!-- .sidebar .widget-area -->
+	</div>
+			</div>
+</article>
+
+		</div>
+	</div>
+</div>
+
+			<div class="section related-posts">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<h2 class="hestia-title text-center">相关文章</h2>
+							<div class="row">
+																	<div class="col-md-4">
+										<div class="card card-blog">
+																							<div class="card-image">
+													<a href="http://www.corvin.cn/1057.html" title="11.在自定义地图中进行自动导航">
+														<img src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/1.png" class="attachment-hestia-blog size-hestia-blog wp-post-image" alt="" srcset="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2019/01/1.png?resize=360%2C240 360w, https://i0.wp.com/www.corvin.cn/wp-content/uploads/2019/01/1.png?zoom=2&amp;resize=360%2C240 720w, https://i0.wp.com/www.corvin.cn/wp-content/uploads/2019/01/1.png?zoom=3&amp;resize=360%2C240 1080w" sizes="(max-width: 360px) 100vw, 360px" data-attachment-id="1063" data-permalink="http://www.corvin.cn/1057.html/1-2" data-orig-file="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2019/01/1.png?fit=1586%2C990" data-orig-size="1586,990" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="1" data-image-description="" data-medium-file="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2019/01/1.png?fit=300%2C187" data-large-file="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2019/01/1.png?fit=750%2C468" width="360" height="240">													</a>
+												</div>
+																						<div class="content">
+												<h6 class="category text-info"><a href="http://www.corvin.cn/category/robot-simulator/stdr_simulator" title="查看STDR仿真中的全部文章">STDR仿真</a> </h6>
+												<h4 class="card-title">
+													<a class="blog-item-title-link" href="http://www.corvin.cn/1057.html" title="11.在自定义地图中进行自动导航" rel="bookmark">
+														11.在自定义地图中进行自动导航													</a>
+												</h4>
+												<p class="card-description">&nbsp;0x00 概述 在前面的文章中，我们介绍如何自动导航时，都<a class="moretag" href="http://www.corvin.cn/1057.html"> 阅读更多…</a></p>
+											</div>
+										</div>
+									</div>
+																	<div class="col-md-4">
+										<div class="card card-blog">
+																							<div class="card-image">
+													<a href="http://www.corvin.cn/1047.html" title="10.在STDR中加载其他地图">
+														<img src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/Screenshot-from-2018-12-20-180133.png" class="attachment-hestia-blog size-hestia-blog wp-post-image" alt="" srcset="https://i1.wp.com/www.corvin.cn/wp-content/uploads/2018/12/Screenshot-from-2018-12-20-180133.png?resize=360%2C240 360w, https://i1.wp.com/www.corvin.cn/wp-content/uploads/2018/12/Screenshot-from-2018-12-20-180133.png?zoom=2&amp;resize=360%2C240 720w" sizes="(max-width: 360px) 100vw, 360px" data-attachment-id="1055" data-permalink="http://www.corvin.cn/1047.html/screenshot-from-2018-12-20-180133" data-orig-file="https://i1.wp.com/www.corvin.cn/wp-content/uploads/2018/12/Screenshot-from-2018-12-20-180133.png?fit=912%2C692" data-orig-size="912,692" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="Screenshot from 2018-12-20 18:01:33" data-image-description="" data-medium-file="https://i1.wp.com/www.corvin.cn/wp-content/uploads/2018/12/Screenshot-from-2018-12-20-180133.png?fit=300%2C228" data-large-file="https://i1.wp.com/www.corvin.cn/wp-content/uploads/2018/12/Screenshot-from-2018-12-20-180133.png?fit=750%2C569" width="360" height="240">													</a>
+												</div>
+																						<div class="content">
+												<h6 class="category text-info"><a href="http://www.corvin.cn/category/robot-simulator/stdr_simulator" title="查看STDR仿真中的全部文章">STDR仿真</a> </h6>
+												<h4 class="card-title">
+													<a class="blog-item-title-link" href="http://www.corvin.cn/1047.html" title="10.在STDR中加载其他地图" rel="bookmark">
+														10.在STDR中加载其他地图													</a>
+												</h4>
+												<p class="card-description">&nbsp;0x00 概述 在前面的教程中，一直都是使用默认提供的一个<a class="moretag" href="http://www.corvin.cn/1047.html"> 阅读更多…</a></p>
+											</div>
+										</div>
+									</div>
+																	<div class="col-md-4">
+										<div class="card card-blog">
+																							<div class="card-image">
+													<a href="http://www.corvin.cn/936.html" title="9.下载stdr仿真中的测试代码">
+														<img src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/Screenshot-from-2018-10-16-160719.png" class="attachment-hestia-blog size-hestia-blog wp-post-image" alt="" srcset="https://i2.wp.com/www.corvin.cn/wp-content/uploads/2018/10/Screenshot-from-2018-10-16-160719.png?resize=360%2C240 360w, https://i2.wp.com/www.corvin.cn/wp-content/uploads/2018/10/Screenshot-from-2018-10-16-160719.png?zoom=2&amp;resize=360%2C240 720w" sizes="(max-width: 360px) 100vw, 360px" data-attachment-id="938" data-permalink="http://www.corvin.cn/936.html/screenshot-from-2018-10-16-160719" data-orig-file="https://i2.wp.com/www.corvin.cn/wp-content/uploads/2018/10/Screenshot-from-2018-10-16-160719.png?fit=926%2C968" data-orig-size="926,968" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="Screenshot from 2018-10-16 16:07:19" data-image-description="" data-medium-file="https://i2.wp.com/www.corvin.cn/wp-content/uploads/2018/10/Screenshot-from-2018-10-16-160719.png?fit=287%2C300" data-large-file="https://i2.wp.com/www.corvin.cn/wp-content/uploads/2018/10/Screenshot-from-2018-10-16-160719.png?fit=750%2C784" width="360" height="240">													</a>
+												</div>
+																						<div class="content">
+												<h6 class="category text-info"><a href="http://www.corvin.cn/category/robot-simulator/stdr_simulator" title="查看STDR仿真中的全部文章">STDR仿真</a> </h6>
+												<h4 class="card-title">
+													<a class="blog-item-title-link" href="http://www.corvin.cn/936.html" title="9.下载stdr仿真中的测试代码" rel="bookmark">
+														9.下载stdr仿真中的测试代码													</a>
+												</h4>
+												<p class="card-description">&nbsp;0x00 简要介绍 在stdr仿真这个系列教程中，前面已经<a class="moretag" href="http://www.corvin.cn/936.html"> 阅读更多…</a></p>
+											</div>
+										</div>
+									</div>
+																							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="footer-wrapper">
+						<footer class="footer footer-black footer-big">
+						<div class="container">
+								
+		<div class="content">
+			<div class="row">
+				<div class="col-md-4"><div id="blog-stats-3" class="widget blog-stats"><h5>访问统计</h5><ul><li>60,327 次</li></ul></div></div><div class="col-md-4"><div id="text-4" class="widget widget_text"><h5>备案编号</h5>			<div class="textwidget"><p>沪ICP备17051445号</p>
+</div>
+		</div></div><div class="col-md-4"><div id="text-5" class="widget widget_text">			<div class="textwidget"></div>
+		</div></div>			</div>
+		</div>
+		<hr>
+										<div class="hestia-bottom-footer-content"><ul class="footer-menu pull-left"><li class="page_item page-item-15"><a href="http://www.corvin.cn/%e4%bc%9a%e5%91%98">会员</a></li>
+<li class="page_item page-item-14"><a href="http://www.corvin.cn/%e5%8a%a8%e6%80%81">动态</a></li>
+<li class="page_item page-item-375"><a href="http://www.corvin.cn/%e7%94%a8%e6%88%b7%e7%be%a4">用户群</a></li>
+</ul>
+					<div class="copyright pull-right">
+				Hestia |由<a href="https://themeisle.com/" rel="nofollow">ThemeIsle</a>开发			</div>
+			</div>			</div>
+					</footer>
+				</div>
+	</div>
+					<!-- This site's ratings are powered by RatingWidget plugin v3.0.5 (Free version) - https://rating-widget.com/wordpress-plugin/ -->
+					<div class="rw-js-container"><script charset="utf-8" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/report.php"></script></div>
+					<!-- / RatingWidget plugin -->
+						<div style="display:none">
+	</div>
+		<button class="hestia-scroll-to-top hestia-fade">
+			<i class="fa fa-angle-double-up" aria-hidden="true"></i>
+		</button>
+		<script type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/admin-bar.js"></script>
+<script type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/photon.js"></script>
+<script type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/comment-reply.js"></script>
+<script type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/devicepx-jetpack.js"></script>
+<script type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/gprofiles.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var WPGroHo = {"my_hash":""};
+/* ]]> */
+</script>
+<script type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/wpgroho.js"></script>
+<script type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/bootstrap.js"></script>
+<script type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/core.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var requestpost = {"ajaxurl":"http:\/\/www.corvin.cn\/wp-admin\/admin-ajax.php","disable_autoslide":"","masonry":""};
+/* ]]> */
+</script>
+<script type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/script.js"></script>
+<script type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/mootools-core-yc.js"></script>
+<script type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/EnlighterJS.js"></script>
+<script type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/wp-embed.js"></script>
+<script type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/postmessage.js"></script>
+<script type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/jquery_003.js"></script>
+<script type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/queuehandler.js"></script>
+<script async="async" type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/form.js"></script>
+	<iframe src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/master.html" scrolling="no" id="likes-master" name="likes-master" style="display:none;"></iframe>
+	<div id="likes-other-gravatars"><div class="likes-text"><span>%d</span> 博主赞过：</div><ul class="wpl-avatars sd-like-gravatars"></ul></div>
+	<script type="text/javascript">/* <![CDATA[ */EnlighterJS_Config = {"selector":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"language":"generic","theme":"enlighter","indent":2,"hover":"hoverEnabled","showLinenumbers":true,"rawButton":true,"infoButton":true,"windowButton":true,"rawcodeDoubleclick":false,"grouping":true,"cryptex":{"enabled":false,"email":"mail@example.tld"}};!function(){var a=function(a){var b="Enlighter Error: ";console.error?console.error(b+a):console.log&&console.log(b+a)};return window.addEvent?"undefined"==typeof EnlighterJS?void a("Javascript Resources not loaded yet!"):"undefined"==typeof EnlighterJS_Config?void a("Configuration not loaded yet!"):void window.addEvent("domready",function(){EnlighterJS.Util.Init(EnlighterJS_Config.selector.block,EnlighterJS_Config.selector.inline,EnlighterJS_Config)}):void a("MooTools Framework not loaded yet!")}();;/* ]]> */</script><script type="text/javascript" src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/e-201916.js" async="async" defer="defer"></script>
+<script type="text/javascript">
+	_stq = window._stq || [];
+	_stq.push([ 'view', {v:'ext',j:'1:7.1.1',blog:'136106817',post:'829',tz:'8',srv:'www.corvin.cn'} ]);
+	_stq.push([ 'clickTrackerInit', '136106817', '829' ]);
+</script>
+		<div id="wpadminbar" class="no-grav">
+							<a class="screen-reader-shortcut" href="#wp-toolbar" tabindex="1">跳至工具栏</a>
+						<div class="quicklinks" id="wp-toolbar" role="navigation" aria-label="工具栏" tabindex="0">
+				<ul id="wp-admin-bar-root-default" class="ab-top-menu">
+		<li id="wp-admin-bar-wp-logo" class="menupop"><div class="ab-item ab-empty-item" tabindex="0" aria-haspopup="true"><span class="ab-icon"></span><span class="screen-reader-text">关于WordPress</span></div><div class="ab-sub-wrapper"><ul id="wp-admin-bar-wp-logo-external" class="ab-sub-secondary ab-submenu">
+		<li id="wp-admin-bar-wporg"><a class="ab-item" href="https://cn.wordpress.org/">WordPress.org</a>		</li>
+		<li id="wp-admin-bar-documentation"><a class="ab-item" href="https://codex.wordpress.org/">文档</a>		</li>
+		<li id="wp-admin-bar-support-forums"><a class="ab-item" href="http://zh-cn.forums.wordpress.org/">支持论坛</a>		</li>
+		<li id="wp-admin-bar-feedback"><a class="ab-item" href="http://zh-cn.forums.wordpress.org/forum/suggestions">反馈</a>		</li></ul></div>		</li>
+		<li id="wp-admin-bar-bp-login"><a class="ab-item" href="http://www.corvin.cn/wp-login.php?redirect_to=http%3A%2F%2Fwww.corvin.cn%2F829.html">登录</a>		</li>
+		<li id="wp-admin-bar-admin-bar-likes-widget"><div class="ab-item ab-empty-item"></div><iframe class="admin-bar-likes-widget jetpack-likes-widget" scrolling="no" name="admin-bar-likes-widget" src="https://widgets.wp.com/likes/#blog_id=136106817&amp;post_id=829&amp;origin=http://www.corvin.cn" frameborder="0"></iframe>		</li></ul><ul id="wp-admin-bar-top-secondary" class="ab-top-secondary ab-top-menu">
+		<li id="wp-admin-bar-search" class="admin-bar-search"><div class="ab-item ab-empty-item" tabindex="-1"><form action="http://www.corvin.cn/" method="get" id="adminbarsearch" class="form-group"><input class="adminbar-input form-control" name="s" id="adminbar-search" maxlength="150" type="text"><label for="adminbar-search" class="screen-reader-text">搜索</label><input class="adminbar-button" value="搜索" type="submit"></form></div>		</li></ul>			</div>
+					</div>
+
+		
+
+
+
+
+
+<img src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/g.gif" alt=":)" id="wpstats" width="6" height="5"><div><i class="rw-action-loader" style="position: fixed; top: -1000px;"></i></div><div><i class="rw-action-loader" style="position: fixed; top: -1000px;"></i></div><span style="display: none; left: 478.5px; top: 470.317px;" class="rw-ui-tooltip rw-valign-top"><b></b><span class="rw-ui-tooltip-label"><nobr>10 / 10</nobr></span></span><div style="display: none; left: 397.5px; top: 541.317px;" class="rw-ui-report rw-size-large rw-halign-center gradient rw-dir-ltr rw-type-star rw-meta-rating-163089715 rw-ui-ad-468x60 rw-valign-bottom"><div class="rw-ui-report-header">9.43 / 10</div><span class="rw-ui-close" onclick="RW.RatingReport.close(true);">×</span><table><tbody><tr><td><em>[10/10]</em></td><td><b><i style="width: 85.71%;"></i></b></td><td><var>(12)</var></td></tr><tr><td><em>[9/10]</em></td><td><b><i style="width: 0%;"></i></b></td><td><var>(0)</var></td></tr><tr><td><em>[8/10]</em></td><td><b><i style="width: 7.14%;"></i></b></td><td><var>(1)</var></td></tr><tr><td><em>[7/10]</em></td><td><b><i style="width: 0%;"></i></b></td><td><var>(0)</var></td></tr><tr><td><em>[6/10]</em></td><td><b><i style="width: 0%;"></i></b></td><td><var>(0)</var></td></tr><tr><td><em>[5/10]</em></td><td><b><i style="width: 0%;"></i></b></td><td><var>(0)</var></td></tr><tr><td><em>[4/10]</em></td><td><b><i style="width: 7.14%;"></i></b></td><td><var>(1)</var></td></tr><tr><td><em>[3/10]</em></td><td><b><i style="width: 0%;"></i></b></td><td><var>(0)</var></td></tr><tr><td><em>[2/10]</em></td><td><b><i style="width: 0%;"></i></b></td><td><var>(0)</var></td></tr><tr><td><em>[1/10]</em></td><td><b><i style="width: 0%;"></i></b></td><td><var>(0)</var></td></tr></tbody></table><div class="rw-ui-poweredby"><div class="rw-ui-recommendations">    <span class="rw-ui-recommendations-title">我们建议:</span>    <ul><li><a href="http://www.corvin.cn/1188.html" title="Read More" onclick="RW.Trc.linkClick(this, {cell: 0, siteCategory: 'unknown'}); return false;">    <img src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/a_002.png" alt="">    <span class="rw-ui-title">4.调试人脸跟踪下位机代码 <b>www.corvin.cn</b></span></a></li><li><a href="http://www.corvin.cn/1162.html" title="Read More" onclick="RW.Trc.linkClick(this, {cell: 1, siteCategory: 'unknown'}); return false;">    <img src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/a.png" alt="">    <span class="rw-ui-title">3.人脸跟踪底层固件代码 <b>www.corvin.cn</b></span></a></li><li><a href="http://www.corvin.cn/1112.html" title="Read More" onclick="RW.Trc.linkClick(this, {cell: 2, siteCategory: 'unknown'}); return false;">    <img src="5.%E5%9C%A8STDR%E4%B8%AD%E5%AD%A6%E4%B9%A0costmap%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE_files/a_003.png" alt="">    <span class="rw-ui-title">1.人脸跟踪项目概述 <b>www.corvin.cn</b></span></a></li>    </ul></div>Powered by <a href="http://rating-widget.com/?s=wordpress&amp;w=report" target="_blank" rel="nofollow"><em></em> <b>Rating</b><i>Widget</i></a></div><i aria-hidden="true" class="rw-ui-info-nub rw-ui-info-outer-nub"></i><i aria-hidden="true" class="rw-ui-info-nub rw-ui-info-inner-nub"></i></div></body></html>
+<!-- Dynamic page generated in 1.093 seconds. -->
+<!-- Cached page generated by WP-Super-Cache on 2019-04-15 16:47:47 -->
+<!-- super cache -->

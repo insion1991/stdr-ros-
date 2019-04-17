@@ -1,0 +1,2 @@
+set(teb_local_planner_MESSAGE_FILES "/home/feibot/fei_slam/stdr_ws/src/navigation-kinetic-devel/teb_local_planner-kinetic-devel/msg/TrajectoryPointMsg.msg;/home/feibot/fei_slam/stdr_ws/src/navigation-kinetic-devel/teb_local_planner-kinetic-devel/msg/TrajectoryMsg.msg;/home/feibot/fei_slam/stdr_ws/src/navigation-kinetic-devel/teb_local_planner-kinetic-devel/msg/FeedbackMsg.msg")
+set(teb_local_planner_SERVICE_FILES "")

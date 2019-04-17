@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#" slick-uniqueid="3" lang="zh-CN"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="profile" href="http://gmpg.org/xfn/11">
+			<link rel="pingback" href="http://www.corvin.cn/xmlrpc.php">
+		<title>１.初识简单的二维移动机器人群仿真器STDR - ROS小课堂</title>
+          <div id="powrIframeLoader">­<style> .powrLoaded iframe { visibility: hidden; } </style></div><script type="text/javascript" async="" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/external.js" style="color: rgba(3, 7, 17, 0.5);"></script><script id="powr-js" async="" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/powr.js" powr-token="uC9c4Mmy8o1506219569" external-type="wordpress"></script><script>
+            (function(d){
+              var js, id = 'powr-js', ref = d.getElementsByTagName('script')[0];
+              if (d.getElementById(id)) {return;}
+              js = d.createElement('script'); js.id = id; js.async = true;
+              js.src = '//www.powr.io/powr.js';
+              js.setAttribute('powr-token','uC9c4Mmy8o1506219569');
+              js.setAttribute('external-type','wordpress');
+              ref.parentNode.insertBefore(js, ref);
+            }(document));
+          </script>
+          
+<!-- This site is optimized with the Yoast SEO plugin v10.0.1 - https://yoast.com/wordpress/plugins/seo/ -->
+<link rel="canonical" href="http://www.corvin.cn/561.html">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="１.初识简单的二维移动机器人群仿真器STDR - ROS小课堂">
+<meta property="og:description" content="0x00 What's STDR Simulator? ST 阅读更多…">
+<meta property="og:url" content="http://www.corvin.cn/561.html">
+<meta property="og:site_name" content="ROS小课堂">
+<meta property="article:section" content="STDR仿真">
+<meta property="article:published_time" content="2018-03-25T04:10:39+00:00">
+<meta property="article:modified_time" content="2018-07-20T05:11:21+00:00">
+<meta property="og:updated_time" content="2018-07-20T05:11:21+00:00">
+<meta property="og:image" content="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2018/03/1521798385895065.png?fit=786%2C611">
+<meta property="og:image:secure_url" content="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2018/03/1521798385895065.png?fit=786%2C611">
+<meta property="og:image:width" content="786">
+<meta property="og:image:height" content="611">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:description" content="0x00 What's STDR Simulator? ST 阅读更多…">
+<meta name="twitter:title" content="１.初识简单的二维移动机器人群仿真器STDR - ROS小课堂">
+<meta name="twitter:image" content="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2018/03/1521798385895065.png?fit=786%2C611">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","url":"http://www.corvin.cn/","sameAs":[],"@id":"#person","name":"corvin"}</script>
+<!-- / Yoast SEO plugin. -->
+
+<link rel="dns-prefetch" href="http://s0.wp.com/">
+<link rel="dns-prefetch" href="http://secure.gravatar.com/">
+<link rel="dns-prefetch" href="http://maxcdn.bootstrapcdn.com/">
+<link rel="dns-prefetch" href="http://fonts.googleapis.com/">
+<link rel="dns-prefetch" href="http://css.rating-widget.com/">
+<link rel="dns-prefetch" href="http://s.w.org/">
+<link rel="alternate" type="application/rss+xml" title="ROS小课堂 » Feed" href="http://www.corvin.cn/feed">
+<link rel="alternate" type="application/rss+xml" title="ROS小课堂 » 评论Feed" href="http://www.corvin.cn/comments/feed">
+<link rel="alternate" type="application/rss+xml" title="ROS小课堂 » １.初识简单的二维移动机器人群仿真器STDR评论Feed" href="http://www.corvin.cn/561.html/feed">
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/11\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/11\/svg\/","svgExt":".svg","source":{"concatemoji":"http:\/\/www.corvin.cn\/wp-includes\/js\/wp-emoji-release.min.js?ver=5.0.4"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56760,9792,65039],[55358,56760,8203,9792,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script><script src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/wp-emoji-release.js" type="text/javascript" defer="defer"></script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel="stylesheet" id="dashicons-css" href="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/dashicons.css" type="text/css" media="all">
+<link rel="stylesheet" id="admin-bar-css" href="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/admin-bar.css" type="text/css" media="all">
+<style id="admin-bar-inline-css" type="text/css">
+
+			.admin-bar {
+				position: inherit !important;
+				top: auto !important;
+			}
+			.admin-bar .goog-te-banner-frame {
+				top: 32px !important
+			}
+			@media screen and (max-width: 782px) {
+				.admin-bar .goog-te-banner-frame {
+					top: 46px !important;
+				}
+			}
+			@media screen and (max-width: 480px) {
+				.admin-bar .goog-te-banner-frame {
+					position: absolute;
+				}
+			}
+		
+</style>
+<link rel="stylesheet" id="wp-block-library-css" href="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/style_003.css" type="text/css" media="all">
+<link rel="stylesheet" id="font-awesome-5-css" href="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/all.css" type="text/css" media="all">
+<link rel="stylesheet" id="font-awesome-4-shims-css" href="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/v4-shims.css" type="text/css" media="all">
+<link rel="stylesheet" id="themeisle-block_styles-css" href="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/style_002.css" type="text/css" media="all">
+<link rel="stylesheet" id="bp-admin-bar-css" href="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/admin-bar_002.css" type="text/css" media="all">
+<link rel="stylesheet" id="bp-legacy-css-css" href="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/buddypress.css" type="text/css" media="screen">
+<link rel="stylesheet" id="rw-site-rating-css" href="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/site-rating.css" type="text/css" media="all">
+<link rel="stylesheet" id="hestia-clients-bar-css" href="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/clients-bar.css" type="text/css" media="all">
+<link rel="stylesheet" id="obfx-module-pub-css-menu-icons-0-css" href="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/font-awesome_002.css" type="text/css" media="all">
+<link rel="stylesheet" id="obfx-module-pub-css-menu-icons-1-css" href="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/public.css" type="text/css" media="all">
+<link rel="stylesheet" id="bootstrap-css" href="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/bootstrap.css" type="text/css" media="all">
+<link rel="stylesheet" id="hestia-font-sizes-css" href="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/font-sizes.css" type="text/css" media="all">
+<link rel="stylesheet" id="font-awesome-css" href="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/font-awesome.css" type="text/css" media="all">
+<link rel="stylesheet" id="hestia_style-css" href="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/style.css" type="text/css" media="all">
+<style id="hestia_style-inline-css" type="text/css">
+.hestia-top-bar, .hestia-top-bar .widget.widget_shopping_cart .cart_list {
+			background-color: #363537
+		}
+		.hestia-top-bar .widget .label-floating input[type=search]:-webkit-autofill {
+			-webkit-box-shadow: inset 0 0 0px 9999px #363537
+		}.hestia-top-bar, .hestia-top-bar .widget .label-floating input[type=search], .hestia-top-bar .widget.widget_search form.form-group:before, .hestia-top-bar .widget.widget_product_search form.form-group:before, .hestia-top-bar .widget.widget_shopping_cart:before {
+			color: #ffffff
+		} 
+		.hestia-top-bar .widget .label-floating input[type=search]{
+			-webkit-text-fill-color:#ffffff !important 
+		}.hestia-top-bar a, .hestia-top-bar .top-bar-nav li a {
+			color: #ffffff
+		}.hestia-top-bar a:hover, .hestia-top-bar .top-bar-nav li a:hover {
+			color: #eeeeee
+		}
+	
+		a, 
+		.navbar .dropdown-menu li:hover > a,
+		.navbar .dropdown-menu li:focus > a,
+		.navbar .dropdown-menu li:active > a,
+		.navbar .navbar-nav > li .dropdown-menu li:hover > a,
+		body:not(.home) .navbar-default .navbar-nav > .active:not(.btn) > a,
+		body:not(.home) .navbar-default .navbar-nav > .active:not(.btn) > a:hover,
+		body:not(.home) .navbar-default .navbar-nav > .active:not(.btn) > a:focus,
+		a:hover, 
+		.card-blog a.moretag:hover, 
+		.card-blog a.more-link:hover, 
+		.widget a:hover,
+		.has-accent-color {
+		    color:#0e6d13;
+		}
+		
+		.pagination span.current, .pagination span.current:focus, .pagination span.current:hover {
+			border-color:#0e6d13
+		}
+		
+		button,
+		button:hover,
+		.woocommerce .track_order button[type="submit"],
+		.woocommerce .track_order button[type="submit"]:hover,
+		div.wpforms-container .wpforms-form button[type=submit].wpforms-submit,
+		div.wpforms-container .wpforms-form button[type=submit].wpforms-submit:hover,
+		input[type="button"],
+		input[type="button"]:hover,
+		input[type="submit"],
+		input[type="submit"]:hover,
+		input#searchsubmit, 
+		.pagination span.current, 
+		.pagination span.current:focus, 
+		.pagination span.current:hover,
+		.btn.btn-primary,
+		.btn.btn-primary:link,
+		.btn.btn-primary:hover, 
+		.btn.btn-primary:focus, 
+		.btn.btn-primary:active, 
+		.btn.btn-primary.active, 
+		.btn.btn-primary.active:focus, 
+		.btn.btn-primary.active:hover,
+		.btn.btn-primary:active:hover, 
+		.btn.btn-primary:active:focus, 
+		.btn.btn-primary:active:hover,
+		.hestia-sidebar-open.btn.btn-rose,
+		.hestia-sidebar-close.btn.btn-rose,
+		.hestia-sidebar-open.btn.btn-rose:hover,
+		.hestia-sidebar-close.btn.btn-rose:hover,
+		.hestia-sidebar-open.btn.btn-rose:focus,
+		.hestia-sidebar-close.btn.btn-rose:focus,
+		.label.label-primary,
+		.hestia-work .portfolio-item:nth-child(6n+1) .label,
+		.nav-cart .nav-cart-content .widget .buttons .button,
+		.has-accent-background-color {
+		    background-color: #0e6d13;
+		}
+		
+		@media (max-width: 768px) { 
+	
+			.navbar-default .navbar-nav>li>a:hover,
+			.navbar-default .navbar-nav>li>a:focus,
+			.navbar .navbar-nav .dropdown .dropdown-menu li a:hover,
+			.navbar .navbar-nav .dropdown .dropdown-menu li a:focus,
+			.navbar button.navbar-toggle:hover,
+			.navbar .navbar-nav li:hover > a i {
+			    color: #0e6d13;
+			}
+		}
+		
+		body:not(.woocommerce-page) button:not([class^="fl-"]):not(.hestia-scroll-to-top):not(.navbar-toggle):not(.close),
+		body:not(.woocommerce-page) .button:not([class^="fl-"]):not(hestia-scroll-to-top):not(.navbar-toggle):not(.add_to_cart_button),
+		div.wpforms-container .wpforms-form button[type=submit].wpforms-submit,
+		input[type="submit"], 
+		input[type="button"], 
+		.btn.btn-primary,
+		.widget_product_search button[type="submit"],
+		.hestia-sidebar-open.btn.btn-rose,
+		.hestia-sidebar-close.btn.btn-rose,
+		.everest-forms button[type=submit].everest-forms-submit-button {
+		    -webkit-box-shadow: 0 2px 2px 0 rgba(14,109,19,0.14),0 3px 1px -2px rgba(14,109,19,0.2),0 1px 5px 0 rgba(14,109,19,0.12);
+		    box-shadow: 0 2px 2px 0 rgba(14,109,19,0.14),0 3px 1px -2px rgba(14,109,19,0.2),0 1px 5px 0 rgba(14,109,19,0.12);
+		}
+		
+		.card .header-primary, .card .content-primary,
+		.everest-forms button[type=submit].everest-forms-submit-button {
+		    background: #0e6d13;
+		}
+		
+		body:not(.woocommerce-page) .button:not([class^="fl-"]):not(.hestia-scroll-to-top):not(.navbar-toggle):not(.add_to_cart_button):hover,
+		body:not(.woocommerce-page) button:not([class^="fl-"]):not(.hestia-scroll-to-top):not(.navbar-toggle):not(.close):hover,
+		div.wpforms-container .wpforms-form button[type=submit].wpforms-submit:hover,
+		input[type="submit"]:hover,
+		input[type="button"]:hover,
+		input#searchsubmit:hover, 
+		.widget_product_search button[type="submit"]:hover,
+		.pagination span.current, 
+		.btn.btn-primary:hover, 
+		.btn.btn-primary:focus, 
+		.btn.btn-primary:active, 
+		.btn.btn-primary.active, 
+		.btn.btn-primary:active:focus, 
+		.btn.btn-primary:active:hover, 
+		.hestia-sidebar-open.btn.btn-rose:hover,
+		.hestia-sidebar-close.btn.btn-rose:hover,
+		.pagination span.current:hover,
+		.everest-forms button[type=submit].everest-forms-submit-button:hover,
+ 		.everest-forms button[type=submit].everest-forms-submit-button:focus,
+ 		.everest-forms button[type=submit].everest-forms-submit-button:active {
+			-webkit-box-shadow: 0 14px 26px -12px rgba(14,109,19,0.42),0 4px 23px 0 rgba(0,0,0,0.12),0 8px 10px -5px rgba(14,109,19,0.2);
+		    box-shadow: 0 14px 26px -12px rgba(14,109,19,0.42),0 4px 23px 0 rgba(0,0,0,0.12),0 8px 10px -5px rgba(14,109,19,0.2);
+			color: #fff;
+		}
+		
+		.form-group.is-focused .form-control {
+			background-image: -webkit-gradient(linear,left top, left bottom,from(#0e6d13),to(#0e6d13)),-webkit-gradient(linear,left top, left bottom,from(#d2d2d2),to(#d2d2d2));
+			background-image: -webkit-linear-gradient(linear,left top, left bottom,from(#0e6d13),to(#0e6d13)),-webkit-linear-gradient(linear,left top, left bottom,from(#d2d2d2),to(#d2d2d2));
+			background-image: linear-gradient(linear,left top, left bottom,from(#0e6d13),to(#0e6d13)),linear-gradient(linear,left top, left bottom,from(#d2d2d2),to(#d2d2d2));
+		}
+		
+		.navbar:not(.navbar-transparent) li:not(.btn):hover > a,
+		.navbar li.on-section:not(.btn) > a, 
+		.navbar.full-screen-menu.navbar-transparent li:not(.btn):hover > a,
+		.navbar.full-screen-menu .navbar-toggle:hover,
+		.navbar:not(.navbar-transparent) .nav-cart:hover, 
+		.navbar:not(.navbar-transparent) .hestia-toggle-search:hover {
+				color:#0e6d13}
+		
+		.header-filter-gradient { 
+			background: linear-gradient(45deg, rgba(168,29,132,1) 0%, rgb(234,57,111) 100%); 
+		}
+		.has-header-gradient-color { color: #a81d84; }
+		.has-header-gradient-background-color { background-color: #a81d84; }
+		 
+		.has-background-color-color { color: #E5E5E5; }
+		.has-background-color-background-color { background-color: #E5E5E5; }
+		
+.btn.btn-primary:not(.colored-button):not(.btn-left):not(.btn-right):not(.btn-just-icon):not(.menu-item), input[type="submit"]:not(.search-submit), body:not(.woocommerce-account) .woocommerce .button.woocommerce-Button, .woocommerce .product button.button, .woocommerce .product button.button.alt, .woocommerce .product #respond input#submit, .woocommerce-cart .blog-post .woocommerce .cart-collaterals .cart_totals .checkout-button, .woocommerce-checkout #payment #place_order, .woocommerce-account.woocommerce-page button.button, .woocommerce .track_order button[type="submit"], .nav-cart .nav-cart-content .widget .buttons .button, .woocommerce a.button.wc-backward, body.woocommerce .wccm-catalog-item a.button, body.woocommerce a.wccm-button.button, form.woocommerce-form-coupon button.button, div.wpforms-container .wpforms-form button[type=submit].wpforms-submit, div.woocommerce a.button.alt, div.woocommerce table.my_account_orders .button, .btn.colored-button, .btn.btn-left, .btn.btn-right, .btn:not(.colored-button):not(.btn-left):not(.btn-right):not(.btn-just-icon):not(.menu-item):not(.hestia-sidebar-open):not(.hestia-sidebar-close){ padding-top:15px;  padding-bottom:15px;  padding-left:33px;  padding-right:33px; }
+.btn.btn-primary:not(.colored-button):not(.btn-left):not(.btn-right):not(.btn-just-icon):not(.menu-item), input[type="submit"]:not(.search-submit), body:not(.woocommerce-account) .woocommerce .button.woocommerce-Button, .woocommerce .product button.button, .woocommerce .product button.button.alt, .woocommerce .product #respond input#submit, .woocommerce-cart .blog-post .woocommerce .cart-collaterals .cart_totals .checkout-button, .woocommerce-checkout #payment #place_order, .woocommerce-account.woocommerce-page button.button, .woocommerce .track_order button[type="submit"], .nav-cart .nav-cart-content .widget .buttons .button, .woocommerce a.button.wc-backward, body.woocommerce .wccm-catalog-item a.button, body.woocommerce a.wccm-button.button, form.woocommerce-form-coupon button.button, div.wpforms-container .wpforms-form button[type=submit].wpforms-submit, div.woocommerce a.button.alt, div.woocommerce table.my_account_orders .button, input[type="submit"].search-submit, .hestia-view-cart-wrapper .added_to_cart.wc-forward, .woocommerce-product-search button, .woocommerce-cart .actions .button, #secondary div[id^=woocommerce_price_filter] .button, .woocommerce div[id^=woocommerce_widget_cart].widget .buttons .button, .searchform input[type=submit], .searchform button, .search-form:not(.media-toolbar-primary) input[type=submit], .search-form:not(.media-toolbar-primary) button, .woocommerce-product-search input[type=submit], .btn.colored-button, .btn.btn-left, .btn.btn-right, .btn:not(.colored-button):not(.btn-left):not(.btn-right):not(.btn-just-icon):not(.menu-item):not(.hestia-sidebar-open):not(.hestia-sidebar-close){border-radius:3px;}
+h1, h2, h3, h4, h5, h6, .hestia-title, .hestia-title.title-in-content, p.meta-in-content , .info-title, .card-title,
+		.page-header.header-small .hestia-title, .page-header.header-small .title, .widget h5, .hestia-title, 
+		.title, .footer-brand, .footer-big h4, .footer-big h5, .media .media-heading, 
+		.carousel h1.hestia-title, .carousel h2.title, 
+		.carousel span.sub-title, .woocommerce.single-product h1.product_title, .woocommerce section.related.products h2, .hestia-about h1, .hestia-about h2, .hestia-about h3, .hestia-about h4, .hestia-about h5 {
+			font-family: Ubuntu Mono;
+		}
+		body, ul, .tooltip-inner {
+			font-family: Ubuntu Mono;
+		}
+@media (min-width: 769px){
+			.page-header.header-small .hestia-title,
+			.page-header.header-small .title,
+			h1.hestia-title.title-in-content,
+			.main article.section .has-title-font-size {
+				font-size: 42px;
+			}}
+
+		.page-template-builder-fullwidth-std .header > .elementor {
+			padding-top: 70px;
+		}
+
+</style>
+<link rel="stylesheet" id="hestia-google-font-ubuntu-mono-css" href="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/css.css" type="text/css" media="all">
+<link rel="stylesheet" id="rw_toprated-css" href="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/toprated.css" type="text/css" media="all">
+<link rel="stylesheet" id="rw_recommendations-css" href="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/recommendations.css" type="text/css" media="all">
+<link rel="stylesheet" id="enlighter-local-css" href="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/EnlighterJS.css" type="text/css" media="all">
+<link rel="stylesheet" id="social-logos-css" href="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/social-logos.css" type="text/css" media="all">
+<link rel="stylesheet" id="jetpack_css-css" href="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/jetpack.css" type="text/css" media="all">
+<script type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/jquery_002.js"></script>
+<script type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/jquery-migrate.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var related_posts_js_options = {"post_heading":"h4"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/related-posts.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var BP_Confirm = {"are_you_sure":"\u786e\u5b9a\uff1f"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/confirm.js"></script>
+<script type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/widget-members.js"></script>
+<script type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/jquery-query.js"></script>
+<script type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/jquery-cookie.js"></script>
+<script type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/jquery-scroll-to.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var BP_DTheme = {"accepted":"\u5df2\u63a5\u53d7","close":"\u5173\u95ed","comments":"\u8bc4\u8bba","leave_group_confirm":"\u60a8\u786e\u5b9a\u8981\u9000\u51fa\u8be5\u7fa4\u5417\uff1f","mark_as_fav":"\u6536\u85cf","my_favs":"\u6211\u7684\u6536\u85cf","rejected":"\u5df2\u62d2\u7edd","remove_fav":"\u79fb\u9664\u6536\u85cf","show_all":"\u663e\u793a\u5168\u90e8","show_all_comments":"\u663e\u793a\u8be5\u8bdd\u9898\u6240\u6709\u8bc4\u8bba","show_x_comments":"Show all comments (%d)","unsaved_changes":"\u60a8\u7684\u4e2a\u4eba\u8d44\u6599\u66f4\u6539\u5c1a\u672a\u4fdd\u5b58\u3002\u5982\u679c\u79bb\u5f00\u6b64\u9875\u9762\uff0c\u60a8\u7684\u66f4\u6539\u5c06\u4f1a\u4e22\u5931\u3002","view":"\u67e5\u770b","store_filter_settings":""};
+/* ]]> */
+</script>
+<script type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/buddypress.js"></script>
+<script type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/jquery.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var IZ = {"with_woocommerce":"0","exchange_thumbnails":"1","woo_categories":"0","enable_mobile":"","options":[],"woo_slider":"0"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/image_zoom-init.js"></script>
+<link rel="https://api.w.org/" href="http://www.corvin.cn/wp-json/">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.corvin.cn/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://www.corvin.cn/wp-includes/wlwmanifest.xml"> 
+<meta name="generator" content="WordPress 5.0.4">
+<link rel="shortlink" href="https://wp.me/p9d5Bf-93">
+<link rel="alternate" type="application/json+oembed" href="http://www.corvin.cn/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fwww.corvin.cn%2F561.html">
+<link rel="alternate" type="text/xml+oembed" href="http://www.corvin.cn/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fwww.corvin.cn%2F561.html&amp;format=xml">
+
+	<script type="text/javascript">var ajaxurl = 'http://www.corvin.cn/wp-admin/admin-ajax.php';</script>
+
+<script type="text/javascript">
+(function(url){
+	if(/(?:Chrome\/26\.0\.1410\.63 Safari\/537\.31|WordfenceTestMonBot)/.test(navigator.userAgent)){ return; }
+	var addEvent = function(evt, handler) {
+		if (window.addEventListener) {
+			document.addEventListener(evt, handler, false);
+		} else if (window.attachEvent) {
+			document.attachEvent('on' + evt, handler);
+		}
+	};
+	var removeEvent = function(evt, handler) {
+		if (window.removeEventListener) {
+			document.removeEventListener(evt, handler, false);
+		} else if (window.detachEvent) {
+			document.detachEvent('on' + evt, handler);
+		}
+	};
+	var evts = 'contextmenu dblclick drag dragend dragenter dragleave dragover dragstart drop keydown keypress keyup mousedown mousemove mouseout mouseover mouseup mousewheel scroll'.split(' ');
+	var logHuman = function() {
+		if (window.wfLogHumanRan) { return; }
+		window.wfLogHumanRan = true;
+		var wfscr = document.createElement('script');
+		wfscr.type = 'text/javascript';
+		wfscr.async = true;
+		wfscr.src = url + '&r=' + Math.random();
+		(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(wfscr);
+		for (var i = 0; i < evts.length; i++) {
+			removeEvent(evts[i], logHuman);
+		}
+	};
+	for (var i = 0; i < evts.length; i++) {
+		addEvent(evts[i], logHuman);
+	}
+})('//www.corvin.cn/?wordfence_lh=1&hid=054AC0720D8ECD331EBF5BAA99EF4A17');
+</script><script type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/a_003.html" async=""></script>
+<link rel="dns-prefetch" href="http://v0.wordpress.com/">
+<link rel="dns-prefetch" href="http://widgets.wp.com/">
+<link rel="dns-prefetch" href="http://s0.wp.com/">
+<link rel="dns-prefetch" href="http://0.gravatar.com/">
+<link rel="dns-prefetch" href="http://1.gravatar.com/">
+<link rel="dns-prefetch" href="http://2.gravatar.com/">
+<link rel="dns-prefetch" href="http://i0.wp.com/">
+<link rel="dns-prefetch" href="http://i1.wp.com/">
+<link rel="dns-prefetch" href="http://i2.wp.com/">
+<style type="text/css">img#wpstats{display:none}</style><style type="text/css" id="custom-background-css">
+body.custom-background { background-image: url("http://www.corvin.cn/wp-content/uploads/2017/11/cropped-timg.jpeg"); background-position: center center; background-size: contain; background-repeat: repeat; background-attachment: fixed; }
+</style>
+<style type="text/css" media="print">#wpadminbar { display:none; }</style>
+<style type="text/css" media="screen">
+	html { margin-top: 32px !important; }
+	* html body { margin-top: 32px !important; }
+	@media screen and ( max-width: 782px ) {
+		html { margin-top: 46px !important; }
+		* html body { margin-top: 46px !important; }
+	}
+</style>
+<link rel="icon" href="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2017/08/cropped-logo.png?fit=32%2C32" sizes="32x32">
+<link rel="icon" href="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2017/08/cropped-logo.png?fit=192%2C192" sizes="192x192">
+<link rel="apple-touch-icon-precomposed" href="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2017/08/cropped-logo.png?fit=180%2C180">
+<meta name="msapplication-TileImage" content="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2017/08/cropped-logo.png?fit=270%2C270">
+<script type="text/javascript" async="" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/a_004.html"></script><link rel="stylesheet" type="text/css" id="gravatar-card-css" href="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/hovercard.css"><link rel="stylesheet" type="text/css" id="gravatar-card-services-css" href="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/services.css"><link type="text/css" rel="stylesheet" href="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/style_004.css" media="screen"><link type="text/css" rel="stylesheet" href="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/theme.css" media="screen"><style type="text/css" id="rw_class_blog-post_custom_style">.rw-class-blog-post.rw-ui-star.rw-ui-container.rw-style-custom .rw-ui-stars li { background-image: url(''); }
+.rw-class-blog-post.rw-rtl.rw-ui-star.rw-ui-container.rw-style-custom .rw-ui-stars li { background-image: url(''); }
+</style></head>
+
+<body class="bp-legacy post-template-default single single-post postid-561 single-format-standard admin-bar no-customize-support custom-background wp-custom-logo blog-post header-layout-default js">
+	<div class="wrapper post-561 post type-post status-publish format-standard has-post-thumbnail hentry category-stdr_simulator default ">
+		<header class="header ">
+					<nav class="navbar navbar-default navbar-fixed-top  hestia_left navbar-not-transparent navbar-scroll-point">
+						<div class="container">
+						<div class="navbar-header">
+			<div class="title-logo-wrapper">
+				<a class="navbar-brand" href="http://www.corvin.cn/" title="ROS小课堂">
+					<img src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/cropped-.png" alt="ROS小课堂"></a>
+			</div>
+								<div class="navbar-toggle-wrapper">
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navigation">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="sr-only">切换导航</span>
+			</button>
+					</div>
+				</div>
+		<div id="main-navigation" class="collapse navbar-collapse"><ul id="menu-%e9%a1%b9%e7%9b%ae%e7%ae%a1%e7%90%86%e7%b3%bb%e7%bb%9f" class="nav navbar-nav"><li id="menu-item-367" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-367"><a title="项目管理系统" href="http://corvin.cn:81/">项目管理系统</a></li>
+<li id="menu-item-371" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-371"><a title="gerrit系统" href="http://corvin.cn:8080/gerrit/">gerrit系统</a></li>
+<li class="hestia-search-in-menu"><div class="hestia-nav-search"><form role="search" method="get" class="search-form form-group" action="http://www.corvin.cn/">
+				<label class="label-floating is-empty form-group">
+					<span class="screen-reader-text">搜索：</span>
+					<label class="control-label"> 搜索… </label><input class="search-field form-control" name="s" type="search">
+				</label>
+				<input class="search-submit" value="搜索" type="submit">
+			</form></div><div class="hestia-toggle-search"><i class="fa fa-search"></i></div></li></ul></div>			</div>
+					</nav>
+		<div style="display: none"></div>		</header>
+<div id="primary" class="boxed-layout-header page-header header-small" data-parallax="active"><div class="container" style="padding-top: 170px;"><div class="row"><div class="col-md-10 col-md-offset-1 text-center"><h1 class="hestia-title entry-title">１.初识简单的二维移动机器人群仿真器STDR</h1><h4 class="author">于<time class="entry-date published" datetime="2018-03-25T12:10:39+00:00" content="2018-03-25">2018-03-25</time><time class="updated hestia-hidden" datetime="2018-07-20T13:11:21+00:00">2018-03-25</time>由<a href="http://www.corvin.cn/author/corvin_zhang" class="vcard author"><strong class="fn">corvin_zhang</strong></a>发布</h4></div></div></div><div class="header-filter" style="background-image: url(http://www.corvin.cn/wp-content/uploads/2017/11/cropped-timg.jpeg);"></div></div>
+<div class="main  main-raised ">
+	<div class="blog-post blog-post-wrapper">
+		<div class="container">
+			<article id="post-561" class="section section-text">
+	<div class="row">
+				<div class="col-md-8 single-post-container" data-layout="sidebar-right">
+			<div class="single-post-wrap entry-content">
+				<table class="rw-rating-table rw-ltr rw-center rw-no-labels"><tbody><tr><td><nobr>&nbsp;</nobr></td><td><div class="rw-center"><div class="rw-ui-container rw-urid-5620 rw-ui-star rw-size-large rw-dir-ltr rw-halign-right rw-valign-middle rw-style-quartz_blue rw-theme-star_quartz_blue rw-active rw-class-blog-post" data-img="http://www.corvin.cn/wp-content/uploads/2018/03/1521798385895065.png" data-urid="5620" style=""><div class="rw-action-area"><ul class="rw-ui-stars"><li class="rw-ui-star-0 rw-ui-star-selected"></li><li class="rw-ui-star-1 rw-ui-star-selected"></li><li class="rw-ui-star-2 rw-ui-star-selected"></li><li class="rw-ui-star-3 rw-ui-star-selected"></li><li class="rw-ui-star-4 rw-ui-star-selected"></li><li class="rw-ui-star-5 rw-ui-star-selected"></li><li class="rw-ui-star-6 rw-ui-star-selected"></li><li class="rw-ui-star-7 rw-ui-star-selected"></li><li class="rw-ui-star-8 rw-ui-star-selected"></li><li class="rw-ui-star-9 rw-ui-star-half-selected"></li></ul><a class="rw-report-link" target="_blank" href="http://rating-widget.com/my-rating-report/star/quartz-blue/rating-162353949-10/" rel="nofollow"></a></div><span class="rw-ui-info-container" style="background-color: rgb(255, 255, 255);"><i aria-hidden="true" class="rw-ui-info-nub rw-ui-info-outer-nub" style=""></i><i aria-hidden="true" class="rw-ui-info-nub rw-ui-info-inner-nub" style="border-right-color: rgb(255, 255, 255);"></i><span class="rw-ui-info-inner-container" style=""><span class="rw-ui-info" style="color: DARKBLUE;">评分 (18 投票)</span></span></span></div></div></td></tr></tbody></table><p><span style="color: #00B050;font-size: 16px">0x00 What's STDR Simulator?</span></p>
+<p style="text-align:center"><img src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/1521793211976211.png" title="1521793211976211.png" alt="1.png"></p>
+<p style="text-indent: 2em"><span style="color: #000000">STDR是Simple Two
+ Dimentional Robot 
+Simulator的缩写，它可以非常容易的对在二维平面移动的机器人进行仿真，STDR的设计目的不是为了像Gazebo那样的大型逼真的机器人仿真或
+者一个功能最全面、功能强大的仿真器，这款软件的目的是为了尽可能的简单的去模拟单个移动机器人的运动或者多个机器人的协同仿真。而且STDR不仅可以运
+行在一个有图形界面的环境中，还可以运行在一个无桌面环境的系统中，这样我们就可以在终端中使用ssh连接后就可以进行仿真任务了。<br></span></p>
+<p style="text-indent: 2em"><span style="color: #000000">STDR可以完美的与ROS兼容
+配套，机器人上的传感器数据都是通过ros话题的形式发布。跟ROS运行一样，STDR的运行也可以将图形用户接口和服务器分开在不同的电脑上运行，而且
+STDR也可以和Rviz一起工作，在Rviz中将STDR中的机器人数据可视化显示。关于该仿真器的更多详细介绍可以观看其在ROS 
+Wiki上的主页，网址如下：</span></p>
+<p style="text-align: center"><a href="http://wiki.ros.org/stdr_simulator" target="_blank" title="http://wiki.ros.org/stdr_simulator"><span style="color: #0070C0;font-size: 16px">http://wiki.ros.org/stdr_simulator</span></a></p>
+<hr>
+<p><span style="color: #00B050;font-size: 16px">0x01 安装STDR仿真器</span></p>
+<p style="text-indent: 2em"><span style="color: #000000">下面介绍两种安装方式，一种是最简单的使用apt来安装，另外一种下载源码后自己编译来安装，下面先介绍第一种apt安装，直接在终端中输入如下命令：</span></p>
+<p style="text-indent: 0em;text-align: center"><span style="color: #0070C0;font-size: 16px">sudo apt-get install ros-$ROS_DISTRO-stdr-simulator</span></p>
+<p style="text-indent: 2em"><span style="color: #000000">其中<span style="color: #0070C0">$ROS_DISTRO</span>会根据当前安装的ROS版本来自动区分，如果安装的是indigo，那么就会被替换成indigo，如果安装的是kinetic就会被替换成kinetic，这样我就不用为了两个不同的ROS版本来写两遍安装命令了。<br></span></p>
+<p style="text-indent: 2em"><span style="color: #000000">下面来介绍使用源码来编译安装，
+此方式不建议一般用户来尝试，只有当现在发布的功能已经无法满足自己的仿真需要才需要在源码基础上修改，不过要想增加自己需要的功能前提是自己对STDR
+源码结构需要非常了解才行，下面来介绍源码编译过程，首先从github下面源码，下载命令如下：</span></p>
+<p style="text-align: center"><span style="color: #0070C0;font-size: 16px">git clone&nbsp;<a href="https://github.com/stdr-simulator-ros-pkg/stdr_simulator.git">https://github.com/stdr-simulator-ros-pkg/stdr_simulator.git</a></span></p>
+<p style="text-align:center"><img src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/1521795632283290.png" title="1521795632283290.png" alt="1521795632283290.png" width="708" height="352"></p>
+<p style="text-indent: 2em"><span style="color: #C00000">当最后编译到达100%时整个编译过程就结束了，然后需要<span style="color: #0070C0">source devel/setup.bash</span>这样就能保证在命令行中直接找到该仿真软件包了,通过使用下图中命令来操作来验证,只有出现下图所示的输出stdr的各项操作才能正常进行:</span></p>
+<p style="text-align:center"><span style="color: #C00000"><img src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/1522651741331852.png" title="1522651741331852.png" alt="Screenshot from 2018-04-02 14:36:42.png"></span></p>
+<hr>
+<p><span style="color: #00B050;font-size: 16px">0x02 STDR代码架构介绍</span></p>
+<p style="text-indent: 2em">在真正运行该仿真以前我们需要对该软件的实现需要有个简单的认识，这样在后面的实际运行中会了解的更加通透，首先查看一下源码目录组成：</p>
+<p style="text-align:center"><img src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/1521797077844974.png" title="1521797077844974.png" alt="Screenshot from 2018-03-23 17:06:45.png"></p>
+<p style="text-indent: 2em">在认识了各个代码目录后，需要弄清楚各代码直接是如何互相调用、协同工作来完成整个仿真任务的，了解这个简单的仿真软件实现方式非常有助于我们后对该代码的修改。</p>
+<p><span style="color: #00B050;font-size: 16px"></span></p>
+<hr>
+<p><span style="color: #00B050;font-size: 16px">0x03 启动STDR进行仿真</span></p>
+<p style="text-indent: 2em">对STDR有了初步的认识后，我们现在开始真正的启动来查看STDR的效果，直接在终端中输入以下命令即可启动，会自动弹出如下的窗口:</p>
+<p style="text-align: center"><span style="color: #0070C0;font-size: 16px">roslaunch stdr_launchers server_with_map_and_gui_plus_robot.launch</span></p>
+<p style="text-align:center"><img src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/1521798385895065.png" title="1521798385895065.png" alt="Screenshot from 2018-03-23 17:44:44.png"></p>
+<p style="text-indent: 2em">启动后在地图的左下角会自动的生成一个机器人，其中红色的线是雷达的扫描输出，绿色的部分是超声波的输出。我们同样可以在rviz中显示该仿真环境，使用如下命令：</p>
+<p style="text-align: center"><span style="color: #0070C0;font-size: 16px">roslaunch stdr_launchers rviz.launch</span></p>
+<p style="text-align:center"><img src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/1521798909903051.png" title="1521798909903051.png" alt="Screenshot from 2018-03-23 17:54:07.png"></p>
+<p style="text-indent: 2em">当将从上往下的视图方式修改为orbit视图方式后我们就可以来转换不同的观察视角了，那个像喇叭一样的东西就是超声波的输出。</p>
+<p style="text-align:center"><img src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/1521799351890091.png" title="1521799351890091.png" alt="Screenshot from 2018-03-23 18:01:53.png"></p>
+<p style="text-indent: 2em">接下来我们查看下当前的话题输出和服务列表，分别使用rostopic list命令和rosservice list命令即可：</p>
+<p style="text-align:center"><img src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/1521799826394066.png" title="1521799826394066.png" alt="Screenshot from 2018-03-23 18:06:18.png"></p>
+<p style="text-indent: 0em">话题和节点之间的关系图通过rqt_graph命令来查看，如下图所示：</p>
+<p style="text-align:center"><img src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/1521800180392011.png" title="1521800180392011.png" alt="2.png"></p>
+<hr>
+<p><span style="color: #00B050;font-size: 16px">0x04 控制机器人移动</span></p>
+<p style="text-indent: 2em">（1）在控制机器人移动我们可以直接往控制其移动的/robot0/cmd_vel话题中发送
+消息即可，或者也可以使用teleop_twist_keyboard软件包来键盘遥控仿真机器人四处移动，这种控制方式跟我们在现实中控制真实的小车是
+一样的，这样就起到了仿真的作用，首先来使用向话题中直接的发布消息控制仿真机器人移动：<span style="color: #00B050;font-size: 16px"><br></span></p>
+<p style="text-indent: 0em;text-align: center"><span style="color: #0070C0;font-size: 16px">rostopic pub -r 2 /robot0/cmd_vel geometry_msgs/Twist '{linear: {x: 0, y: 0, z: 0}, angular: {x: 0, y: 0, z: -0.5}}'</span></p>
+<p style="text-align:center"><img src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/1521900301480098.png" title="1521900301480098.png" alt="1521900301480098.png" width="1006" height="183"></p>
+<p style="text-indent: 2em">当开始向话题中发布消息后就会发现仿真的机器人开始顺时针转动，这是因为在ROS中规定角速度的正方向是逆时针方向，我们在发布的消息中角速度设定为-0.5，所以就会出现顺时针运动，运动效果如下图所示。</p>
+<p style="text-align:center"><img src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/1521900496658285.gif" title="1521900496658285.gif" alt="1.gif"></p>
+<p>（2）接下来第二种方式是我们可以使用键盘来遥控仿真机器人来四处移动，首先需要下载teleop_twist_keyboard源码，下载操作步骤如下：</p>
+<p style="text-align: center"><span style="font-size: 16px;color: #0070C0">git clone https://github.com/ros-teleop/teleop_twist_keyboard.git</span><span style="font-size: 16px;color: #000000"><br></span></p>
+<p style="text-align:center"><span style="font-size: 16px;color: #000000"><img src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/1521946321726222.png" title="1521946321726222.png" alt="Screenshot from 2018-03-25 10-48-06.png"></span></p>
+<p style="text-indent: 2em">对于teleop_twist_keyboard.py源码修改部分主要是修改成robot0
+仿真机器人的速度控制话题，因为默认的发送话题名称是/cmd_vel，这样键盘控制时没办法发送到指定的/robot0/cmd_vel话题上，也就没
+办法来遥控机器人了，所以需要修改话题名：</p>
+<p style="text-align:center"><span style="font-size: 16px;color: #000000"><img src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/1521946606511451.png" title="1521946606511451.png" alt="Screenshot from 2018-03-25 10-53-14.png"></span></p>
+<p style="text-indent: 2em">接下来我们就可以先编译一下该软件包，然后就可以运行该控制节点来遥控仿真机器人四处走动了，
+首先我们需要先进入工作空间的根目录运行catkin_make来编译该软件包，然后使用source 
+devel/setup.bash配置环境变量使该软件包可以被搜索到，接下来就可以运行如下命令来启动该节点了：</p>
+<p style="text-align: center"><span style="font-size: 16px;color: #0070C0">rosrun teleop_twist_keyboard teleop_twist_keyboard.py</span></p>
+<p style="text-indent: 2em">当我们根据提示使用键盘上的按键就可以控制仿真机器人四处走动了，需要注意的是该仿真机器人对
+速度的处理方式为：当接收一条控制命令后会一直不断执行该命令，直到有下一条命令来改变当期的运行状态，如果想让机器人停止走动只需要按k键即可，向控制
+移动命令话题中发送全为0的控制命令就会让其停止移动，具体效果如下图所示：</p>
+<p style="text-align:center"><span style="font-size: 16px"><img src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/1521947648760424.gif" title="1521947648760424.gif" alt="2.gif"></span></p>
+<p><span style="font-size: 16px"></span></p>
+<hr>
+<p><span style="color: #00B050;font-size: 16px">0x05 创建多个机器人</span><span style="font-size: 16px"></span></p>
+<p>到现在我们一直操作的就是一个机器人，接下来我们看看如何使用该仿真器创建更多的机器人，点击STDR Simulator工具栏中的Load robot工具就会弹出可以加载的各种传感器和机器人。</p>
+<p style="text-align:center"><img src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/1521949430534551.png" title="1521949430534551.png" alt="Screenshot from 2018-03-25 11-28-33.png"></p>
+<p>我们现在只加载robots目录下的各种机器人，下面是机器人的列表，我们加载pandora_robot.xml这款机器人，因为它跟默认显示的机器人相同型号：</p>
+<p style="text-align:center"><img src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/1521949881663213.png" title="1521949881663213.png" alt="Screenshot from 2018-03-25 11-46-10.png"></p>
+<p style="text-indent: 2em">当选中后点击open按钮后我们就可以在STDR Simulator上来选则放置的位置了，同时如果感觉放置的位置不合适还可以通过"Move robot"来更换位置，如果想删除机器人就选择“Delete robot"即可，具体操作如下图所示<span style="font-size: 16px">：</span></p>
+<p style="text-align:center"><span style="font-size: 16px"><img src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/1521950134296837.gif" title="1521950134296837.gif" alt="3.gif"></span></p>
+<p style="text-indent: 2em"><span style="color: #000000">接下来我们使用rostopic pub方式来使两个仿真机器人同时运动，下面的两条命令大家可以根据自己创建的机器人来做相应修改：</span></p>
+<p style="text-indent: 0em"><span style="color: #000000">向robot0发送一条控制其顺时针旋转的命令<span style="font-size: 16px">：</span></span></p>
+<p style="text-align: center"><span style="font-size: 16px;color: #0070C0">rostopic pub -1 /robot0/cmd_vel geometry_msgs/Twist '{linear: {x: 0, y: 0, z: 0}, angular: {x: 0, y: 0, z: -0.5}}'</span></p>
+<p style="text-align: left;text-indent: 0em"><span style="color: #000000">向robot2发送一条控制其逆时针旋转命令：</span></p>
+<p style="text-align: center"><span style="font-size: 16px;color: #0070C0">rostopic pub -1 /robot2/cmd_vel geometry_msgs/Twist '{linear: {x: 0, y: 0, z: 0}, angular: {x: 0, y: 0, z: 0.5}}'</span></p>
+<p style="text-indent: 0em"><span style="color: #000000">运动效果如下图所示：</span></p>
+<p style="text-align:center"><span style="font-size: 16px"><img src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/1521950746112042.gif" title="1521950746112042.gif" alt="4.gif"></span></p>
+<p><span style="font-size: 16px;color: #000000"></span></p>
+<hr>
+<p><span style="color: #00B050;font-size: 16px">0x06 参考资料</span></p>
+<p>[1].ROS wiki上stdr_simulator的主页[OL].&nbsp;<a href="http://wiki.ros.org/stdr_simulator" target="_blank" title="http://wiki.ros.org/stdr_simulator">http://wiki.ros.org/stdr_simulator</a></p>
+<p>[2].stdr_simulator的独立参考网址[OL].&nbsp;<a href="http://stdr-simulator-ros-pkg.github.io/" target="_blank" title="http://stdr-simulator-ros-pkg.github.io/">http://stdr-simulator-ros-pkg.github.io/</a></p>
+<p>[3].GitHub上stdr_simulator源码地址[OL].<a href="https://github.com/stdr-simulator-ros-pkg/stdr_simulator" target="_blank" title="https://github.com/stdr-simulator-ros-pkg/stdr_simulator">https://github.com/stdr-simulator-ros-pkg/stdr_simulator</a></p>
+<p>[4].GitHub上teleop_twist_keyboard源码地址[OL].<a href="https://github.com/ros-teleop/teleop_twist_keyboard" target="_self" title="https://github.com/ros-teleop/teleop_twist_keyboard">https://github.com/ros-teleop/teleop_twist_keyboard</a></p>
+<p><span style="font-size: 16px;color: #000000"></span></p>
+<hr>
+<p><span style="color: #00B050;font-size: 16px">0x07 问题反馈<span style="color: #000000"></span></span></p>
+<p style="text-indent: 2em">大家在按照教程操作过程中有任何问题，可以关注ROS小课堂的官方微信公众号，在公众号中给我
+发消息反馈问题即可，我基本上每天都会处理公众号中的留言！当然，如果你要是顺便给ROS小课堂打个赏，我也会感激不尽的，打赏30块还会邀请进ROS小
+课堂的微信群与更多志同道合的小伙伴一起学习和交流！</p>
+<p style="text-align:center"><img src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/1516851765432601.jpg" alt="1516851765432601.jpg"></p>
+<p></p>
+<div class="sharedaddy sd-block sd-like jetpack-likes-widget-wrapper jetpack-likes-widget-loaded" id="like-post-wrapper-136106817-561-5cb421c88109e" data-src="https://widgets.wp.com/likes/#blog_id=136106817&amp;post_id=561&amp;origin=www.corvin.cn&amp;obj_id=136106817-561-5cb421c88109e" data-name="like-post-frame-136106817-561-5cb421c88109e"><h3 class="sd-title">赞过：</h3><div class="likes-widget-placeholder post-likes-widget-placeholder" style="height: 55px; display: none;"><span class="button"><span>赞</span></span> <span class="loading">正在加载……</span></div><iframe name="like-post-frame-136106817-561-5cb421c88109e" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/a.html" scrolling="no" width="100%" height="55px" frameborder="0"></iframe><span class="sd-text-color"></span><a class="sd-link-color"></a></div>
+<div id="jp-relatedposts" class="jp-relatedposts">
+	<h3 class="jp-relatedposts-headline"><em>相关</em></h3>
+</div>								</div>
+			
+		<div class="section section-blog-info">
+			<div class="row">
+				<div class="col-md-6">
+					<div class="entry-categories">分类：						<span class="label label-primary"><a href="http://www.corvin.cn/category/robot-simulator/stdr_simulator">STDR仿真</a></span>					</div>
+									</div>
+							</div>
+			<hr>
+			
+<div id="comments" class="section section-comments">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="media-area">
+				<h3 class="hestia-title text-center">
+									</h3>
+							</div>
+			<div class="media-body">
+					<div id="respond" class="comment-respond">
+		<h3 class="hestia-title text-center">发表评论 <small><a rel="nofollow" id="cancel-comment-reply-link" href="http://www.corvin.cn/561.html#respond" style="display:none;">取消回复</a></small></h3> <span class="pull-left author"> <div class="avatar"><img src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/placeholder.jpg" width="64" height="64"></div> </span>			<form action="http://www.corvin.cn/wp-comments-post.php" method="post" id="commentform" class="form media-body form-group">
+				<p class="comment-notes"><span id="email-notes">电子邮件地址不会被公开。</span> 必填项已用<span class="required">*</span>标注</p><div class="row"> <div class="col-md-4"> <div class="form-group label-floating is-empty"> <label class="control-label">名称 <span class="required">*</span></label><input id="author" name="author" class="form-control" aria-required="true" type="text"> <span class="hestia-input"></span> </div> </div>
+<div class="col-md-4"> <div class="form-group label-floating is-empty"> <label class="control-label">电子邮件 <span class="required">*</span></label><input id="email" name="email" class="form-control" aria-required="true" type="email"> <span class="hestia-input"></span> </div> </div>
+<div class="col-md-4"> <div class="form-group label-floating is-empty"> <label class="control-label">网站</label><input id="url" name="url" class="form-control" aria-required="true" type="url"> <span class="hestia-input"></span> </div> </div> </div>
+<div class="form-group label-floating is-empty"> <label class="control-label">在想些什么？</label><textarea id="comment" name="comment" class="form-control" rows="6" aria-required="true"></textarea><span class="hestia-input"></span> </div><p class="form-submit"></p><p class="comment-subscription-form"><input name="subscribe_comments" id="subscribe_comments" value="subscribe" style="width: auto; -moz-appearance: checkbox; -webkit-appearance: checkbox;" type="checkbox"> <label class="subscribe-label" id="subscribe-label" for="subscribe_comments">通过邮件通知我后续评论</label></p><p class="comment-subscription-form"><input name="subscribe_blog" id="subscribe_blog" value="subscribe" style="width: auto; -moz-appearance: checkbox; -webkit-appearance: checkbox;" type="checkbox"> <label class="subscribe-label" id="subscribe-blog-label" for="subscribe_blog">通过邮件通知我有新文章</label></p><input name="submit" id="submit" class="btn btn-primary pull-right" value="发表评论" type="submit"> <input name="comment_post_ID" value="561" id="comment_post_ID" type="hidden">
+<input name="comment_parent" id="comment_parent" value="0" type="hidden">
+<p></p><p style="display: none;"><input id="akismet_comment_nonce" name="akismet_comment_nonce" value="9d46ccdc7c" type="hidden"></p><p style="display: none;"></p>			<input id="ak_js" name="ak_js" value="1555309022678" type="hidden"></form>
+			</div><!-- #respond -->
+	<p class="akismet_comment_form_privacy_notice">此站点使用Akismet来减少垃圾评论。<a href="https://akismet.com/privacy/" target="_blank" rel="nofollow noopener">了解我们如何处理您的评论数据</a>。</p>							</div>
+		</div>
+	</div>
+</div>
+		</div>
+		</div>	<div class="col-md-3 blog-sidebar-wrapper col-md-offset-1 ">
+		<aside id="secondary" class="blog-sidebar" role="complementary">
+					<div id="recent-posts-2" class="widget widget_recent_entries">		<h5>近期文章</h5>		<ul>
+											<li>
+					<a href="http://www.corvin.cn/1188.html">4.调试人脸跟踪下位机代码</a>
+									</li>
+											<li>
+					<a href="http://www.corvin.cn/1162.html">3.人脸跟踪底层固件代码</a>
+									</li>
+											<li>
+					<a href="http://www.corvin.cn/1139.html">2.人脸跟踪硬件平台搭建</a>
+									</li>
+											<li>
+					<a href="http://www.corvin.cn/1112.html">1.人脸跟踪项目概述</a>
+									</li>
+											<li>
+					<a href="http://www.corvin.cn/1068.html">2.引导ROS2GO启动</a>
+									</li>
+					</ul>
+		</div><div id="categories-2" class="widget widget_categories"><h5>分类目录</h5>		<ul>
+	<li class="cat-item cat-item-61"><a href="http://www.corvin.cn/category/arduino-mega2560">ArduinoMega2560</a>
+</li>
+	<li class="cat-item cat-item-52"><a href="http://www.corvin.cn/category/python-program">Python编程</a>
+</li>
+	<li class="cat-item cat-item-64"><a href="http://www.corvin.cn/category/ros2go-system">ROS2GO系统</a>
+</li>
+	<li class="cat-item cat-item-53"><a href="http://www.corvin.cn/category/ros-basic-knowledge">ROS基础知识</a>
+</li>
+	<li class="cat-item cat-item-62"><a href="http://www.corvin.cn/category/ros-control-handle">ROS控制手柄</a>
+</li>
+	<li class="cat-item cat-item-58"><a href="http://www.corvin.cn/category/robot-simulator/stdr_simulator">STDR仿真</a>
+</li>
+	<li class="cat-item cat-item-55"><a href="http://www.corvin.cn/category/laser-radar/ydlidar-x4">YDLIDAR_X4</a>
+</li>
+	<li class="cat-item cat-item-41"><a href="http://www.corvin.cn/category/threeomniwheeelsrobot">三轮全向机器人</a>
+</li>
+	<li class="cat-item cat-item-67"><a href="http://www.corvin.cn/category/face-tracker">人脸跟踪</a>
+</li>
+	<li class="cat-item cat-item-40"><a href="http://www.corvin.cn/category/code-maintenance">代码维护</a>
+</li>
+	<li class="cat-item cat-item-48"><a href="http://www.corvin.cn/category/setup-config_system">安装配置系统</a>
+</li>
+	<li class="cat-item cat-item-45"><a href="http://www.corvin.cn/category/imu">惯性测量单元</a>
+</li>
+	<li class="cat-item cat-item-50"><a href="http://www.corvin.cn/category/robot-vision">机器视觉</a>
+</li>
+	<li class="cat-item cat-item-60"><a href="http://www.corvin.cn/category/raspberrypi/rasp_ros_develop">树莓派ROS开发</a>
+</li>
+	<li class="cat-item cat-item-59"><a href="http://www.corvin.cn/category/raspberrypi/rasp_ros_image">树莓派ROS镜像</a>
+</li>
+	<li class="cat-item cat-item-54"><a href="http://www.corvin.cn/category/laser-radar">激光雷达</a>
+</li>
+	<li class="cat-item cat-item-19"><a href="http://www.corvin.cn/category/website_broadcast">网站公告</a>
+</li>
+	<li class="cat-item cat-item-49"><a href="http://www.corvin.cn/category/voice-interactive-system">语音交互系统</a>
+</li>
+	<li class="cat-item cat-item-46"><a href="http://www.corvin.cn/category/download-document">资料下载</a>
+</li>
+		</ul>
+</div>		</aside><!-- .sidebar .widget-area -->
+	</div>
+			</div>
+</article>
+
+		</div>
+	</div>
+</div>
+
+			<div class="section related-posts">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<h2 class="hestia-title text-center">相关文章</h2>
+							<div class="row">
+																	<div class="col-md-4">
+										<div class="card card-blog">
+																							<div class="card-image">
+													<a href="http://www.corvin.cn/1057.html" title="11.在自定义地图中进行自动导航">
+														<img src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/1.png" class="attachment-hestia-blog size-hestia-blog wp-post-image" alt="" srcset="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2019/01/1.png?resize=360%2C240 360w, https://i0.wp.com/www.corvin.cn/wp-content/uploads/2019/01/1.png?zoom=2&amp;resize=360%2C240 720w, https://i0.wp.com/www.corvin.cn/wp-content/uploads/2019/01/1.png?zoom=3&amp;resize=360%2C240 1080w" sizes="(max-width: 360px) 100vw, 360px" data-attachment-id="1063" data-permalink="http://www.corvin.cn/1057.html/1-2" data-orig-file="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2019/01/1.png?fit=1586%2C990" data-orig-size="1586,990" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="1" data-image-description="" data-medium-file="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2019/01/1.png?fit=300%2C187" data-large-file="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2019/01/1.png?fit=750%2C468" width="360" height="240">													</a>
+												</div>
+																						<div class="content">
+												<h6 class="category text-info"><a href="http://www.corvin.cn/category/robot-simulator/stdr_simulator" title="查看STDR仿真中的全部文章">STDR仿真</a> </h6>
+												<h4 class="card-title">
+													<a class="blog-item-title-link" href="http://www.corvin.cn/1057.html" title="11.在自定义地图中进行自动导航" rel="bookmark">
+														11.在自定义地图中进行自动导航													</a>
+												</h4>
+												<p class="card-description">&nbsp;0x00 概述 在前面的文章中，我们介绍如何自动导航时，都<a class="moretag" href="http://www.corvin.cn/1057.html"> 阅读更多…</a></p>
+											</div>
+										</div>
+									</div>
+																	<div class="col-md-4">
+										<div class="card card-blog">
+																							<div class="card-image">
+													<a href="http://www.corvin.cn/1047.html" title="10.在STDR中加载其他地图">
+														<img src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/Screenshot-from-2018-12-20-180133.png" class="attachment-hestia-blog size-hestia-blog wp-post-image" alt="" srcset="https://i1.wp.com/www.corvin.cn/wp-content/uploads/2018/12/Screenshot-from-2018-12-20-180133.png?resize=360%2C240 360w, https://i1.wp.com/www.corvin.cn/wp-content/uploads/2018/12/Screenshot-from-2018-12-20-180133.png?zoom=2&amp;resize=360%2C240 720w" sizes="(max-width: 360px) 100vw, 360px" data-attachment-id="1055" data-permalink="http://www.corvin.cn/1047.html/screenshot-from-2018-12-20-180133" data-orig-file="https://i1.wp.com/www.corvin.cn/wp-content/uploads/2018/12/Screenshot-from-2018-12-20-180133.png?fit=912%2C692" data-orig-size="912,692" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="Screenshot from 2018-12-20 18:01:33" data-image-description="" data-medium-file="https://i1.wp.com/www.corvin.cn/wp-content/uploads/2018/12/Screenshot-from-2018-12-20-180133.png?fit=300%2C228" data-large-file="https://i1.wp.com/www.corvin.cn/wp-content/uploads/2018/12/Screenshot-from-2018-12-20-180133.png?fit=750%2C569" width="360" height="240">													</a>
+												</div>
+																						<div class="content">
+												<h6 class="category text-info"><a href="http://www.corvin.cn/category/robot-simulator/stdr_simulator" title="查看STDR仿真中的全部文章">STDR仿真</a> </h6>
+												<h4 class="card-title">
+													<a class="blog-item-title-link" href="http://www.corvin.cn/1047.html" title="10.在STDR中加载其他地图" rel="bookmark">
+														10.在STDR中加载其他地图													</a>
+												</h4>
+												<p class="card-description">&nbsp;0x00 概述 在前面的教程中，一直都是使用默认提供的一个<a class="moretag" href="http://www.corvin.cn/1047.html"> 阅读更多…</a></p>
+											</div>
+										</div>
+									</div>
+																	<div class="col-md-4">
+										<div class="card card-blog">
+																							<div class="card-image">
+													<a href="http://www.corvin.cn/936.html" title="9.下载stdr仿真中的测试代码">
+														<img src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/Screenshot-from-2018-10-16-160719.png" class="attachment-hestia-blog size-hestia-blog wp-post-image" alt="" srcset="https://i2.wp.com/www.corvin.cn/wp-content/uploads/2018/10/Screenshot-from-2018-10-16-160719.png?resize=360%2C240 360w, https://i2.wp.com/www.corvin.cn/wp-content/uploads/2018/10/Screenshot-from-2018-10-16-160719.png?zoom=2&amp;resize=360%2C240 720w" sizes="(max-width: 360px) 100vw, 360px" data-attachment-id="938" data-permalink="http://www.corvin.cn/936.html/screenshot-from-2018-10-16-160719" data-orig-file="https://i2.wp.com/www.corvin.cn/wp-content/uploads/2018/10/Screenshot-from-2018-10-16-160719.png?fit=926%2C968" data-orig-size="926,968" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="Screenshot from 2018-10-16 16:07:19" data-image-description="" data-medium-file="https://i2.wp.com/www.corvin.cn/wp-content/uploads/2018/10/Screenshot-from-2018-10-16-160719.png?fit=287%2C300" data-large-file="https://i2.wp.com/www.corvin.cn/wp-content/uploads/2018/10/Screenshot-from-2018-10-16-160719.png?fit=750%2C784" width="360" height="240">													</a>
+												</div>
+																						<div class="content">
+												<h6 class="category text-info"><a href="http://www.corvin.cn/category/robot-simulator/stdr_simulator" title="查看STDR仿真中的全部文章">STDR仿真</a> </h6>
+												<h4 class="card-title">
+													<a class="blog-item-title-link" href="http://www.corvin.cn/936.html" title="9.下载stdr仿真中的测试代码" rel="bookmark">
+														9.下载stdr仿真中的测试代码													</a>
+												</h4>
+												<p class="card-description">&nbsp;0x00 简要介绍 在stdr仿真这个系列教程中，前面已经<a class="moretag" href="http://www.corvin.cn/936.html"> 阅读更多…</a></p>
+											</div>
+										</div>
+									</div>
+																							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="footer-wrapper">
+						<footer class="footer footer-black footer-big">
+						<div class="container">
+								
+		<div class="content">
+			<div class="row">
+				<div class="col-md-4"><div id="blog-stats-3" class="widget blog-stats"><h5>访问统计</h5><ul><li>60,276 次</li></ul></div></div><div class="col-md-4"><div id="text-4" class="widget widget_text"><h5>备案编号</h5>			<div class="textwidget"><p>沪ICP备17051445号</p>
+</div>
+		</div></div><div class="col-md-4"><div id="text-5" class="widget widget_text">			<div class="textwidget"></div>
+		</div></div>			</div>
+		</div>
+		<hr>
+										<div class="hestia-bottom-footer-content"><ul class="footer-menu pull-left"><li class="page_item page-item-15"><a href="http://www.corvin.cn/%e4%bc%9a%e5%91%98">会员</a></li>
+<li class="page_item page-item-14"><a href="http://www.corvin.cn/%e5%8a%a8%e6%80%81">动态</a></li>
+<li class="page_item page-item-375"><a href="http://www.corvin.cn/%e7%94%a8%e6%88%b7%e7%be%a4">用户群</a></li>
+</ul>
+					<div class="copyright pull-right">
+				Hestia |由<a href="https://themeisle.com/" rel="nofollow">ThemeIsle</a>开发			</div>
+			</div>			</div>
+					</footer>
+				</div>
+	</div>
+					<!-- This site's ratings are powered by RatingWidget plugin v3.0.5 (Free version) - https://rating-widget.com/wordpress-plugin/ -->
+					<div class="rw-js-container"></div>
+					<!-- / RatingWidget plugin -->
+						<div style="display:none">
+	</div>
+		<button class="hestia-scroll-to-top hestia-fade">
+			<i class="fa fa-angle-double-up" aria-hidden="true"></i>
+		</button>
+		<script type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/admin-bar.js"></script>
+<script type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/photon.js"></script>
+<script type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/comment-reply.js"></script>
+<script type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/devicepx-jetpack.js"></script>
+<script type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/gprofiles.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var WPGroHo = {"my_hash":""};
+/* ]]> */
+</script>
+<script type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/wpgroho.js"></script>
+<script type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/bootstrap.js"></script>
+<script type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/core.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var requestpost = {"ajaxurl":"http:\/\/www.corvin.cn\/wp-admin\/admin-ajax.php","disable_autoslide":"","masonry":""};
+/* ]]> */
+</script>
+<script type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/script.js"></script>
+<script type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/mootools-core-yc.js"></script>
+<script type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/EnlighterJS.js"></script>
+<script type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/wp-embed.js"></script>
+<script type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/postmessage.js"></script>
+<script type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/jquery_003.js"></script>
+<script type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/queuehandler.js"></script>
+<script async="async" type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/form.js"></script>
+	<iframe src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/master.html" scrolling="no" id="likes-master" name="likes-master" style="display:none;"></iframe>
+	<div id="likes-other-gravatars"><div class="likes-text"><span>%d</span> 博主赞过：</div><ul class="wpl-avatars sd-like-gravatars"></ul></div>
+	<script type="text/javascript">/* <![CDATA[ */EnlighterJS_Config = {"selector":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"language":"generic","theme":"enlighter","indent":2,"hover":"hoverEnabled","showLinenumbers":true,"rawButton":true,"infoButton":true,"windowButton":true,"rawcodeDoubleclick":false,"grouping":true,"cryptex":{"enabled":false,"email":"mail@example.tld"}};!function(){var a=function(a){var b="Enlighter Error: ";console.error?console.error(b+a):console.log&&console.log(b+a)};return window.addEvent?"undefined"==typeof EnlighterJS?void a("Javascript Resources not loaded yet!"):"undefined"==typeof EnlighterJS_Config?void a("Configuration not loaded yet!"):void window.addEvent("domready",function(){EnlighterJS.Util.Init(EnlighterJS_Config.selector.block,EnlighterJS_Config.selector.inline,EnlighterJS_Config)}):void a("MooTools Framework not loaded yet!")}();;/* ]]> */</script><script type="text/javascript" src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/e-201916.js" async="async" defer="defer"></script>
+<script type="text/javascript">
+	_stq = window._stq || [];
+	_stq.push([ 'view', {v:'ext',j:'1:7.1.1',blog:'136106817',post:'561',tz:'8',srv:'www.corvin.cn'} ]);
+	_stq.push([ 'clickTrackerInit', '136106817', '561' ]);
+</script>
+		<div id="wpadminbar" class="no-grav">
+							<a class="screen-reader-shortcut" href="#wp-toolbar" tabindex="1">跳至工具栏</a>
+						<div class="quicklinks" id="wp-toolbar" role="navigation" aria-label="工具栏" tabindex="0">
+				<ul id="wp-admin-bar-root-default" class="ab-top-menu">
+		<li id="wp-admin-bar-wp-logo" class="menupop"><div class="ab-item ab-empty-item" tabindex="0" aria-haspopup="true"><span class="ab-icon"></span><span class="screen-reader-text">关于WordPress</span></div><div class="ab-sub-wrapper"><ul id="wp-admin-bar-wp-logo-external" class="ab-sub-secondary ab-submenu">
+		<li id="wp-admin-bar-wporg"><a class="ab-item" href="https://cn.wordpress.org/">WordPress.org</a>		</li>
+		<li id="wp-admin-bar-documentation"><a class="ab-item" href="https://codex.wordpress.org/">文档</a>		</li>
+		<li id="wp-admin-bar-support-forums"><a class="ab-item" href="http://zh-cn.forums.wordpress.org/">支持论坛</a>		</li>
+		<li id="wp-admin-bar-feedback"><a class="ab-item" href="http://zh-cn.forums.wordpress.org/forum/suggestions">反馈</a>		</li></ul></div>		</li>
+		<li id="wp-admin-bar-bp-login"><a class="ab-item" href="http://www.corvin.cn/wp-login.php?redirect_to=http%3A%2F%2Fwww.corvin.cn%2F561.html">登录</a>		</li>
+		<li id="wp-admin-bar-admin-bar-likes-widget"><div class="ab-item ab-empty-item"></div><iframe class="admin-bar-likes-widget jetpack-likes-widget" scrolling="no" name="admin-bar-likes-widget" src="https://widgets.wp.com/likes/#blog_id=136106817&amp;post_id=561&amp;origin=http://www.corvin.cn" frameborder="0"></iframe>		</li></ul><ul id="wp-admin-bar-top-secondary" class="ab-top-secondary ab-top-menu">
+		<li id="wp-admin-bar-search" class="admin-bar-search"><div class="ab-item ab-empty-item" tabindex="-1"><form action="http://www.corvin.cn/" method="get" id="adminbarsearch" class="form-group"><input class="adminbar-input form-control" name="s" id="adminbar-search" maxlength="150" type="text"><label for="adminbar-search" class="screen-reader-text">搜索</label><input class="adminbar-button" value="搜索" type="submit"></form></div>		</li></ul>			</div>
+					</div>
+
+		
+
+
+
+
+
+<img src="%EF%BC%91.%E5%88%9D%E8%AF%86%E7%AE%80%E5%8D%95%E7%9A%84%E4%BA%8C%E7%BB%B4%E7%A7%BB%E5%8A%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%BE%A4%E4%BB%BF%E7%9C%9F%E5%99%A8STDR_files/g.gif" alt=":)" id="wpstats" width="6" height="5"><span style="display: none;" class="rw-ui-tooltip"></span><div style="display: none;" class="rw-ui-report"></div><div><i class="rw-action-loader" style="position: fixed; top: -1000px;"></i></div><div><i class="rw-action-loader" style="position: fixed; top: -1000px;"></i></div></body></html>
+<!-- Dynamic page generated in 2.615 seconds. -->
+<!-- Cached page generated by WP-Super-Cache on 2019-04-15 14:16:42 -->
+<!-- super cache -->

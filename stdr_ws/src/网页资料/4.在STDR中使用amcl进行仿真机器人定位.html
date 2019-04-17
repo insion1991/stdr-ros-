@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#" slick-uniqueid="3" lang="zh-CN"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="profile" href="http://gmpg.org/xfn/11">
+			<link rel="pingback" href="http://www.corvin.cn/xmlrpc.php">
+		<title>4.在STDR中使用amcl进行仿真机器人定位 - ROS小课堂</title>
+          <div id="powrIframeLoader">­<style> .powrLoaded iframe { visibility: hidden; } </style></div><script type="text/javascript" async="" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/external.js" style="color: rgba(3, 7, 17, 0.5);"></script><script id="powr-js" async="" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/powr.js" powr-token="uC9c4Mmy8o1506219569" external-type="wordpress"></script><script>
+            (function(d){
+              var js, id = 'powr-js', ref = d.getElementsByTagName('script')[0];
+              if (d.getElementById(id)) {return;}
+              js = d.createElement('script'); js.id = id; js.async = true;
+              js.src = '//www.powr.io/powr.js';
+              js.setAttribute('powr-token','uC9c4Mmy8o1506219569');
+              js.setAttribute('external-type','wordpress');
+              ref.parentNode.insertBefore(js, ref);
+            }(document));
+          </script>
+          
+<!-- This site is optimized with the Yoast SEO plugin v10.0.1 - https://yoast.com/wordpress/plugins/seo/ -->
+<link rel="canonical" href="http://www.corvin.cn/756.html">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="4.在STDR中使用amcl进行仿真机器人定位 - ROS小课堂">
+<meta property="og:description" content="0x00 为何需要对机器人进行定位？ 要想实现移动式机器人的自动导航需 阅读更多…">
+<meta property="og:url" content="http://www.corvin.cn/756.html">
+<meta property="og:site_name" content="ROS小课堂">
+<meta property="article:section" content="STDR仿真">
+<meta property="article:published_time" content="2018-06-06T05:29:53+00:00">
+<meta property="article:modified_time" content="2018-06-06T05:33:37+00:00">
+<meta property="og:updated_time" content="2018-06-06T05:33:37+00:00">
+<meta property="og:image" content="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2018/06/Screenshot-from-2018-06-05-152310.png?fit=1225%2C670">
+<meta property="og:image:secure_url" content="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2018/06/Screenshot-from-2018-06-05-152310.png?fit=1225%2C670">
+<meta property="og:image:width" content="1225">
+<meta property="og:image:height" content="670">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:description" content="0x00 为何需要对机器人进行定位？ 要想实现移动式机器人的自动导航需 阅读更多…">
+<meta name="twitter:title" content="4.在STDR中使用amcl进行仿真机器人定位 - ROS小课堂">
+<meta name="twitter:image" content="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2018/06/Screenshot-from-2018-06-05-152310.png?fit=1225%2C670">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","url":"http://www.corvin.cn/","sameAs":[],"@id":"#person","name":"corvin"}</script>
+<!-- / Yoast SEO plugin. -->
+
+<link rel="dns-prefetch" href="http://s0.wp.com/">
+<link rel="dns-prefetch" href="http://secure.gravatar.com/">
+<link rel="dns-prefetch" href="http://maxcdn.bootstrapcdn.com/">
+<link rel="dns-prefetch" href="http://fonts.googleapis.com/">
+<link rel="dns-prefetch" href="http://css.rating-widget.com/">
+<link rel="dns-prefetch" href="http://s.w.org/">
+<link rel="alternate" type="application/rss+xml" title="ROS小课堂 » Feed" href="http://www.corvin.cn/feed">
+<link rel="alternate" type="application/rss+xml" title="ROS小课堂 » 评论Feed" href="http://www.corvin.cn/comments/feed">
+<link rel="alternate" type="application/rss+xml" title="ROS小课堂 » 4.在STDR中使用amcl进行仿真机器人定位评论Feed" href="http://www.corvin.cn/756.html/feed">
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/11\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/11\/svg\/","svgExt":".svg","source":{"concatemoji":"http:\/\/www.corvin.cn\/wp-includes\/js\/wp-emoji-release.min.js?ver=5.0.4"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56760,9792,65039],[55358,56760,8203,9792,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script><script src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/wp-emoji-release.js" type="text/javascript" defer="defer"></script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel="stylesheet" id="dashicons-css" href="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/dashicons.css" type="text/css" media="all">
+<link rel="stylesheet" id="admin-bar-css" href="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/admin-bar.css" type="text/css" media="all">
+<style id="admin-bar-inline-css" type="text/css">
+
+			.admin-bar {
+				position: inherit !important;
+				top: auto !important;
+			}
+			.admin-bar .goog-te-banner-frame {
+				top: 32px !important
+			}
+			@media screen and (max-width: 782px) {
+				.admin-bar .goog-te-banner-frame {
+					top: 46px !important;
+				}
+			}
+			@media screen and (max-width: 480px) {
+				.admin-bar .goog-te-banner-frame {
+					position: absolute;
+				}
+			}
+		
+</style>
+<link rel="stylesheet" id="wp-block-library-css" href="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/style_002.css" type="text/css" media="all">
+<link rel="stylesheet" id="font-awesome-5-css" href="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/all.css" type="text/css" media="all">
+<link rel="stylesheet" id="font-awesome-4-shims-css" href="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/v4-shims.css" type="text/css" media="all">
+<link rel="stylesheet" id="themeisle-block_styles-css" href="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/style.css" type="text/css" media="all">
+<link rel="stylesheet" id="bp-admin-bar-css" href="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/admin-bar_002.css" type="text/css" media="all">
+<link rel="stylesheet" id="bp-legacy-css-css" href="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/buddypress.css" type="text/css" media="screen">
+<link rel="stylesheet" id="rw-site-rating-css" href="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/site-rating.css" type="text/css" media="all">
+<link rel="stylesheet" id="hestia-clients-bar-css" href="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/clients-bar.css" type="text/css" media="all">
+<link rel="stylesheet" id="obfx-module-pub-css-menu-icons-0-css" href="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/font-awesome_002.css" type="text/css" media="all">
+<link rel="stylesheet" id="obfx-module-pub-css-menu-icons-1-css" href="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/public.css" type="text/css" media="all">
+<link rel="stylesheet" id="bootstrap-css" href="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/bootstrap.css" type="text/css" media="all">
+<link rel="stylesheet" id="hestia-font-sizes-css" href="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/font-sizes.css" type="text/css" media="all">
+<link rel="stylesheet" id="font-awesome-css" href="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/font-awesome.css" type="text/css" media="all">
+<link rel="stylesheet" id="hestia_style-css" href="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/style_003.css" type="text/css" media="all">
+<style id="hestia_style-inline-css" type="text/css">
+.hestia-top-bar, .hestia-top-bar .widget.widget_shopping_cart .cart_list {
+			background-color: #363537
+		}
+		.hestia-top-bar .widget .label-floating input[type=search]:-webkit-autofill {
+			-webkit-box-shadow: inset 0 0 0px 9999px #363537
+		}.hestia-top-bar, .hestia-top-bar .widget .label-floating input[type=search], .hestia-top-bar .widget.widget_search form.form-group:before, .hestia-top-bar .widget.widget_product_search form.form-group:before, .hestia-top-bar .widget.widget_shopping_cart:before {
+			color: #ffffff
+		} 
+		.hestia-top-bar .widget .label-floating input[type=search]{
+			-webkit-text-fill-color:#ffffff !important 
+		}.hestia-top-bar a, .hestia-top-bar .top-bar-nav li a {
+			color: #ffffff
+		}.hestia-top-bar a:hover, .hestia-top-bar .top-bar-nav li a:hover {
+			color: #eeeeee
+		}
+	
+		a, 
+		.navbar .dropdown-menu li:hover > a,
+		.navbar .dropdown-menu li:focus > a,
+		.navbar .dropdown-menu li:active > a,
+		.navbar .navbar-nav > li .dropdown-menu li:hover > a,
+		body:not(.home) .navbar-default .navbar-nav > .active:not(.btn) > a,
+		body:not(.home) .navbar-default .navbar-nav > .active:not(.btn) > a:hover,
+		body:not(.home) .navbar-default .navbar-nav > .active:not(.btn) > a:focus,
+		a:hover, 
+		.card-blog a.moretag:hover, 
+		.card-blog a.more-link:hover, 
+		.widget a:hover,
+		.has-accent-color {
+		    color:#0e6d13;
+		}
+		
+		.pagination span.current, .pagination span.current:focus, .pagination span.current:hover {
+			border-color:#0e6d13
+		}
+		
+		button,
+		button:hover,
+		.woocommerce .track_order button[type="submit"],
+		.woocommerce .track_order button[type="submit"]:hover,
+		div.wpforms-container .wpforms-form button[type=submit].wpforms-submit,
+		div.wpforms-container .wpforms-form button[type=submit].wpforms-submit:hover,
+		input[type="button"],
+		input[type="button"]:hover,
+		input[type="submit"],
+		input[type="submit"]:hover,
+		input#searchsubmit, 
+		.pagination span.current, 
+		.pagination span.current:focus, 
+		.pagination span.current:hover,
+		.btn.btn-primary,
+		.btn.btn-primary:link,
+		.btn.btn-primary:hover, 
+		.btn.btn-primary:focus, 
+		.btn.btn-primary:active, 
+		.btn.btn-primary.active, 
+		.btn.btn-primary.active:focus, 
+		.btn.btn-primary.active:hover,
+		.btn.btn-primary:active:hover, 
+		.btn.btn-primary:active:focus, 
+		.btn.btn-primary:active:hover,
+		.hestia-sidebar-open.btn.btn-rose,
+		.hestia-sidebar-close.btn.btn-rose,
+		.hestia-sidebar-open.btn.btn-rose:hover,
+		.hestia-sidebar-close.btn.btn-rose:hover,
+		.hestia-sidebar-open.btn.btn-rose:focus,
+		.hestia-sidebar-close.btn.btn-rose:focus,
+		.label.label-primary,
+		.hestia-work .portfolio-item:nth-child(6n+1) .label,
+		.nav-cart .nav-cart-content .widget .buttons .button,
+		.has-accent-background-color {
+		    background-color: #0e6d13;
+		}
+		
+		@media (max-width: 768px) { 
+	
+			.navbar-default .navbar-nav>li>a:hover,
+			.navbar-default .navbar-nav>li>a:focus,
+			.navbar .navbar-nav .dropdown .dropdown-menu li a:hover,
+			.navbar .navbar-nav .dropdown .dropdown-menu li a:focus,
+			.navbar button.navbar-toggle:hover,
+			.navbar .navbar-nav li:hover > a i {
+			    color: #0e6d13;
+			}
+		}
+		
+		body:not(.woocommerce-page) button:not([class^="fl-"]):not(.hestia-scroll-to-top):not(.navbar-toggle):not(.close),
+		body:not(.woocommerce-page) .button:not([class^="fl-"]):not(hestia-scroll-to-top):not(.navbar-toggle):not(.add_to_cart_button),
+		div.wpforms-container .wpforms-form button[type=submit].wpforms-submit,
+		input[type="submit"], 
+		input[type="button"], 
+		.btn.btn-primary,
+		.widget_product_search button[type="submit"],
+		.hestia-sidebar-open.btn.btn-rose,
+		.hestia-sidebar-close.btn.btn-rose,
+		.everest-forms button[type=submit].everest-forms-submit-button {
+		    -webkit-box-shadow: 0 2px 2px 0 rgba(14,109,19,0.14),0 3px 1px -2px rgba(14,109,19,0.2),0 1px 5px 0 rgba(14,109,19,0.12);
+		    box-shadow: 0 2px 2px 0 rgba(14,109,19,0.14),0 3px 1px -2px rgba(14,109,19,0.2),0 1px 5px 0 rgba(14,109,19,0.12);
+		}
+		
+		.card .header-primary, .card .content-primary,
+		.everest-forms button[type=submit].everest-forms-submit-button {
+		    background: #0e6d13;
+		}
+		
+		body:not(.woocommerce-page) .button:not([class^="fl-"]):not(.hestia-scroll-to-top):not(.navbar-toggle):not(.add_to_cart_button):hover,
+		body:not(.woocommerce-page) button:not([class^="fl-"]):not(.hestia-scroll-to-top):not(.navbar-toggle):not(.close):hover,
+		div.wpforms-container .wpforms-form button[type=submit].wpforms-submit:hover,
+		input[type="submit"]:hover,
+		input[type="button"]:hover,
+		input#searchsubmit:hover, 
+		.widget_product_search button[type="submit"]:hover,
+		.pagination span.current, 
+		.btn.btn-primary:hover, 
+		.btn.btn-primary:focus, 
+		.btn.btn-primary:active, 
+		.btn.btn-primary.active, 
+		.btn.btn-primary:active:focus, 
+		.btn.btn-primary:active:hover, 
+		.hestia-sidebar-open.btn.btn-rose:hover,
+		.hestia-sidebar-close.btn.btn-rose:hover,
+		.pagination span.current:hover,
+		.everest-forms button[type=submit].everest-forms-submit-button:hover,
+ 		.everest-forms button[type=submit].everest-forms-submit-button:focus,
+ 		.everest-forms button[type=submit].everest-forms-submit-button:active {
+			-webkit-box-shadow: 0 14px 26px -12px rgba(14,109,19,0.42),0 4px 23px 0 rgba(0,0,0,0.12),0 8px 10px -5px rgba(14,109,19,0.2);
+		    box-shadow: 0 14px 26px -12px rgba(14,109,19,0.42),0 4px 23px 0 rgba(0,0,0,0.12),0 8px 10px -5px rgba(14,109,19,0.2);
+			color: #fff;
+		}
+		
+		.form-group.is-focused .form-control {
+			background-image: -webkit-gradient(linear,left top, left bottom,from(#0e6d13),to(#0e6d13)),-webkit-gradient(linear,left top, left bottom,from(#d2d2d2),to(#d2d2d2));
+			background-image: -webkit-linear-gradient(linear,left top, left bottom,from(#0e6d13),to(#0e6d13)),-webkit-linear-gradient(linear,left top, left bottom,from(#d2d2d2),to(#d2d2d2));
+			background-image: linear-gradient(linear,left top, left bottom,from(#0e6d13),to(#0e6d13)),linear-gradient(linear,left top, left bottom,from(#d2d2d2),to(#d2d2d2));
+		}
+		
+		.navbar:not(.navbar-transparent) li:not(.btn):hover > a,
+		.navbar li.on-section:not(.btn) > a, 
+		.navbar.full-screen-menu.navbar-transparent li:not(.btn):hover > a,
+		.navbar.full-screen-menu .navbar-toggle:hover,
+		.navbar:not(.navbar-transparent) .nav-cart:hover, 
+		.navbar:not(.navbar-transparent) .hestia-toggle-search:hover {
+				color:#0e6d13}
+		
+		.header-filter-gradient { 
+			background: linear-gradient(45deg, rgba(168,29,132,1) 0%, rgb(234,57,111) 100%); 
+		}
+		.has-header-gradient-color { color: #a81d84; }
+		.has-header-gradient-background-color { background-color: #a81d84; }
+		 
+		.has-background-color-color { color: #E5E5E5; }
+		.has-background-color-background-color { background-color: #E5E5E5; }
+		
+.btn.btn-primary:not(.colored-button):not(.btn-left):not(.btn-right):not(.btn-just-icon):not(.menu-item), input[type="submit"]:not(.search-submit), body:not(.woocommerce-account) .woocommerce .button.woocommerce-Button, .woocommerce .product button.button, .woocommerce .product button.button.alt, .woocommerce .product #respond input#submit, .woocommerce-cart .blog-post .woocommerce .cart-collaterals .cart_totals .checkout-button, .woocommerce-checkout #payment #place_order, .woocommerce-account.woocommerce-page button.button, .woocommerce .track_order button[type="submit"], .nav-cart .nav-cart-content .widget .buttons .button, .woocommerce a.button.wc-backward, body.woocommerce .wccm-catalog-item a.button, body.woocommerce a.wccm-button.button, form.woocommerce-form-coupon button.button, div.wpforms-container .wpforms-form button[type=submit].wpforms-submit, div.woocommerce a.button.alt, div.woocommerce table.my_account_orders .button, .btn.colored-button, .btn.btn-left, .btn.btn-right, .btn:not(.colored-button):not(.btn-left):not(.btn-right):not(.btn-just-icon):not(.menu-item):not(.hestia-sidebar-open):not(.hestia-sidebar-close){ padding-top:15px;  padding-bottom:15px;  padding-left:33px;  padding-right:33px; }
+.btn.btn-primary:not(.colored-button):not(.btn-left):not(.btn-right):not(.btn-just-icon):not(.menu-item), input[type="submit"]:not(.search-submit), body:not(.woocommerce-account) .woocommerce .button.woocommerce-Button, .woocommerce .product button.button, .woocommerce .product button.button.alt, .woocommerce .product #respond input#submit, .woocommerce-cart .blog-post .woocommerce .cart-collaterals .cart_totals .checkout-button, .woocommerce-checkout #payment #place_order, .woocommerce-account.woocommerce-page button.button, .woocommerce .track_order button[type="submit"], .nav-cart .nav-cart-content .widget .buttons .button, .woocommerce a.button.wc-backward, body.woocommerce .wccm-catalog-item a.button, body.woocommerce a.wccm-button.button, form.woocommerce-form-coupon button.button, div.wpforms-container .wpforms-form button[type=submit].wpforms-submit, div.woocommerce a.button.alt, div.woocommerce table.my_account_orders .button, input[type="submit"].search-submit, .hestia-view-cart-wrapper .added_to_cart.wc-forward, .woocommerce-product-search button, .woocommerce-cart .actions .button, #secondary div[id^=woocommerce_price_filter] .button, .woocommerce div[id^=woocommerce_widget_cart].widget .buttons .button, .searchform input[type=submit], .searchform button, .search-form:not(.media-toolbar-primary) input[type=submit], .search-form:not(.media-toolbar-primary) button, .woocommerce-product-search input[type=submit], .btn.colored-button, .btn.btn-left, .btn.btn-right, .btn:not(.colored-button):not(.btn-left):not(.btn-right):not(.btn-just-icon):not(.menu-item):not(.hestia-sidebar-open):not(.hestia-sidebar-close){border-radius:3px;}
+h1, h2, h3, h4, h5, h6, .hestia-title, .hestia-title.title-in-content, p.meta-in-content , .info-title, .card-title,
+		.page-header.header-small .hestia-title, .page-header.header-small .title, .widget h5, .hestia-title, 
+		.title, .footer-brand, .footer-big h4, .footer-big h5, .media .media-heading, 
+		.carousel h1.hestia-title, .carousel h2.title, 
+		.carousel span.sub-title, .woocommerce.single-product h1.product_title, .woocommerce section.related.products h2, .hestia-about h1, .hestia-about h2, .hestia-about h3, .hestia-about h4, .hestia-about h5 {
+			font-family: Ubuntu Mono;
+		}
+		body, ul, .tooltip-inner {
+			font-family: Ubuntu Mono;
+		}
+@media (min-width: 769px){
+			.page-header.header-small .hestia-title,
+			.page-header.header-small .title,
+			h1.hestia-title.title-in-content,
+			.main article.section .has-title-font-size {
+				font-size: 42px;
+			}}
+
+		.page-template-builder-fullwidth-std .header > .elementor {
+			padding-top: 70px;
+		}
+
+</style>
+<link rel="stylesheet" id="hestia-google-font-ubuntu-mono-css" href="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/css.css" type="text/css" media="all">
+<link rel="stylesheet" id="rw_toprated-css" href="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/toprated.css" type="text/css" media="all">
+<link rel="stylesheet" id="rw_recommendations-css" href="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/recommendations.css" type="text/css" media="all">
+<link rel="stylesheet" id="enlighter-local-css" href="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/EnlighterJS.css" type="text/css" media="all">
+<link rel="stylesheet" id="social-logos-css" href="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/social-logos.css" type="text/css" media="all">
+<link rel="stylesheet" id="jetpack_css-css" href="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/jetpack.css" type="text/css" media="all">
+<script type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/jquery.js"></script>
+<script type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/jquery-migrate.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var related_posts_js_options = {"post_heading":"h4"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/related-posts.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var BP_Confirm = {"are_you_sure":"\u786e\u5b9a\uff1f"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/confirm.js"></script>
+<script type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/widget-members.js"></script>
+<script type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/jquery-query.js"></script>
+<script type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/jquery-cookie.js"></script>
+<script type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/jquery-scroll-to.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var BP_DTheme = {"accepted":"\u5df2\u63a5\u53d7","close":"\u5173\u95ed","comments":"\u8bc4\u8bba","leave_group_confirm":"\u60a8\u786e\u5b9a\u8981\u9000\u51fa\u8be5\u7fa4\u5417\uff1f","mark_as_fav":"\u6536\u85cf","my_favs":"\u6211\u7684\u6536\u85cf","rejected":"\u5df2\u62d2\u7edd","remove_fav":"\u79fb\u9664\u6536\u85cf","show_all":"\u663e\u793a\u5168\u90e8","show_all_comments":"\u663e\u793a\u8be5\u8bdd\u9898\u6240\u6709\u8bc4\u8bba","show_x_comments":"Show all comments (%d)","unsaved_changes":"\u60a8\u7684\u4e2a\u4eba\u8d44\u6599\u66f4\u6539\u5c1a\u672a\u4fdd\u5b58\u3002\u5982\u679c\u79bb\u5f00\u6b64\u9875\u9762\uff0c\u60a8\u7684\u66f4\u6539\u5c06\u4f1a\u4e22\u5931\u3002","view":"\u67e5\u770b","store_filter_settings":""};
+/* ]]> */
+</script>
+<script type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/buddypress.js"></script>
+<script type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/jquery_002.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var IZ = {"with_woocommerce":"0","exchange_thumbnails":"1","woo_categories":"0","enable_mobile":"","options":[],"woo_slider":"0"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/image_zoom-init.js"></script>
+<link rel="https://api.w.org/" href="http://www.corvin.cn/wp-json/">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.corvin.cn/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://www.corvin.cn/wp-includes/wlwmanifest.xml"> 
+<meta name="generator" content="WordPress 5.0.4">
+<link rel="shortlink" href="https://wp.me/p9d5Bf-cc">
+<link rel="alternate" type="application/json+oembed" href="http://www.corvin.cn/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fwww.corvin.cn%2F756.html">
+<link rel="alternate" type="text/xml+oembed" href="http://www.corvin.cn/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fwww.corvin.cn%2F756.html&amp;format=xml">
+
+	<script type="text/javascript">var ajaxurl = 'http://www.corvin.cn/wp-admin/admin-ajax.php';</script>
+
+<script type="text/javascript">
+(function(url){
+	if(/(?:Chrome\/26\.0\.1410\.63 Safari\/537\.31|WordfenceTestMonBot)/.test(navigator.userAgent)){ return; }
+	var addEvent = function(evt, handler) {
+		if (window.addEventListener) {
+			document.addEventListener(evt, handler, false);
+		} else if (window.attachEvent) {
+			document.attachEvent('on' + evt, handler);
+		}
+	};
+	var removeEvent = function(evt, handler) {
+		if (window.removeEventListener) {
+			document.removeEventListener(evt, handler, false);
+		} else if (window.detachEvent) {
+			document.detachEvent('on' + evt, handler);
+		}
+	};
+	var evts = 'contextmenu dblclick drag dragend dragenter dragleave dragover dragstart drop keydown keypress keyup mousedown mousemove mouseout mouseover mouseup mousewheel scroll'.split(' ');
+	var logHuman = function() {
+		if (window.wfLogHumanRan) { return; }
+		window.wfLogHumanRan = true;
+		var wfscr = document.createElement('script');
+		wfscr.type = 'text/javascript';
+		wfscr.async = true;
+		wfscr.src = url + '&r=' + Math.random();
+		(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(wfscr);
+		for (var i = 0; i < evts.length; i++) {
+			removeEvent(evts[i], logHuman);
+		}
+	};
+	for (var i = 0; i < evts.length; i++) {
+		addEvent(evts[i], logHuman);
+	}
+})('//www.corvin.cn/?wordfence_lh=1&hid=AB9509A460B760D43F5E8D3C04C8A7C1');
+</script><script type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/a_003.html" async=""></script>
+<link rel="dns-prefetch" href="http://v0.wordpress.com/">
+<link rel="dns-prefetch" href="http://widgets.wp.com/">
+<link rel="dns-prefetch" href="http://s0.wp.com/">
+<link rel="dns-prefetch" href="http://0.gravatar.com/">
+<link rel="dns-prefetch" href="http://1.gravatar.com/">
+<link rel="dns-prefetch" href="http://2.gravatar.com/">
+<link rel="dns-prefetch" href="http://i0.wp.com/">
+<link rel="dns-prefetch" href="http://i1.wp.com/">
+<link rel="dns-prefetch" href="http://i2.wp.com/">
+<style type="text/css">img#wpstats{display:none}</style><style type="text/css" id="custom-background-css">
+body.custom-background { background-image: url("http://www.corvin.cn/wp-content/uploads/2017/11/cropped-timg.jpeg"); background-position: center center; background-size: contain; background-repeat: repeat; background-attachment: fixed; }
+</style>
+<style type="text/css" media="print">#wpadminbar { display:none; }</style>
+<style type="text/css" media="screen">
+	html { margin-top: 32px !important; }
+	* html body { margin-top: 32px !important; }
+	@media screen and ( max-width: 782px ) {
+		html { margin-top: 46px !important; }
+		* html body { margin-top: 46px !important; }
+	}
+</style>
+<link rel="icon" href="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2017/08/cropped-logo.png?fit=32%2C32" sizes="32x32">
+<link rel="icon" href="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2017/08/cropped-logo.png?fit=192%2C192" sizes="192x192">
+<link rel="apple-touch-icon-precomposed" href="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2017/08/cropped-logo.png?fit=180%2C180">
+<meta name="msapplication-TileImage" content="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2017/08/cropped-logo.png?fit=270%2C270">
+<script type="text/javascript" async="" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/a_004.html"></script><link rel="stylesheet" type="text/css" id="gravatar-card-css" href="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/hovercard.css"><link rel="stylesheet" type="text/css" id="gravatar-card-services-css" href="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/services.css"><link type="text/css" rel="stylesheet" href="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/style_004.css" media="screen"><link type="text/css" rel="stylesheet" href="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/theme.css" media="screen"><style type="text/css" id="rw_class_blog-post_custom_style">.rw-class-blog-post.rw-ui-star.rw-ui-container.rw-style-custom .rw-ui-stars li { background-image: url(''); }
+.rw-class-blog-post.rw-rtl.rw-ui-star.rw-ui-container.rw-style-custom .rw-ui-stars li { background-image: url(''); }
+</style></head>
+
+<body class="bp-legacy post-template-default single single-post postid-756 single-format-standard admin-bar no-customize-support custom-background wp-custom-logo blog-post header-layout-default js">
+	<div class="wrapper post-756 post type-post status-publish format-standard has-post-thumbnail hentry category-stdr_simulator default ">
+		<header class="header ">
+					<nav class="navbar navbar-default navbar-fixed-top  hestia_left navbar-not-transparent">
+						<div class="container">
+						<div class="navbar-header">
+			<div class="title-logo-wrapper">
+				<a class="navbar-brand" href="http://www.corvin.cn/" title="ROS小课堂">
+					<img src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/cropped-.png" alt="ROS小课堂"></a>
+			</div>
+								<div class="navbar-toggle-wrapper">
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navigation">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="sr-only">切换导航</span>
+			</button>
+					</div>
+				</div>
+		<div id="main-navigation" class="collapse navbar-collapse"><ul id="menu-%e9%a1%b9%e7%9b%ae%e7%ae%a1%e7%90%86%e7%b3%bb%e7%bb%9f" class="nav navbar-nav"><li id="menu-item-367" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-367"><a title="项目管理系统" href="http://corvin.cn:81/">项目管理系统</a></li>
+<li id="menu-item-371" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-371"><a title="gerrit系统" href="http://corvin.cn:8080/gerrit/">gerrit系统</a></li>
+<li class="hestia-search-in-menu"><div class="hestia-nav-search"><form role="search" method="get" class="search-form form-group" action="http://www.corvin.cn/">
+				<label class="label-floating is-empty form-group">
+					<span class="screen-reader-text">搜索：</span>
+					<label class="control-label"> 搜索… </label><input class="search-field form-control" name="s" type="search">
+				</label>
+				<input class="search-submit" value="搜索" type="submit">
+			</form></div><div class="hestia-toggle-search"><i class="fa fa-search"></i></div></li></ul></div>			</div>
+					</nav>
+		<div style="display: none"></div>		</header>
+<div id="primary" class="boxed-layout-header page-header header-small" data-parallax="active" style="transform: translate3d(0px, 204.667px, 0px);"><div class="container" style="padding-top: 170px;"><div class="row"><div class="col-md-10 col-md-offset-1 text-center"><h1 class="hestia-title entry-title">4.在STDR中使用amcl进行仿真机器人定位</h1><h4 class="author">于<time class="entry-date published" datetime="2018-06-06T13:29:53+00:00" content="2018-06-06">2018-06-06</time><time class="updated hestia-hidden" datetime="2018-06-06T13:33:37+00:00">2018-06-06</time>由<a href="http://www.corvin.cn/author/corvin_zhang" class="vcard author"><strong class="fn">corvin_zhang</strong></a>发布</h4></div></div></div><div class="header-filter" style="background-image: url(http://www.corvin.cn/wp-content/uploads/2017/11/cropped-timg.jpeg);"></div></div>
+<div class="main  main-raised ">
+	<div class="blog-post blog-post-wrapper">
+		<div class="container">
+			<article id="post-756" class="section section-text">
+	<div class="row">
+				<div class="col-md-8 single-post-container" data-layout="sidebar-right">
+			<div class="single-post-wrap entry-content">
+				<table class="rw-rating-table rw-ltr rw-center rw-no-labels"><tbody><tr><td><nobr>&nbsp;</nobr></td><td><div class="rw-center"><div class="rw-ui-container rw-urid-7570 rw-ui-star rw-size-large rw-dir-ltr rw-halign-right rw-valign-middle rw-style-quartz_blue rw-theme-star_quartz_blue rw-active rw-class-blog-post" data-img="http://www.corvin.cn/wp-content/uploads/2018/06/Screenshot-from-2018-06-05-152310.png" data-urid="7570" style=""><div class="rw-action-area"><ul class="rw-ui-stars"><li class="rw-ui-star-0 rw-ui-star-selected"></li><li class="rw-ui-star-1 rw-ui-star-selected"></li><li class="rw-ui-star-2 rw-ui-star-selected"></li><li class="rw-ui-star-3 rw-ui-star-selected"></li><li class="rw-ui-star-4 rw-ui-star-selected"></li><li class="rw-ui-star-5 rw-ui-star-selected"></li><li class="rw-ui-star-6 rw-ui-star-selected"></li><li class="rw-ui-star-7 rw-ui-star-selected"></li><li class="rw-ui-star-8 rw-ui-star-selected"></li><li class="rw-ui-star-9 rw-ui-star-selected"></li></ul><a class="rw-report-link" target="_blank" href="http://rating-widget.com/my-rating-report/star/quartz-blue/rating-162819156-10/" rel="nofollow"></a></div><span class="rw-ui-info-container" style="background-color: rgb(255, 255, 255);"><i aria-hidden="true" class="rw-ui-info-nub rw-ui-info-outer-nub" style=""></i><i aria-hidden="true" class="rw-ui-info-nub rw-ui-info-inner-nub" style="border-right-color: rgb(255, 255, 255);"></i><span class="rw-ui-info-inner-container" style="border-color: DARKBLUE;"><span class="rw-ui-info" style="color: DARKBLUE;">评分 (21 投票)</span></span></span></div></div></td></tr></tbody></table><p><span style="color: #00B050;font-size: 16px">0x00 为何需要对机器人进行定位？</span></p>
+<p style="text-indent: 2em">要想实现移动式机器人的自动导航需要完成以下六点，当然这些信息是我自己总结的仅供大家参考：</p>
+<p style="text-indent: 2em">（1）一张完整的高精度全局地图，机器人需要在该地图下完成自动导航，这是进行自动导航的必要且重要的前提;</p>
+<p style="text-indent: 2em">（2）机器人在地图的哪个位置上，确定机器人当期位姿，用于确定机器人的起始状态;</p>
+<p style="text-indent: 2em">（3）机器人需要到达的目的地在地图上哪里，确定机器人在地图上的最终位姿，用于确定机器人的结束状态;</p>
+<p style="text-indent: 2em">（4）根据机器人在地图上的当前位姿和目的地位姿两点信息，如何规划出一条完美的移动路径使其可以从当前位置移动到目的位置;</p>
+<p style="text-indent: 2em">（5）尽可能根据全局地图来移动机器人同时需要进行局部路径的规划，防止全局路径上突然出现障碍物，因此需要不断小距离的规划局部路径来移动机器人使其避障。</p>
+<p style="text-indent: 2em">（6）随着机器人的不断移动，全局路径也需要不断的重新规划，因为从当前位置移动到目的位置需要时间，全局路径规划只在某一确定时间点下是有效的，随着机器人位置不断变化和时间的流逝，开始时候规划的全局路径已经变得不可靠，因此需要不断的更新全局路径。</p>
+<p style="text-indent: 2em">对于第一点的建立一张全局地图，我们在第3篇教程<a href="http://www.corvin.cn/710.html" target="_blank" title="在STDR仿真器中使用gmapping构建2D栅格地图">在STDR仿真器中使用gmapping构建2D栅格地图</a>中
+已经介绍过了，本次教程主要就是为了解决第二点，我们如何确定机器人在一张确定的地图上的位姿状态，在这里就用到了AMCL软件包，AMCL的全称是
+Adaptive Monte Carlo 
+Localization自适应蒙特卡罗定位，是移动机器人在二维环境下的概率定位算法，它实现了自适应（或kld采样）的蒙特卡罗定位方法，作用是针对
+已有的地图使用粒子滤波器跟踪确定一个机器人的位姿信息。对机器人的定位是非常重要的，因为若无法正确定位机器人当前位置，那么基于错误的起始点来进行后
+面规划的到达目的地的路径必定也是错误的，那么按照错误的路径来移动必定是无法到达目的地的，因此我们需要一种资源消耗低，定位速度快，定位精度好，可以
+稳定定位机器人当前位置的算法是重中之重。</p>
+<p style="text-indent: 2em">我们可以感受到要想做好机器人的自动导航发现每一步都是非常重要的，第一步就是需要有高精度的全局地图，接下来对机器人在当前地图下的定位就是第二件重要的事，只有一步一步的做好每一步才能做出最完美的自动导航系统。</p>
+<p><span style="font-family: arial, helvetica, sans-serif;font-size: 14px"></span></p>
+<hr>
+<p><span style="color: #00B050;font-size: 16px">0x01 AMCL是如何实现对机器人进行定位的呢？</span></p>
+<p style="text-indent: 2em">AMCL使用的是粒子滤波的方式来实现对机器人的定位，下面我使用一个简单形象的例子来介绍这
+个定位过程是如何实现的。你可以想象这样一个场景，你站在一个商业广场上，这个广场就相当于一张全局地图。我在广场上随机的分布了100个妹子，这些妹子
+就是粒子用来对你进行跟踪定位的，当然现在这些妹子都不知道要跟踪定位的目标就是你啊。你也不认识妹子们，你现在漫无目的的往前移动5步，你突然发现你面
+前有一个火锅店，你就饿了想吃火锅，就顺便在广场上吼了一嗓子，“我往前走了5步就发现前面有个火锅店啊，我要去吃火锅“。妹子们根据你的信息也来同样的
+移动，然后就开始观察自己的前面有没有火锅店啊，那肯定是前面有火锅店的妹子附近才有要跟踪的目标啊。此时，由于开始的时候妹子们是随机分布在广场上，面
+朝的方向肯定也是各部相同，有的肯定就不能发现自己前面有火锅店，那这个妹子就肯定很伤心，自己就退出这个任务了。那些可以发现了火锅店的妹子就很开心，
+距离目标很近啊，所以她就开始再生出一个妹子跟自己一起来完成这个任务，因为自己找到目标的概率很大啊，可以想象现在这群妹子们肯定有很多就在要跟踪的目
+标附近了。</p>
+<p style="text-indent: 2em">那接下来你吃了火锅出来后，继续移动，你向前走了10步，做转弯后发现一个兰州拉面，你就又吼
+了一嗓子，”我往前走了10步，左拐个弯就发现个兰州拉面啊“。那妹子们又开始根据这个信息来也做同样的移动，此时有的妹子移动后就发现前面没有兰州拉面
+啊，很伤心就退出跟踪定位任务。那些移动后发现自己前面有兰州拉面的就更开心了啊，距离目标又近了一点啊，因为两次概率都在目标的附近，那她就再生出一个
+妹子跟着自己一起来定位目标。那可以想象一下，现在肯定广场上有更多的妹子都聚集在一起，她们都在目标的附近。</p>
+<p style="text-indent: 2em">那你吃完面后出来继续往前走20步，突然发现前面有个珠宝店，你就又吼一嗓子，”我往前走了
+20步，发现一个珠宝店啊“。妹子们又根据这个信息开始移动，并查看自己的前面有没有珠宝店，那些没有看到珠宝店的就给淘汰了，那发现又珠宝店的妹子就再
+生出一个妹子，可以想象现在基本上妹子差不多都聚集在目标的附近了，那经过多次这样的循环，即使妹子们不知道要跟踪的目标在哪里，但是可以确定自己现在所
+处的位置基本上跟目标位置也差不到哪里去了。所以以后我要想定位你的位置那就容易多了，即使我不知道你在哪里，我只要知道我的那群妹子在哪里就行，你基本
+上也就在那附近了，说实话我感觉这个过程都有点像遗传算法的过程了。</p>
+<p style="text-indent: 2em">在这里我只是简单介绍了一下例子滤波定位的原理，当然以上这个例子仅供玩乐，不必拘泥是否科学
+严谨，重在理解这个定位的过程，在ROS下的AMCL只实现了在laser扫描的创建的地图上，使用laser来进行定位，其实该定位方法还可以修改使用
+其他类型的传感器来定位，例如可以使用超声波或红外这些测距的传感器也可以实现定位。</p>
+<hr>
+<p><span style="color: #00B050;font-size: 16px">0x02 创建stdr_amcl测试软件包</span></p>
+<p>（1）在自己的ros工作空间src目录下创建stdr_amcl软件包，在其中编写相关launch文件来加载stdr仿真器和amcl节点来对仿真机器人在地图上定位，首先来创建软件包：</p>
+<p style="text-align:center"><img src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/1528160743158484.png" title="1528160743158484.png" alt="Screenshot from 2018-06-05 09:01:34.png"></p>
+<p>（2）在launch目录下创建stdr_amcl.launch文件，在stdr_amcl.launch文件中添加如下代码，首先将stdr仿
+真器加载启动，然后打开rviz并加载配置文件，然后通过map_server来加载gmapping建立的地图，最后加载amcl节点启动：</p>
+<pre class="brush:xml;toolbar:false">&lt;!--
+&nbsp;&nbsp;Copyright:&nbsp;2016-2018&nbsp;ROS小课堂&nbsp;www.corvin.cn
+&nbsp;&nbsp;Author:&nbsp;corvin
+&nbsp;&nbsp;Description:
+&nbsp;&nbsp;&nbsp;&nbsp;启动amcl节点，这样就可以在全局地图上对机器人进行定位了。
+&nbsp;&nbsp;History:
+&nbsp;&nbsp;&nbsp;&nbsp;20180528:&nbsp;initial&nbsp;this&nbsp;file.
+--&gt;
+&lt;launch&gt;
+&nbsp;&nbsp;&lt;!--startup&nbsp;stdr&nbsp;simulator&nbsp;with&nbsp;robot0&nbsp;--&gt;
+&nbsp;&nbsp;&lt;include&nbsp;file="$(find&nbsp;stdr_launchers)/launch/server_with_map_and_gui_plus_robot.launch"/&gt;
+
+&nbsp;&nbsp;&lt;!--&nbsp;startup&nbsp;rviz&nbsp;node&nbsp;to&nbsp;show&nbsp;amcl&nbsp;process&nbsp;--&gt;
+&nbsp;&nbsp;&lt;node&nbsp;name="amcl_rviz"&nbsp;type="rviz"&nbsp;pkg="rviz"&nbsp;args="-d&nbsp;$(find&nbsp;stdr_amcl)/rviz/stdr_amcl_config.rviz"&nbsp;/&gt;
+
+&nbsp;&nbsp;&lt;!--&nbsp;load&nbsp;map&nbsp;--&gt;
+&nbsp;&nbsp;&lt;node&nbsp;name="stdr_map_server"&nbsp;pkg="map_server"&nbsp;type="map_server"&nbsp;args="$(find&nbsp;stdr_gmapping)/maps/mymap.yaml"&nbsp;&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;remap&nbsp;from="map"&nbsp;to="/amcl/map"&nbsp;/&gt;
+&nbsp;&nbsp;&lt;/node&gt;
+
+&nbsp;&nbsp;&lt;!--&nbsp;Run&nbsp;amcl&nbsp;--&gt;
+&nbsp;&nbsp;&lt;node&nbsp;pkg="amcl"&nbsp;type="amcl"&nbsp;name="stdr_amcl_node"&nbsp;output="screen"&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;!--&nbsp;amcl&nbsp;default&nbsp;subscribe&nbsp;scan&nbsp;topic,&nbsp;now&nbsp;remap&nbsp;to&nbsp;/robot0/laser_0&nbsp;--&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;remap&nbsp;from="scan"&nbsp;to="/robot0/laser_0"/&gt;
+
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;!--&nbsp;amcl&nbsp;default&nbsp;subscribe&nbsp;map&nbsp;topic,&nbsp;now&nbsp;remap&nbsp;to&nbsp;/amcl/map&nbsp;--&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;remap&nbsp;from="map"&nbsp;to="/amcl/map"&nbsp;/&gt;
+
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;!--&nbsp;overall&nbsp;filter&nbsp;parameters&nbsp;--&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="min_particles"&nbsp;value="400"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="max_particles"&nbsp;value="5000"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="kld_err"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value="0.01"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="kld_z"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value="0.99"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="update_min_d"&nbsp;&nbsp;value="0.05"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="update_min_a"&nbsp;&nbsp;value="0.05"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="resample_interval"&nbsp;&nbsp;&nbsp;value="2"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="transform_tolerance"&nbsp;value="0.5"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="recovery_alpha_slow"&nbsp;value="0.001"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="recovery_alpha_fast"&nbsp;value="0.1"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;!--&nbsp;set&nbsp;particles&nbsp;init&nbsp;pose&nbsp;to&nbsp;robot&nbsp;pose&nbsp;--&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="initial_pose_x"&nbsp;value="1.0"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="initial_pose_y"&nbsp;value="2.0"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="initial_pose_a"&nbsp;value="0.0"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="initial_cov_xx"&nbsp;value="0.25"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="initial_cov_yy"&nbsp;value="0.25"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="initial_cov_aa"&nbsp;value="0.068538917"/&gt;&nbsp;&lt;!--&nbsp;pi/12&nbsp;*&nbsp;pi/12&nbsp;--&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="gui_publish_rate"&nbsp;value="-1.0"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="save_pose_rate"&nbsp;&nbsp;&nbsp;value="0.5"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="use_map_topic"&nbsp;&nbsp;&nbsp;&nbsp;value="true"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="first_map_only"&nbsp;&nbsp;&nbsp;value="false"/&gt;
+
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;!--&nbsp;laser&nbsp;model&nbsp;parameters&nbsp;--&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="laser_min_range"&nbsp;value="0.05"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="laser_max_range"&nbsp;value="4.0"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="laser_max_beams"&nbsp;value="60"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="laser_z_hit"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value="0.95"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="laser_z_short"&nbsp;&nbsp;&nbsp;value="0.1"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="laser_z_max"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value="0.05"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="laser_z_rand"&nbsp;&nbsp;&nbsp;&nbsp;value="0.05"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="laser_sigma_hit"&nbsp;&nbsp;&nbsp;&nbsp;value="0.2"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="laser_lambda_short"&nbsp;value="0.1"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="laser_likelihood_max_dist"&nbsp;value="2.0"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="laser_model_type"&nbsp;value="likelihood_field"/&gt;
+
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;!--&nbsp;Odometry&nbsp;model&nbsp;parameters&nbsp;--&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="odom_model_type"&nbsp;value="diff"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="odom_alpha1"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value="0.03"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="odom_alpha2"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value="0.03"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="odom_alpha3"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value="0.03"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="odom_alpha4"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value="0.03"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="odom_alpha5"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value="0.0"/&gt;&nbsp;&lt;!--only&nbsp;used&nbsp;if&nbsp;model&nbsp;is&nbsp;"omni"--&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="odom_frame_id"&nbsp;&nbsp;&nbsp;value="/map_static"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="base_frame_id"&nbsp;&nbsp;&nbsp;value="/robot0"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="global_frame_id"&nbsp;value="/map"/&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;param&nbsp;name="tf_broadcast"&nbsp;&nbsp;&nbsp;&nbsp;value="true"/&gt;
+&nbsp;&nbsp;&lt;/node&gt;
+&lt;/launch&gt;</pre>
+<p>（3）配置rviz显示，由于rviz的配置文件过长，因此现在提供压缩包下载大家解压后放到rviz目录下即可：<img src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/icon_rar.gif" width="16" height="16"><a href="http://www.corvin.cn/wp-content/uploads/file/20180605/1528161543292831.gz" title="stdr_amcl_config.rviz.tar.gz">stdr_amcl_config.rviz.tar.gz</a>，按照下图来解压：</p>
+<p style="text-align:center"><img src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/1528161863557966.png" title="1528161863557966.png" alt="Screenshot from 2018-06-05 09:21:50.png"></p>
+<hr>
+<p><span style="color: #00B050;font-size: 16px">0x03 编译并测试stdr_amcl软件包</span></p>
+<p>（1）编译软件包需要在catkin_ws目录下执行catkin_make命令，如果想只编译stdr_amcl软件包就加上–pkg就可以了，如下图所示：</p>
+<p style="text-align:center"><img src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/1528163246463885.png" title="1528163246463885.png" alt="Screenshot from 2018-06-05 09:43:23.png"></p>
+<p style="text-indent: 2em">当编译完成后需要执行source devel/setup.bash来配置环境变量，这样才能使用如下命令来启动stdr_amcl软件包下的stdr_amcl.launch文件：</p>
+<p style="text-align: center"><span style="font-size: 16px;color: #0070C0">roslaunch stdr_amcl stdr_amcl.launch</span></p>
+<p style="text-align:center"><img src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/1528163666294082.png" title="1528163666294082.png" alt="Screenshot from 2018-06-05 09:53:22.png"></p>
+<p style="text-indent: 2em">在robot0旁边的那一大群零散的东西就是初始化的粒子，用来定位机器人的，在初始状态下可以看到定位精度很差，粒子定位在机器人周围2米范围内，随着机器人的不断移动，粒子会逐渐收敛于机器人的位置上。</p>
+<p>（2）下面我们使用teleop_twist_keyboard软件包下的teleop_twist_keyboard.py来键盘遥控机器人往前走，会看到整个粒子收敛定位的过程：</p>
+<p style="text-align:center"><img src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/1528167195264052.gif" title="1528167195264052.gif" alt="2.gif"></p>
+<p>（3）查看rqt_graph节点和话题之间的关系图，这样可以对AMCL的正常运行的依赖条件理解更为全面：</p>
+<p style="text-align:center"><img src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/1528166253723204.png" title="1528166253723204.png" alt="Screenshot from 2018-06-05 10:24:00.png"></p>
+<p><span style="font-family: arial, helvetica, sans-serif">（4）来仔细研究一下amcl节点订阅的各个话题：<br></span></p>
+<ul class=" list-paddingleft-2" style="list-style-type: disc">
+<li>
+<p><span style="font-family: arial, helvetica, sans-serif"><span style="font-size: 14px;background-color: #FFFFFF">/robot0/laser_0</span> (</span><a href="http://docs.ros.org/api/sensor_msgs/html/msg/LaserScan.html" target="_blank"><span style="font-family: arial, helvetica, sans-serif">sensor_msgs/LaserScan</span></a><span style="font-family: arial, helvetica, sans-serif">)：
+这是stdr中的仿真机器人的激光雷达输出的话题，在进行amcl定位时，这个是必不可少需要订阅的话题，因为我们要知道目标周围的环境状态。amcl节
+点默认是订阅的scan话题，这里由于robot0仿真器发布的雷达话题是/robot0/laser_0，因此需要在launch文件中使用remap
+来重新映射下订阅的话题。</span></p>
+</li>
+<li>
+<p><tt><span style="font-family: arial, helvetica, sans-serif">/tf</span></tt><span style="font-family: arial, helvetica, sans-serif">&nbsp;(</span><a href="http://docs.ros.org/api/tf/html/msg/tfMessage.html" target="_blank"><span style="font-family: arial, helvetica, sans-serif">tf/tfMessage</span></a><span style="font-family: arial, helvetica, sans-serif">)：订阅了各坐标系转换的话题，用于查询各坐标系的转换。</span></p>
+</li>
+<li>
+<p><tt><span style="font-family: arial, helvetica, sans-serif">/initialpose</span></tt><span style="font-family: arial, helvetica, sans-serif">&nbsp;(</span><a href="http://docs.ros.org/api/geometry_msgs/html/msg/PoseWithCovarianceStamped.html" target="_blank"><span style="font-family: arial, helvetica, sans-serif">geometry_msgs/PoseWithCovarianceStamped</span></a><span style="font-family: arial, helvetica, sans-serif">)：用于（重新）初始化粒子滤波器的平均值和协方差，简单来理解就是先预估计一下机器人的初始位姿。</span></p>
+</li>
+<li>
+<p><tt><span style="font-family: arial, helvetica, sans-serif">/amcl/map&nbsp;</span></tt><span style="font-family: arial, helvetica, sans-serif">(</span><a href="http://docs.ros.org/api/nav_msgs/html/msg/OccupancyGrid.html" target="_blank"><span style="font-family: arial, helvetica, sans-serif">nav_msgs/OccupancyGrid</span></a><span style="font-family: arial, helvetica, sans-serif">)：当在launch文件中设置了use_map_topic为true时，amcl则订阅该话题获取地图，然后使用基于激光来进行定位，当然设置use_map_topic为false时不订阅该话题也是可以的。</span></p>
+</li>
+</ul>
+<p><span style="font-family: arial, helvetica, sans-serif">amcl节点发布的话题如下：</span></p>
+<ul class=" list-paddingleft-2" style="list-style-type: disc">
+<li>
+<p><tt><span style="font-family: arial, helvetica, sans-serif">amcl_pose</span></tt><span style="font-family: arial, helvetica, sans-serif">&nbsp;(</span><a href="http://docs.ros.org/api/geometry_msgs/html/msg/PoseWithCovarianceStamped.html" target="_blank"><span style="font-family: arial, helvetica, sans-serif">geometry_msgs/PoseWithCovarianceStamped</span></a><span style="font-family: arial, helvetica, sans-serif">)：机器人在地图上带有协方差的位姿估计，这个是话题是整个粒子滤波定位的最终输出结果，该话题输出的位姿信息是根据全局坐标系/map的坐标转换后的位置。</span></p>
+</li>
+<li>
+<p><tt><span style="font-family: arial, helvetica, sans-serif">particlecloud</span></tt><span style="font-family: arial, helvetica, sans-serif">&nbsp;(</span><a href="http://docs.ros.org/api/geometry_msgs/html/msg/PoseArray.html" target="_blank"><span style="font-family: arial, helvetica, sans-serif">geometry_msgs/PoseArray</span></a><span style="font-family: arial, helvetica, sans-serif">)：在粒子滤波器维护下的一组粒子位姿估计，可以直接在rviz中显示，查看粒子的收敛效果。</span></p>
+</li>
+<li>
+<p><tt><span style="font-family: arial, helvetica, sans-serif">tf</span></tt><span style="font-family: arial, helvetica, sans-serif">&nbsp;(</span><a href="http://docs.ros.org/api/tf/html/msg/tfMessage.html" target="_blank"><span style="font-family: arial, helvetica, sans-serif">tf/tfMessage</span></a><span style="font-family: arial, helvetica, sans-serif">)：发布从odom坐标系到map坐标系的转换，当然该odom坐标系可以使用odom_frame_id参数来重新映射为自定义的坐标系名称，在stdr中由于没有odom坐标系，因此使用/map_static来代替odom坐标系。</span></p>
+</li>
+</ul>
+<p><span style="font-family: arial, helvetica, sans-serif">（5）下面来看看amcl节点提供的service:</span></p>
+<ul class=" list-paddingleft-2" style="list-style-type: disc">
+<li>
+<p><tt><span style="font-family: arial, helvetica, sans-serif">global_localization</span></tt><span style="font-family: arial, helvetica, sans-serif">&nbsp;(</span><a href="http://docs.ros.org/api/std_srvs/html/srv/Empty.html" target="_blank"><span style="font-family: arial, helvetica, sans-serif">std_srvs/Empty</span></a><span style="font-family: arial, helvetica, sans-serif">)：通过调用该服务将初始化全局定位，将所有的粒子重新打散随机的分散在地图的空闲地方，可以通过以下命令来调用该服务，当调用后可以发现所有的粒子被重新打散随机分布在地图上，然后使用键盘遥控机器人旋转，这样可以自动重新对机器人进行定位，调用效果如下图所示：</span></p>
+</li>
+</ul>
+<p style="text-align: center"><span style="color: #0070C0;font-size: 16px">rosservice call /global_localization "{}"&nbsp;</span></p>
+<p style="text-align:center"><span style="font-size: 16px;color: #000000"><img src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/1528181496396236.gif" title="1528181496396236.gif" alt="3.gif"><br></span></p>
+<ul class=" list-paddingleft-2" style="list-style-type: disc">
+<li>
+<p>request_nomotion_update<span style="color: #000000;font-size: 14px;font-family: arial, helvetica, sans-serif">&nbsp;(<a href="http://docs.ros.org/api/std_srvs/html/srv/Empty.html" target="_blank">std_srvs/Empty</a>)：</span>该服务是手动的来更新粒子并发布新的粒子，可以使用如下命令来调用服务执行更新粒子的操作，该服务一般需要多次调用才能逐渐看到粒子收敛的效果：</p>
+<p style="text-align: center"><span style="background-color: #FFFFFF;color: #0070C0;font-family: arial, helvetica, sans-serif;font-size: 16px">rosservice call /request_nomotion_update "{}"</span></p>
+</li>
+</ul>
+<p style="text-align:center"><img src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/1528182129757822.gif" title="1528182129757822.gif" alt="4.gif"></p>
+<p><span style="font-size: 14px"><strong><span style="color: #000000">amcl调用的服务：</span></strong></span></p>
+<ul class=" list-paddingleft-2" style="list-style-type: disc">
+<li>
+<p>static_map<span style="font-size: 16px;color: #000000">&nbsp;(<a href="http://docs.ros.org/api/nav_msgs/html/srv/GetMap.html" target="_blank">nav_msgs/GetMap</a>)：</span><span style="font-size: 14px">我们从前面话题和节点图得知，amcl可以通过订阅/map话题来获取地图，如果在launch文件中设置use_map_static为false的话，就可以通过调用该服务来获取地图了，效果与订阅/map话题是一样的。</span></p>
+</li>
+</ul>
+<p><span style="font-size: 16px;color: #000000"></span></p>
+<hr>
+<p><span style="color: #00B050;font-size: 16px">0x04 测试amcl的定位效果</span></p>
+<p>（1）通过查看/amcl_pose话题输出来看定位位姿，可以通过以下命令来获取话题的输出：</p>
+<p style="text-align: center"><span style="color: #0070C0;font-size: 16px">rostopic echo /amcl_pose</span></p>
+<p style="text-align:center"><img src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/1528183951823673.png" title="1528183951823673.png" alt="Screenshot from 2018-06-05 15:23:10.png"></p>
+<p><span style="color: #000000"></span></p>
+<p style="text-align:center"><img src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/1528185662122677.gif" title="1528185662122677.gif" alt="6.gif"></p>
+<p>（2）在机器人的移动过程中，突然将机器人搬起来更换位置，看看能否重新定位成功：</p>
+<p style="text-align:center"><img src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/1528186191445536.gif" title="1528186191445536.gif" alt="7.gif"></p>
+<p style="text-indent: 2em">通过上面动图可以看到在我们小范围内（3米）来移动机器人，amcl的定位效果很好，粒子收敛
+速度很快，但是当大范围的移动时效果就不理想了，这个在机器人移动过程中如果突然将其搬起来放置到距离当前较远位置的话，会导致机器人定位突然失灵，所以
+对于大范围的定位算法还是有提升空间的。</p>
+<p style="text-align:center"><img src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/1528186749290408.gif" title="1528186749290408.gif" alt="8.gif"></p>
+<hr>
+<p><span style="color: #00B050;font-size: 16px">0x05 launch文件中各参数意义解析</span></p>
+<p><strong>（1）滤波器可以设置的所有参数</strong></p>
+<ul class=" list-paddingleft-2" style="list-style-type: disc">
+<li>
+<p><tt><span style="color: #000000">~<span style="color: #0070C0">min_particles</span></span></tt>&nbsp;(<tt><span style="color: #000000">int</span></tt>, default: 100)：滤波器中的最少粒子数，值越大定位效果越好，但是相应的会增加主控平台的计算资源消耗。</p>
+</li>
+<li>
+<p><tt>~<span style="color: #0070C0">max_particles</span></tt>&nbsp;(<tt>int</tt>, default: 5000)：滤波器中最多粒子数，是一个上限值，因为太多的粒子数会导致系统资源消耗过多。</p>
+</li>
+<li>
+<p><tt>~<span style="color: #0070C0">kld_err</span></tt>&nbsp;(<tt>double</tt>, default: 0.01)：真实分布与估计分布之间的最大误差。</p>
+</li>
+<li>
+<p><tt>~<span style="color: #0070C0">kld_z</span></tt>&nbsp;(<tt>double</tt>, default: 0.99)：上标准分位数（1-p），其中p是估计分布上误差小于kld_err的概率，默认0.99。</p>
+</li>
+<li>
+<p><tt>~<span style="color: #0070C0">update_min_d</span></tt>&nbsp;(<tt>double</tt>,
+ default: 0.2 
+meters)：在执行滤波更新前平移运动的距离，默认0.2m(对于里程计模型有影响，模型中根据运动和地图求最终位姿的似然时丢弃了路径中的相关所有
+信息，已知的只有最终位姿，为了规避不合理的穿过障碍物后的非零似然，这个值建议不大于机器人半径，否则因更新频率的不同可能产生完全不同的结果)。</p>
+</li>
+<li>
+<p><tt>~<span style="color: #0070C0">update_min_a</span></tt>&nbsp;(<tt>double</tt>, default: π/6.0 radians)：执行滤波更新前旋转的角度。</p>
+</li>
+<li>
+<p><tt>~<span style="color: #0070C0">resample_interval</span></tt>&nbsp;(<tt>int</tt>, default: 2)：在重采样前需要滤波更新的次数。</p>
+</li>
+<li>
+<p><tt>~<span style="color: #0070C0">transform_tolerance</span></tt>&nbsp;(<tt>double</tt>, default: 0.1 seconds)：tf变换发布推迟的时间，为了说明tf变换在未来时间内是可用的。</p>
+</li>
+<li>
+<p><tt>~<span style="color: #0070C0">recovery_alpha_slow</span></tt>&nbsp;(<tt>double</tt>, default: 0.0 (<tt>disabled</tt>))：慢速的平均权重滤波的指数衰减频率，用作决定什么时候通过增加随机位姿来recover，默认0（disable），可能0.001是一个不错的值。</p>
+</li>
+<li>
+<p><tt>~<span style="color: #0070C0">recovery_alpha_fast</span></tt>&nbsp;(<tt>double</tt>, default: 0.0 (<tt>disabled</tt>))：快速的平均权重滤波的指数衰减频率，用作决定什么时候通过增加随机位姿来recover，默认0（disable），可能0.1是个不错的值。</p>
+</li>
+<li>
+<p><tt>~<span style="color: #0070C0">initial_pose_x</span></tt>&nbsp;(<tt>double</tt>, default: 0.0 meters)：初始位姿均值（x），用于初始化高斯分布滤波器。（initial_pose_参数决定撒出去的初始位姿粒子集范围中心）。</p>
+</li>
+<li>
+<p><tt>~<span style="color: #0070C0">initial_pose_y</span></tt>&nbsp;(<tt>double</tt>, default: 0.0 meters)：初始位姿均值（y），用于初始化高斯分布滤波器。（同上）</p>
+</li>
+<li>
+<p><tt>~<span style="color: #0070C0">initial_pose_a</span></tt>&nbsp;(<tt>double</tt>, default: 0.0 radians)：初始位姿均值（yaw），用于初始化高斯分布滤波器。（粒子朝向）</p>
+</li>
+<li>
+<p><tt>~<span style="color: #0070C0">initial_cov_xx</span></tt>&nbsp;(<tt>double</tt>, default: 0.5*0.5 meters)：初始位姿协方差（x*x），用于初始化高斯分布滤波器。（initial_cov_参数决定初始粒子集的范围）</p>
+</li>
+<li>
+<p><tt>~<span style="color: #0070C0">initial_cov_yy</span></tt>&nbsp;(<tt>double</tt>, default: 0.5*0.5 meters)：初始位姿协方差（y*y），用于初始化高斯分布滤波器。（同上）</p>
+</li>
+<li>
+<p><tt>~<span style="color: #0070C0">initial_cov_aa</span></tt>&nbsp;(<tt>double</tt>, default: (π/12)*(π/12) radian)：初始位姿协方差（yaw*yaw），用于初始化高斯分布滤波器。（粒子朝向的偏差）</p>
+</li>
+<li>
+<p><tt>~<span style="color: #0070C0">gui_publish_rate</span></tt>&nbsp;(<tt>double</tt>, default: -1.0 Hz)：扫描和路径发布到可视化软件的最大频率，设置参数为-1.0意为失能此功能，默认-1.0。</p>
+</li>
+<li>
+<p><tt>~<span style="color: #0070C0">save_pose_rate</span></tt>&nbsp;(<tt>double</tt>, default: 0.5 Hz)：存储上一次估计的位姿和协方差到参数服务器的最大速率。被保存的位姿将会用在连续的运动上来初始化滤波器。-1.0失能。</p>
+</li>
+<li>
+<p><tt>~<span style="color: #0070C0">use_map_topic</span></tt>&nbsp;(<tt>bool</tt>,
+ default: 
+false)：当设置为true时，AMCL将会订阅map话题，而不是调用服务返回地图。也就是说当设置为true时，有另外一个节点实时的发布map
+话题，也就是机器人在实时的进行地图构建，并供给amcl话题使用；当设置为false时，通过map server，也就是调用已经构建完成的地图。</p>
+</li>
+<li>
+<p><tt>~<span style="color: #0070C0">first_map_only</span></tt>&nbsp;(<tt>bool</tt>, default: false)：当设置为true时，AMCL将仅仅使用订阅的第一个地图，而不是每次接收到新的时更新为一个新的地图。</p>
+</li>
+</ul>
+<p><span class="anchor"></span><strong>（2）可以设置的所有激光模型参数</strong></p>
+<p>请注意无论使用哪种混合权重都应该等于1，对于laser_model_type是beam时会用到4个参数
+z_hit，z_short，z_max和z_rand，如果是likelihood_field模型仅使用2个：z_hit和z_rand。这4个
+laser_z_参数，是在动态环境下的定位时用于异常值去除技术的参数。</p>
+<ul class=" list-paddingleft-2" style="list-style-type: disc">
+<li>
+<p class="line867"><tt>~<span style="color: #0070C0">laser_min_range</span></tt>&nbsp;(<tt>double</tt>, default: -1.0)：最小扫描范围，参数设置为-1.0时，将会使用激光上报的最小扫描范围。</p>
+</li>
+<li>
+<p class="line867"><span class="anchor"><tt>~<span style="color: #0070C0">laser_max_range</span></tt>&nbsp;(<tt>double</tt>, default: -1.0)：最大扫描范围，参数设置为-1.0时，将会使用激光上报的最大扫描范围。</span></p>
+</li>
+<li>
+<p class="line867"><span class="anchor"><tt>~<span style="color: #0070C0">laser_max_beams</span></tt>&nbsp;(<tt>int</tt>, default: 30)：更新滤波器时，每次扫描中多少个等间距的光束被使用（减小计算量，测距扫描中相邻波束往往不是独立的可以减小噪声影响，太小也会造成信息量少定位不准）。</span></p>
+</li>
+<li>
+<p class="line867"><span class="anchor"><tt>~<span style="color: #0070C0">laser_z_hit</span></tt>&nbsp;(<tt>double</tt>, default: 0.95)：模型的z_hit部分的混合权值，默认0.95(混合权重1.具有局部测量噪声的正确范围–以测量距离近似真实距离为均值，其后laser_sigma_hit为标准偏差的高斯分布的权重)。</span></p>
+</li>
+<li>
+<p class="line867"><span class="anchor"><tt>~<span style="color: #0070C0">laser_z_short</span></tt>&nbsp;(<tt>double</tt>,
+ default: 
+0.1)：模型的z_short部分的混合权值，默认0.1（混合权重2.意外对象权重（类似于一元指数关于y轴对称0～测量距离（非最大距离）的部
+分：–ηλe^(-λz)，其余部分为0，其中η为归一化参数，λ为laser_lambda_short,z为t时刻的一个独立测量值（一个测距值，测
+距传感器一次测量通常产生一系列的测量值）），动态的环境，如人或移动物体）。</span></p>
+</li>
+<li>
+<p class="line867"><span class="anchor"><tt>~<span style="color: #0070C0">laser_z_max</span></tt>&nbsp;(<tt>double</tt>, default: 0.05)：模型的z_max部分的混合权值，默认0.05（混合权重3.测量失败权重（最大距离时为1，其余为0），如声呐镜面反射，激光黑色吸光对象或强光下的测量，最典型的是超出最大距离）。</span></p>
+</li>
+<li>
+<p class="line867"><span class="anchor"><tt>~<span style="color: #0070C0">laser_z_rand</span></tt>&nbsp;(<tt>double</tt>, default: 0.05)：模型的z_rand部分的混合权值，默认0.05（混合权重4.随机测量权重–均匀分布（1平均分布到0～最大测量范围），完全无法解释的测量，如声呐的多次反射，传感器串扰）。</span></p>
+</li>
+<li>
+<p class="line867"><span class="anchor"><tt>~<span style="color: #0070C0">laser_sigma_hit</span></tt>&nbsp;(<tt>double</tt>, default: 0.2 meters)：被用在模型的z_hit部分的高斯模型的标准差，默认0.2m。</span></p>
+</li>
+<li>
+<p class="line867"><span class="anchor"><tt>~<span style="color: #0070C0">laser_lambda_short</span></tt>&nbsp;(<tt>double</tt>, default: 0.1)：模型z_short部分的指数衰减参数，默认0.1（根据ηλe^(-λz)，λ越大随距离增大意外对象概率衰减越快）。</span></p>
+</li>
+<li>
+<p class="line867"><span class="anchor"><tt>~<span style="color: #0070C0">laser_likelihood_max_dist</span></tt>&nbsp;(<tt>double</tt>,
+ default: 2.0 
+meters)：地图上做障碍物膨胀的最大距离，用作likelihood_field模型
+（likelihood_field_range_finder_model只描述了最近障碍物的距离，（目前理解应该是在这个距离内的障碍物膨胀处理,
+但是算法里又没有提到膨胀，不明确是什么意思）.这里算法用到上面的laser_sigma_hit。似然域计算测量概率的算法是将t时刻的各个测量（舍
+去达到最大测量范围的测量值）的概率相乘，单个测量概率：Zh * prob(dist,σ) 
++avg，Zh为laser_z_hit,avg为均匀分布概率，dist最近障碍物的距离，prob为0为中心标准方差为
+σ（laser_sigma_hit）的高斯分布的距离概率。</span></p>
+</li>
+<li>
+<p class="line867"><span class="anchor"><tt>~<span style="color: #0070C0">laser_model_type</span></tt>&nbsp;(<tt>string</tt>, default:&nbsp;<tt>"likelihood_field"</tt>)：激光模型类型定义，可以是beam, likehood_field, likehood_field_prob（和likehood_field一样但是融合了beamskip特征–官网的注释），默认是“likehood_field” 。</span></p>
+<p class="line867"><span class="anchor"></span></p>
+</li>
+</ul>
+<p><strong>（3）里程计模型参数</strong></p>
+<ul class=" list-paddingleft-2" style="list-style-type: disc">
+<li>
+<p><tt>~<span style="color: #0070C0">odom_model_type</span></tt>&nbsp;(<tt>string</tt>, default:&nbsp;<tt>"diff"</tt>)：odom模型定义，可以是"diff", "omni", "diff-corrected", "omni-corrected"，后面两个是对老版本里程计模型的矫正，相应的里程计参数需要做一定的减小。</p>
+</li>
+<li>
+<p><tt>~<span style="color: #0070C0">odom_alpha1</span></tt>&nbsp;(<tt>double</tt>, default: 0.2)：指定由机器人运动部分的旋转分量估计的里程计旋转的期望噪声，默认0.2（旋转存在旋转噪声）。</p>
+</li>
+<li>
+<p><tt>~<span style="color: #0070C0">odom_alpha2</span></tt>&nbsp;(<tt>double</tt>, default: 0.2)：机器人运动部分的平移分量估计的里程计旋转的期望噪声，默认0.2（旋转中可能出现平移噪声）。</p>
+</li>
+<li>
+<p><tt>~<span style="color: #0070C0">odom_alpha3</span></tt>&nbsp;(<tt>double</tt>, default: 0.2)：机器人运动部分的平移分量估计的里程计平移的期望噪声，如果你自认为自己机器人的里程计信息比较准确那么就可以将该值设置的很小。</p>
+</li>
+<li>
+<p><tt>~<span style="color: #0070C0">odom_alpha4</span></tt>&nbsp;(<tt>double</tt>, default: 0.2)：机器人运动部分的旋转分量估计的里程计平移的期望噪声，你设置的这4个alpha值越大说明里程计的误差越大。</p>
+</li>
+<li>
+<p><tt>~<span style="color: #0070C0">odom_alpha5</span></tt>&nbsp;(<tt>double</tt>, default: 0.2)：平移相关的噪声参数（仅用于模型是“omni”的情况，就是当你的机器人是全向移动时才需要设置该参数，否则就设置其为0.0）</p>
+</li>
+<li>
+<p><tt>~<span style="color: #0070C0">odom_frame_id</span></tt>&nbsp;(<tt>string</tt>, default:&nbsp;<tt>"odom"</tt>)：里程计默认使用的坐标系。</p>
+</li>
+<li>
+<p><tt>~<span style="color: #0070C0">base_frame_id</span></tt>&nbsp;(<tt>string</tt>, default:&nbsp;<tt>"base_link"</tt>)：机器人的基坐标系。</p>
+</li>
+<li>
+<p><tt>~<span style="color: #0070C0">global_frame_id</span></tt>&nbsp;(<tt>string</tt>, default:&nbsp;<tt>"map"</tt>)：由定位系统发布的坐标系名称。</p>
+</li>
+<li>
+<p><tt>~<span style="color: #0070C0">tf_broadcast</span></tt>&nbsp;(<tt>bool</tt>, default: true)：设置为false阻止amcl发布全局坐标系和里程计坐标系之间的tf变换。</p>
+</li>
+</ul>
+<hr>
+<p><span style="color: #00B050;font-size: 16px">0x06 AMCL中的坐标转换</span></p>
+<p>首先我们来看一下在amcl中tf树，总共有多少个坐标系参与到这个过程中：</p>
+<p style="text-align:center"><img src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/1528252821928530.png" title="1528252821928530.png" alt="1528252821928530.png" width="1474" height="602"></p>
+<p style="text-indent: 2em">在amcl实现定位的一开始，从激光雷达获得测距信息，然后开始将laser_frame相对
+于base_link做tf转换，并且将永久保存该转换，这样就导致你安装在机器人上的激光雷达位置需要固定，不能激光雷达一下在移动底盘上，一会又跑到
+机器人头顶上，再过一会又跑机器人屁股上了，即保证laser_frame到base_link的转换是固定的才行，如下图所示来理解
+laser_frame测距信息与base_link之间转换关系：</p>
+<p style="text-align:center"><img src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/1528253832765959.png" title="1528253832765959.png" alt="1.png"></p>
+<p style="text-indent: 2em">接下来开始考虑如何实现定位的，下面来对比两种方法Odometry Localization和AMCL Map Localization：</p>
+<p style="text-align:center"><img src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/1528255414705281.png" title="1528255414705281.png" alt="amcl_localization.png"></p>
+<p style="text-indent: 2em">我们一直再说轮式里程计来得到的测距信息会存在累计误差，我相信很多人都不太清楚为什么，这就跟汽车打滑差不多，如果只通过轮式里程计来计算移动距离的话就会出错：</p>
+<p style="text-align:center"><img src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/1528256534983951.gif" title="1528256534983951.gif" alt="1.gif"></p>
+<p style="text-indent: 2em">在amcl中已经通过粒子滤波定位得到了base_frame相对应global_frame
+的位姿信息，但是为了保证base_frame只有一个父节点就没有来直接发布这个转换，因为base_frame的父节点已经是odom_frame
+了，那amcl就只能发布map_frame到odom_frame的转换了，这样还得到一个好处就是我们可以得到odom的累计误差了。</p>
+<p style="text-indent: 2em">这是因为你可以想象一个场景，机器人直线往前走，通过轮式里程计得到结果应该走了10米，那么
+距离odom_frame就应该是10米了，但是由于原地打滑，实际上机器人通过amcl定位发现根本就没有动，那么amcl就需要发布
+map_frame到odom_frame的转换将这个10米的误差去除掉，这样才能维护整个tf树正常。</p>
+<p style="text-align:center"><img src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/1528258273426123.png" title="1528258273426123.png" alt="Screenshot from 2018-06-06 12:07:26.png"></p>
+<p><span style="color: #00B050;font-size: 16px"></span></p>
+<hr>
+<p><span style="color: #00B050;font-size: 16px">0x07 参考资料</span></p>
+<p>[1].ROS WiKi上AMCL的主页[OL].&nbsp;<a href="http://wiki.ros.org/amcl" target="_blank" title="http://wiki.ros.org/amcl">http://wiki.ros.org/amcl</a></p>
+<p>[2].ros的navigation之amcl(localization)应用详解[OL].&nbsp;<a href="https://blog.csdn.net/chenxingwangzi/article/details/50038413" target="_blank" title="https://blog.csdn.net/chenxingwangzi/article/details/50038413">https://blog.csdn.net/chenxingwangzi/article/details/50038413</a></p>
+<p>[3].ros amcl参数设置[OL].&nbsp;<a href="https://www.cnblogs.com/dyan1024/p/7825988.html" target="_blank" title="https://www.cnblogs.com/dyan1024/p/7825988.html">https://www.cnblogs.com/dyan1024/p/7825988.html</a></p>
+<hr>
+<p><span style="color: #00B050;font-size: 16px">0x08 问题反馈</span></p>
+<p style="text-indent: 2em"><span style="font-size: 14px;font-family: arial, helvetica, sans-serif">大
+家在按照教程操作过程中有任何问题，可以关注ROS小课堂的官方微信公众号，在公众号中给我发消息反馈问题即可，我基本上每天都会处理公众号中的留言！当
+然如果你要是顺便给ROS小课堂打个赏，我也会感激不尽的，打赏30块还会邀请进ROS小课堂的微信群与更多志同道合的小伙伴一起学习和交
+流！&nbsp;</span></p>
+<p style="text-align:center"><img src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/1516851765432601.jpg" alt="1516851765432601.jpg"></p>
+<p></p>
+<p></p>
+<div class="sharedaddy sd-block sd-like jetpack-likes-widget-wrapper jetpack-likes-widget-loaded" id="like-post-wrapper-136106817-756-5cb433f3deeeb" data-src="https://widgets.wp.com/likes/#blog_id=136106817&amp;post_id=756&amp;origin=www.corvin.cn&amp;obj_id=136106817-756-5cb433f3deeeb" data-name="like-post-frame-136106817-756-5cb433f3deeeb"><h3 class="sd-title">赞过：</h3><div class="likes-widget-placeholder post-likes-widget-placeholder" style="height: 55px; display: none;"><span class="button"><span>赞</span></span> <span class="loading">正在加载……</span></div><iframe name="like-post-frame-136106817-756-5cb433f3deeeb" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/a.html" scrolling="no" width="100%" height="55px" frameborder="0"></iframe><span class="sd-text-color"></span><a class="sd-link-color"></a></div>
+<div id="jp-relatedposts" class="jp-relatedposts">
+	<h3 class="jp-relatedposts-headline"><em>相关</em></h3>
+</div>								</div>
+			
+		<div class="section section-blog-info">
+			<div class="row">
+				<div class="col-md-6">
+					<div class="entry-categories">分类：						<span class="label label-primary"><a href="http://www.corvin.cn/category/robot-simulator/stdr_simulator">STDR仿真</a></span>					</div>
+									</div>
+							</div>
+			<hr>
+			
+<div id="comments" class="section section-comments">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="media-area">
+				<h3 class="hestia-title text-center">
+					8 条评论				</h3>
+						<div class="comment even thread-even depth-1 media" id="comment-120">
+							<a class="pull-left" href="https://www.youtube.com/watch?v=YYXVQtpj--g">
+					<div class="comment-author avatar vcard">
+						<img alt="" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/d0fc8ec5f982617b23cb6592234863b0.jpeg" srcset="http://1.gravatar.com/avatar/d0fc8ec5f982617b23cb6592234863b0?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo grav-hashed grav-hijack" id="grav-d0fc8ec5f982617b23cb6592234863b0-0" width="64" height="64">					</div>
+				</a>
+						<div class="media-body">
+				<h4 class="media-heading">
+					<a href="https://www.youtube.com/watch?v=YYXVQtpj--g" rel="external nofollow" class="url">youtube.com</a>					<small>
+						· 2019-03-07 11:32					</small>
+				</h4>
+				<p>I am really impressed together with your writing talents as smartly as<br>
+with the structure on your weblog. Is this a paid theme or did you customize it<br>
+yourself? Either way stay up the excellent quality writing, it’s<br>
+rare to look a great blog like this one these days..</p>
+<table class="rw-rating-table rw-ltr rw-left rw-no-labels">
+<tbody><tr>
+<td><nobr>&nbsp;</nobr></td>
+<td>
+<div class="rw-left">
+<div class="rw-ui-container rw-urid-1211 rw-ui-nero rw-size-small rw-dir-ltr rw-halign-right rw-valign-middle rw-style-thumbs rw-theme-thumbs_1 rw-active rw-class-comment" data-urid="1211" style=""><div class="rw-action-area"><span class="rw-ui-like"><i aria-label="Like" class="rw-ui-like-icon"></i><span class="rw-ui-like-label" style="">0</span></span><span class="rw-ui-dislike"><i aria-label="Dislike" class="rw-ui-dislike-icon"></i><span class="rw-ui-dislike-label" style="">0</span></span><a class="rw-report-link" target="_blank" href="http://rating-widget.com/my-rating-report/nero/thumbs/rating-0/" rel="nofollow"></a></div><span class="rw-ui-info-container" style="background-color: rgb(255, 255, 255);"><i aria-hidden="true" class="rw-ui-info-nub rw-ui-info-outer-nub" style="border-right-color: rgba(0, 0, 0, 0.5);"></i><i aria-hidden="true" class="rw-ui-info-nub rw-ui-info-inner-nub" style="border-right-color: rgb(255, 255, 255);"></i><span class="rw-ui-info-inner-container" style="border-color: rgba(0, 0, 0, 0.5);"><span class="rw-ui-info" style="color: rgb(0, 0, 0);">Rate this</span></span></span></div>
+</div>
+</td>
+</tr>
+</tbody></table>
+				<div class="media-footer">
+					<a rel="nofollow" class="comment-reply-link" href="#comment-120" onclick='return addComment.moveForm( "comment-120", "120", "respond", "756" )' aria-label="回复给youtube.com"><i class="fa fa-mail-reply"></i> 回复</a>				</div>
+			</div>
+		</div>
+		<!-- #comment-## -->
+		<div class="comment odd alt thread-odd thread-alt depth-1 media" id="comment-129">
+							<a class="pull-left" href="http://www.corvin.cn/756.html">
+					<div class="comment-author avatar vcard">
+						<img alt="" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/d791e50b993a73818b5098e19c66be71.jpeg" srcset="http://1.gravatar.com/avatar/d791e50b993a73818b5098e19c66be71?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo grav-hashed grav-hijack" id="grav-d791e50b993a73818b5098e19c66be71-0" width="64" height="64">					</div>
+				</a>
+						<div class="media-body">
+				<h4 class="media-heading">
+					Johnf800					<small>
+						· 2019-03-09 11:57					</small>
+				</h4>
+				<p>I went over this site and I conceive you have a lot of wonderful information, bookmarked . eaecdfgecfdc</p>
+<table class="rw-rating-table rw-ltr rw-left rw-no-labels">
+<tbody><tr>
+<td><nobr>&nbsp;</nobr></td>
+<td>
+<div class="rw-left">
+<div class="rw-ui-container rw-urid-1301 rw-ui-nero rw-size-small rw-dir-ltr rw-halign-right rw-valign-middle rw-style-thumbs rw-theme-thumbs_1 rw-active rw-class-comment" data-urid="1301" style=""><div class="rw-action-area"><span class="rw-ui-like"><i aria-label="Like" class="rw-ui-like-icon"></i><span class="rw-ui-like-label" style="">0</span></span><span class="rw-ui-dislike"><i aria-label="Dislike" class="rw-ui-dislike-icon"></i><span class="rw-ui-dislike-label" style="">0</span></span><a class="rw-report-link" target="_blank" href="http://rating-widget.com/my-rating-report/nero/thumbs/rating-0/" rel="nofollow"></a></div><span class="rw-ui-info-container" style="background-color: rgb(255, 255, 255);"><i aria-hidden="true" class="rw-ui-info-nub rw-ui-info-outer-nub" style="border-right-color: rgba(0, 0, 0, 0.5);"></i><i aria-hidden="true" class="rw-ui-info-nub rw-ui-info-inner-nub" style="border-right-color: rgb(255, 255, 255);"></i><span class="rw-ui-info-inner-container" style="border-color: rgba(0, 0, 0, 0.5);"><span class="rw-ui-info" style="color: rgb(0, 0, 0);">Rate this</span></span></span></div>
+</div>
+</td>
+</tr>
+</tbody></table>
+				<div class="media-footer">
+					<a rel="nofollow" class="comment-reply-link" href="#comment-129" onclick='return addComment.moveForm( "comment-129", "129", "respond", "756" )' aria-label="回复给Johnf800"><i class="fa fa-mail-reply"></i> 回复</a>				</div>
+			</div>
+		</div>
+		<!-- #comment-## -->
+		<div class="comment even thread-even depth-1 media" id="comment-137">
+							<a class="pull-left" href="http://www.corvin.cn/756.html">
+					<div class="comment-author avatar vcard">
+						<img alt="" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/94f9203a3a5eb63797ff0fa4b3a4ded7.jpeg" srcset="http://0.gravatar.com/avatar/94f9203a3a5eb63797ff0fa4b3a4ded7?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo grav-hashed grav-hijack" id="grav-94f9203a3a5eb63797ff0fa4b3a4ded7-0" width="64" height="64">					</div>
+				</a>
+						<div class="media-body">
+				<h4 class="media-heading">
+					Johna581					<small>
+						· 2019-03-10 15:48					</small>
+				</h4>
+				<p>Hey very nice website!! Man .. Beautiful .. Amazing .. I’ll 
+bookmark your website and take the feeds alsoI’m happy to find numerous 
+useful information here in the post, we need work out more techniques in
+ this regard, thanks for sharing. . . . . . cbdecgdagcbb</p>
+<table class="rw-rating-table rw-ltr rw-left rw-no-labels">
+<tbody><tr>
+<td><nobr>&nbsp;</nobr></td>
+<td>
+<div class="rw-left">
+<div class="rw-ui-container rw-urid-1381 rw-ui-nero rw-size-small rw-dir-ltr rw-halign-right rw-valign-middle rw-style-thumbs rw-theme-thumbs_1 rw-active rw-class-comment" data-urid="1381" style=""><div class="rw-action-area"><span class="rw-ui-like"><i aria-label="Like" class="rw-ui-like-icon"></i><span class="rw-ui-like-label" style="">0</span></span><span class="rw-ui-dislike"><i aria-label="Dislike" class="rw-ui-dislike-icon"></i><span class="rw-ui-dislike-label" style="">0</span></span><a class="rw-report-link" target="_blank" href="http://rating-widget.com/my-rating-report/nero/thumbs/rating-0/" rel="nofollow"></a></div><span class="rw-ui-info-container" style="background-color: rgb(255, 255, 255);"><i aria-hidden="true" class="rw-ui-info-nub rw-ui-info-outer-nub" style="border-right-color: rgba(0, 0, 0, 0.5);"></i><i aria-hidden="true" class="rw-ui-info-nub rw-ui-info-inner-nub" style="border-right-color: rgb(255, 255, 255);"></i><span class="rw-ui-info-inner-container" style="border-color: rgba(0, 0, 0, 0.5);"><span class="rw-ui-info" style="color: rgb(0, 0, 0);">Rate this</span></span></span></div>
+</div>
+</td>
+</tr>
+</tbody></table>
+				<div class="media-footer">
+					<a rel="nofollow" class="comment-reply-link" href="#comment-137" onclick='return addComment.moveForm( "comment-137", "137", "respond", "756" )' aria-label="回复给Johna581"><i class="fa fa-mail-reply"></i> 回复</a>				</div>
+			</div>
+		</div>
+		<!-- #comment-## -->
+		<div class="comment odd alt thread-odd thread-alt depth-1 media" id="comment-138">
+							<a class="pull-left" href="http://www.corvin.cn/756.html">
+					<div class="comment-author avatar vcard">
+						<img alt="" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/049588a44a30cc77a443ce2b460d1aca.jpeg" srcset="http://0.gravatar.com/avatar/049588a44a30cc77a443ce2b460d1aca?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo grav-hashed grav-hijack" id="grav-049588a44a30cc77a443ce2b460d1aca-0" width="64" height="64">					</div>
+				</a>
+						<div class="media-body">
+				<h4 class="media-heading">
+					Johnb575					<small>
+						· 2019-03-10 15:48					</small>
+				</h4>
+				<p>I am not sure where you are getting your info, but great topic. I
+ needs to spend some time learning much more or understanding more. 
+Thanks for fantastic information I was looking for this info for my 
+mission. kddcfdcegdkd</p>
+<table class="rw-rating-table rw-ltr rw-left rw-no-labels">
+<tbody><tr>
+<td><nobr>&nbsp;</nobr></td>
+<td>
+<div class="rw-left">
+<div class="rw-ui-container rw-urid-1391 rw-ui-nero rw-size-small rw-dir-ltr rw-halign-right rw-valign-middle rw-style-thumbs rw-theme-thumbs_1 rw-active rw-class-comment" data-urid="1391" style=""><div class="rw-action-area"><span class="rw-ui-like"><i aria-label="Like" class="rw-ui-like-icon"></i><span class="rw-ui-like-label" style="">0</span></span><span class="rw-ui-dislike"><i aria-label="Dislike" class="rw-ui-dislike-icon"></i><span class="rw-ui-dislike-label" style="">0</span></span><a class="rw-report-link" target="_blank" href="http://rating-widget.com/my-rating-report/nero/thumbs/rating-0/" rel="nofollow"></a></div><span class="rw-ui-info-container" style="background-color: rgb(255, 255, 255);"><i aria-hidden="true" class="rw-ui-info-nub rw-ui-info-outer-nub" style="border-right-color: rgba(0, 0, 0, 0.5);"></i><i aria-hidden="true" class="rw-ui-info-nub rw-ui-info-inner-nub" style="border-right-color: rgb(255, 255, 255);"></i><span class="rw-ui-info-inner-container" style="border-color: rgba(0, 0, 0, 0.5);"><span class="rw-ui-info" style="color: rgb(0, 0, 0);">Rate this</span></span></span></div>
+</div>
+</td>
+</tr>
+</tbody></table>
+				<div class="media-footer">
+					<a rel="nofollow" class="comment-reply-link" href="#comment-138" onclick='return addComment.moveForm( "comment-138", "138", "respond", "756" )' aria-label="回复给Johnb575"><i class="fa fa-mail-reply"></i> 回复</a>				</div>
+			</div>
+		</div>
+		<!-- #comment-## -->
+		<div class="comment even thread-even depth-1 media" id="comment-143">
+							<a class="pull-left" href="http://www.corvin.cn/756.html">
+					<div class="comment-author avatar vcard">
+						<img alt="" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/b7bcb4091969cfc370f389a20ad76e71.jpeg" srcset="http://2.gravatar.com/avatar/b7bcb4091969cfc370f389a20ad76e71?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo grav-hashed grav-hijack" id="grav-b7bcb4091969cfc370f389a20ad76e71-0" width="64" height="64">					</div>
+				</a>
+						<div class="media-body">
+				<h4 class="media-heading">
+					Johnd978					<small>
+						· 2019-03-12 19:55					</small>
+				</h4>
+				<p>Very well written article. It will be helpful to anyone who usess it, as well as yours truly  bdaafabcfece</p>
+<table class="rw-rating-table rw-ltr rw-left rw-no-labels">
+<tbody><tr>
+<td><nobr>&nbsp;</nobr></td>
+<td>
+<div class="rw-left">
+<div class="rw-ui-container rw-urid-1441 rw-ui-nero rw-size-small rw-dir-ltr rw-halign-right rw-valign-middle rw-style-thumbs rw-theme-thumbs_1 rw-active rw-class-comment" data-urid="1441" style=""><div class="rw-action-area"><span class="rw-ui-like"><i aria-label="Like" class="rw-ui-like-icon"></i><span class="rw-ui-like-label" style="">0</span></span><span class="rw-ui-dislike"><i aria-label="Dislike" class="rw-ui-dislike-icon"></i><span class="rw-ui-dislike-label" style="">0</span></span><a class="rw-report-link" target="_blank" href="http://rating-widget.com/my-rating-report/nero/thumbs/rating-0/" rel="nofollow"></a></div><span class="rw-ui-info-container" style="background-color: rgb(255, 255, 255);"><i aria-hidden="true" class="rw-ui-info-nub rw-ui-info-outer-nub" style="border-right-color: rgba(0, 0, 0, 0.5);"></i><i aria-hidden="true" class="rw-ui-info-nub rw-ui-info-inner-nub" style="border-right-color: rgb(255, 255, 255);"></i><span class="rw-ui-info-inner-container" style="border-color: rgba(0, 0, 0, 0.5);"><span class="rw-ui-info" style="color: rgb(0, 0, 0);">Rate this</span></span></span></div>
+</div>
+</td>
+</tr>
+</tbody></table>
+				<div class="media-footer">
+					<a rel="nofollow" class="comment-reply-link" href="#comment-143" onclick='return addComment.moveForm( "comment-143", "143", "respond", "756" )' aria-label="回复给Johnd978"><i class="fa fa-mail-reply"></i> 回复</a>				</div>
+			</div>
+		</div>
+		<!-- #comment-## -->
+		<div class="comment odd alt thread-odd thread-alt depth-1 media" id="comment-144">
+							<a class="pull-left" href="http://dakkbkgdfkkefeeb.blogspot.com/">
+					<div class="comment-author avatar vcard">
+						<img alt="" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/ce74a4d42202f5604bc503eebe669545.jpeg" srcset="http://0.gravatar.com/avatar/ce74a4d42202f5604bc503eebe669545?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo grav-hashed grav-hijack" id="grav-ce74a4d42202f5604bc503eebe669545-0" width="64" height="64">					</div>
+				</a>
+						<div class="media-body">
+				<h4 class="media-heading">
+					<a href="http://dakkbkgdfkkefeeb.blogspot.com/" rel="external nofollow" class="url">Smithc809</a>					<small>
+						· 2019-03-12 19:55					</small>
+				</h4>
+				<p>Very nice post. I certainly appreciate this website. dakkbkgdfkkefeeb</p>
+<table class="rw-rating-table rw-ltr rw-left rw-no-labels">
+<tbody><tr>
+<td><nobr>&nbsp;</nobr></td>
+<td>
+<div class="rw-left">
+<div class="rw-ui-container rw-urid-1451 rw-ui-nero rw-size-small rw-dir-ltr rw-halign-right rw-valign-middle rw-style-thumbs rw-theme-thumbs_1 rw-active rw-class-comment" data-urid="1451" style=""><div class="rw-action-area"><span class="rw-ui-like"><i aria-label="Like" class="rw-ui-like-icon"></i><span class="rw-ui-like-label" style="">0</span></span><span class="rw-ui-dislike"><i aria-label="Dislike" class="rw-ui-dislike-icon"></i><span class="rw-ui-dislike-label" style="">0</span></span><a class="rw-report-link" target="_blank" href="http://rating-widget.com/my-rating-report/nero/thumbs/rating-0/" rel="nofollow"></a></div><span class="rw-ui-info-container" style="background-color: rgb(255, 255, 255);"><i aria-hidden="true" class="rw-ui-info-nub rw-ui-info-outer-nub" style="border-right-color: rgba(0, 0, 0, 0.5);"></i><i aria-hidden="true" class="rw-ui-info-nub rw-ui-info-inner-nub" style="border-right-color: rgb(255, 255, 255);"></i><span class="rw-ui-info-inner-container" style="border-color: rgba(0, 0, 0, 0.5);"><span class="rw-ui-info" style="color: rgb(0, 0, 0);">Rate this</span></span></span></div>
+</div>
+</td>
+</tr>
+</tbody></table>
+				<div class="media-footer">
+					<a rel="nofollow" class="comment-reply-link" href="#comment-144" onclick='return addComment.moveForm( "comment-144", "144", "respond", "756" )' aria-label="回复给Smithc809"><i class="fa fa-mail-reply"></i> 回复</a>				</div>
+			</div>
+		</div>
+		<!-- #comment-## -->
+		<div class="comment even thread-even depth-1 media" id="comment-152">
+							<a class="pull-left" href="http://www.corvin.cn/756.html">
+					<div class="comment-author avatar vcard">
+						<img alt="" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/f9d567a4601fba04c69496ca8b574621.jpeg" srcset="http://0.gravatar.com/avatar/f9d567a4601fba04c69496ca8b574621?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo grav-hashed grav-hijack" id="grav-f9d567a4601fba04c69496ca8b574621-0" width="64" height="64">					</div>
+				</a>
+						<div class="media-body">
+				<h4 class="media-heading">
+					Johnc742					<small>
+						· 2019-03-13 17:48					</small>
+				</h4>
+				<p>Hi there, I found your site by way of Google while searching for a
+ comparable matter, your web site got here up, it looks good. I have 
+bookmarked it in my google bookmarks. ecfbegdbcegf</p>
+<table class="rw-rating-table rw-ltr rw-left rw-no-labels">
+<tbody><tr>
+<td><nobr>&nbsp;</nobr></td>
+<td>
+<div class="rw-left">
+<div class="rw-ui-container rw-urid-1531 rw-ui-nero rw-size-small rw-dir-ltr rw-halign-right rw-valign-middle rw-style-thumbs rw-theme-thumbs_1 rw-active rw-class-comment" data-urid="1531" style=""><div class="rw-action-area"><span class="rw-ui-like"><i aria-label="Like" class="rw-ui-like-icon"></i><span class="rw-ui-like-label" style="">0</span></span><span class="rw-ui-dislike"><i aria-label="Dislike" class="rw-ui-dislike-icon"></i><span class="rw-ui-dislike-label" style="">0</span></span><a class="rw-report-link" target="_blank" href="http://rating-widget.com/my-rating-report/nero/thumbs/rating-0/" rel="nofollow"></a></div><span class="rw-ui-info-container" style="background-color: rgb(255, 255, 255);"><i aria-hidden="true" class="rw-ui-info-nub rw-ui-info-outer-nub" style="border-right-color: rgba(0, 0, 0, 0.5);"></i><i aria-hidden="true" class="rw-ui-info-nub rw-ui-info-inner-nub" style="border-right-color: rgb(255, 255, 255);"></i><span class="rw-ui-info-inner-container" style="border-color: rgba(0, 0, 0, 0.5);"><span class="rw-ui-info" style="color: rgb(0, 0, 0);">Rate this</span></span></span></div>
+</div>
+</td>
+</tr>
+</tbody></table>
+				<div class="media-footer">
+					<a rel="nofollow" class="comment-reply-link" href="#comment-152" onclick='return addComment.moveForm( "comment-152", "152", "respond", "756" )' aria-label="回复给Johnc742"><i class="fa fa-mail-reply"></i> 回复</a>				</div>
+			</div>
+		</div>
+		<!-- #comment-## -->
+		<div class="comment odd alt thread-odd thread-alt depth-1 media" id="comment-154">
+							<a class="pull-left" href="http://eckkkbbkddkagdbd.blogspot.com/">
+					<div class="comment-author avatar vcard">
+						<img alt="" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/30cc5aee3212b4600f49af194c5f4f4a.jpeg" srcset="http://0.gravatar.com/avatar/30cc5aee3212b4600f49af194c5f4f4a?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo grav-hashed grav-hijack" id="grav-30cc5aee3212b4600f49af194c5f4f4a-0" width="64" height="64">					</div>
+				</a>
+						<div class="media-body">
+				<h4 class="media-heading">
+					<a href="http://eckkkbbkddkagdbd.blogspot.com/" rel="external nofollow" class="url">Smithe126</a>					<small>
+						· 2019-03-13 17:49					</small>
+				</h4>
+				<p>I just like the helpful info you supply on your articles. I will 
+bookmark your blog and take a look at once more here regularly. I’m 
+somewhat sure Ill learn a lot of new stuff right right here! Best of 
+luck for the following! eckkkbbkddkagdbd</p>
+<table class="rw-rating-table rw-ltr rw-left rw-no-labels">
+<tbody><tr>
+<td><nobr>&nbsp;</nobr></td>
+<td>
+<div class="rw-left">
+<div class="rw-ui-container rw-urid-1551 rw-ui-nero rw-size-small rw-dir-ltr rw-halign-right rw-valign-middle rw-style-thumbs rw-theme-thumbs_1 rw-active rw-class-comment" data-urid="1551" style=""><div class="rw-action-area"><span class="rw-ui-like"><i aria-label="Like" class="rw-ui-like-icon"></i><span class="rw-ui-like-label" style="">0</span></span><span class="rw-ui-dislike"><i aria-label="Dislike" class="rw-ui-dislike-icon"></i><span class="rw-ui-dislike-label" style="">0</span></span><a class="rw-report-link" target="_blank" href="http://rating-widget.com/my-rating-report/nero/thumbs/rating-0/" rel="nofollow"></a></div><span class="rw-ui-info-container" style="background-color: rgb(255, 255, 255);"><i aria-hidden="true" class="rw-ui-info-nub rw-ui-info-outer-nub" style="border-right-color: rgba(0, 0, 0, 0.5);"></i><i aria-hidden="true" class="rw-ui-info-nub rw-ui-info-inner-nub" style="border-right-color: rgb(255, 255, 255);"></i><span class="rw-ui-info-inner-container" style="border-color: rgba(0, 0, 0, 0.5);"><span class="rw-ui-info" style="color: rgb(0, 0, 0);">Rate this</span></span></span></div>
+</div>
+</td>
+</tr>
+</tbody></table>
+				<div class="media-footer">
+					<a rel="nofollow" class="comment-reply-link" href="#comment-154" onclick='return addComment.moveForm( "comment-154", "154", "respond", "756" )' aria-label="回复给Smithe126"><i class="fa fa-mail-reply"></i> 回复</a>				</div>
+			</div>
+		</div>
+		<!-- #comment-## -->
+			</div>
+			<div class="media-body">
+					<div id="respond" class="comment-respond">
+		<h3 class="hestia-title text-center">发表评论 <small><a rel="nofollow" id="cancel-comment-reply-link" href="http://www.corvin.cn/756.html#respond" style="display:none;">取消回复</a></small></h3> <span class="pull-left author"> <div class="avatar"><img src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/placeholder.jpg" width="64" height="64"></div> </span>			<form action="http://www.corvin.cn/wp-comments-post.php" method="post" id="commentform" class="form media-body form-group">
+				<p class="comment-notes"><span id="email-notes">电子邮件地址不会被公开。</span> 必填项已用<span class="required">*</span>标注</p><div class="row"> <div class="col-md-4"> <div class="form-group label-floating is-empty"> <label class="control-label">名称 <span class="required">*</span></label><input id="author" name="author" class="form-control" aria-required="true" type="text"> <span class="hestia-input"></span> </div> </div>
+<div class="col-md-4"> <div class="form-group label-floating is-empty"> <label class="control-label">电子邮件 <span class="required">*</span></label><input id="email" name="email" class="form-control" aria-required="true" type="email"> <span class="hestia-input"></span> </div> </div>
+<div class="col-md-4"> <div class="form-group label-floating is-empty"> <label class="control-label">网站</label><input id="url" name="url" class="form-control" aria-required="true" type="url"> <span class="hestia-input"></span> </div> </div> </div>
+<div class="form-group label-floating is-empty"> <label class="control-label">在想些什么？</label><textarea id="comment" name="comment" class="form-control" rows="6" aria-required="true"></textarea><span class="hestia-input"></span> </div><p class="form-submit"></p><p class="comment-subscription-form"><input name="subscribe_comments" id="subscribe_comments" value="subscribe" style="width: auto; -moz-appearance: checkbox; -webkit-appearance: checkbox;" type="checkbox"> <label class="subscribe-label" id="subscribe-label" for="subscribe_comments">通过邮件通知我后续评论</label></p><p class="comment-subscription-form"><input name="subscribe_blog" id="subscribe_blog" value="subscribe" style="width: auto; -moz-appearance: checkbox; -webkit-appearance: checkbox;" type="checkbox"> <label class="subscribe-label" id="subscribe-blog-label" for="subscribe_blog">通过邮件通知我有新文章</label></p><input name="submit" id="submit" class="btn btn-primary pull-right" value="发表评论" type="submit"> <input name="comment_post_ID" value="756" id="comment_post_ID" type="hidden">
+<input name="comment_parent" id="comment_parent" value="0" type="hidden">
+<p></p><p style="display: none;"><input id="akismet_comment_nonce" name="akismet_comment_nonce" value="38693315b0" type="hidden"></p><p style="display: none;"></p>			<input id="ak_js" name="ak_js" value="1555313961829" type="hidden"></form>
+			</div><!-- #respond -->
+	<p class="akismet_comment_form_privacy_notice">此站点使用Akismet来减少垃圾评论。<a href="https://akismet.com/privacy/" target="_blank" rel="nofollow noopener">了解我们如何处理您的评论数据</a>。</p>							</div>
+		</div>
+	</div>
+</div>
+		</div>
+		</div>	<div class="col-md-3 blog-sidebar-wrapper col-md-offset-1 ">
+		<aside id="secondary" class="blog-sidebar" role="complementary">
+					<div id="recent-posts-2" class="widget widget_recent_entries">		<h5>近期文章</h5>		<ul>
+											<li>
+					<a href="http://www.corvin.cn/1188.html">4.调试人脸跟踪下位机代码</a>
+									</li>
+											<li>
+					<a href="http://www.corvin.cn/1162.html">3.人脸跟踪底层固件代码</a>
+									</li>
+											<li>
+					<a href="http://www.corvin.cn/1139.html">2.人脸跟踪硬件平台搭建</a>
+									</li>
+											<li>
+					<a href="http://www.corvin.cn/1112.html">1.人脸跟踪项目概述</a>
+									</li>
+											<li>
+					<a href="http://www.corvin.cn/1068.html">2.引导ROS2GO启动</a>
+									</li>
+					</ul>
+		</div><div id="categories-2" class="widget widget_categories"><h5>分类目录</h5>		<ul>
+	<li class="cat-item cat-item-61"><a href="http://www.corvin.cn/category/arduino-mega2560">ArduinoMega2560</a>
+</li>
+	<li class="cat-item cat-item-52"><a href="http://www.corvin.cn/category/python-program">Python编程</a>
+</li>
+	<li class="cat-item cat-item-64"><a href="http://www.corvin.cn/category/ros2go-system">ROS2GO系统</a>
+</li>
+	<li class="cat-item cat-item-53"><a href="http://www.corvin.cn/category/ros-basic-knowledge">ROS基础知识</a>
+</li>
+	<li class="cat-item cat-item-62"><a href="http://www.corvin.cn/category/ros-control-handle">ROS控制手柄</a>
+</li>
+	<li class="cat-item cat-item-58"><a href="http://www.corvin.cn/category/robot-simulator/stdr_simulator">STDR仿真</a>
+</li>
+	<li class="cat-item cat-item-55"><a href="http://www.corvin.cn/category/laser-radar/ydlidar-x4">YDLIDAR_X4</a>
+</li>
+	<li class="cat-item cat-item-41"><a href="http://www.corvin.cn/category/threeomniwheeelsrobot">三轮全向机器人</a>
+</li>
+	<li class="cat-item cat-item-67"><a href="http://www.corvin.cn/category/face-tracker">人脸跟踪</a>
+</li>
+	<li class="cat-item cat-item-40"><a href="http://www.corvin.cn/category/code-maintenance">代码维护</a>
+</li>
+	<li class="cat-item cat-item-48"><a href="http://www.corvin.cn/category/setup-config_system">安装配置系统</a>
+</li>
+	<li class="cat-item cat-item-45"><a href="http://www.corvin.cn/category/imu">惯性测量单元</a>
+</li>
+	<li class="cat-item cat-item-50"><a href="http://www.corvin.cn/category/robot-vision">机器视觉</a>
+</li>
+	<li class="cat-item cat-item-60"><a href="http://www.corvin.cn/category/raspberrypi/rasp_ros_develop">树莓派ROS开发</a>
+</li>
+	<li class="cat-item cat-item-59"><a href="http://www.corvin.cn/category/raspberrypi/rasp_ros_image">树莓派ROS镜像</a>
+</li>
+	<li class="cat-item cat-item-54"><a href="http://www.corvin.cn/category/laser-radar">激光雷达</a>
+</li>
+	<li class="cat-item cat-item-19"><a href="http://www.corvin.cn/category/website_broadcast">网站公告</a>
+</li>
+	<li class="cat-item cat-item-49"><a href="http://www.corvin.cn/category/voice-interactive-system">语音交互系统</a>
+</li>
+	<li class="cat-item cat-item-46"><a href="http://www.corvin.cn/category/download-document">资料下载</a>
+</li>
+		</ul>
+</div>		</aside><!-- .sidebar .widget-area -->
+	</div>
+			</div>
+</article>
+
+		</div>
+	</div>
+</div>
+
+			<div class="section related-posts">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<h2 class="hestia-title text-center">相关文章</h2>
+							<div class="row">
+																	<div class="col-md-4">
+										<div class="card card-blog">
+																							<div class="card-image">
+													<a href="http://www.corvin.cn/1057.html" title="11.在自定义地图中进行自动导航">
+														<img src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/1.png" class="attachment-hestia-blog size-hestia-blog wp-post-image" alt="" srcset="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2019/01/1.png?resize=360%2C240 360w, https://i0.wp.com/www.corvin.cn/wp-content/uploads/2019/01/1.png?zoom=2&amp;resize=360%2C240 720w, https://i0.wp.com/www.corvin.cn/wp-content/uploads/2019/01/1.png?zoom=3&amp;resize=360%2C240 1080w" sizes="(max-width: 360px) 100vw, 360px" data-attachment-id="1063" data-permalink="http://www.corvin.cn/1057.html/1-2" data-orig-file="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2019/01/1.png?fit=1586%2C990" data-orig-size="1586,990" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="1" data-image-description="" data-medium-file="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2019/01/1.png?fit=300%2C187" data-large-file="https://i0.wp.com/www.corvin.cn/wp-content/uploads/2019/01/1.png?fit=750%2C468" width="360" height="240">													</a>
+												</div>
+																						<div class="content">
+												<h6 class="category text-info"><a href="http://www.corvin.cn/category/robot-simulator/stdr_simulator" title="查看STDR仿真中的全部文章">STDR仿真</a> </h6>
+												<h4 class="card-title">
+													<a class="blog-item-title-link" href="http://www.corvin.cn/1057.html" title="11.在自定义地图中进行自动导航" rel="bookmark">
+														11.在自定义地图中进行自动导航													</a>
+												</h4>
+												<p class="card-description">&nbsp;0x00 概述 在前面的文章中，我们介绍如何自动导航时，都<a class="moretag" href="http://www.corvin.cn/1057.html"> 阅读更多…</a></p>
+											</div>
+										</div>
+									</div>
+																	<div class="col-md-4">
+										<div class="card card-blog">
+																							<div class="card-image">
+													<a href="http://www.corvin.cn/1047.html" title="10.在STDR中加载其他地图">
+														<img src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/Screenshot-from-2018-12-20-180133.png" class="attachment-hestia-blog size-hestia-blog wp-post-image" alt="" srcset="https://i1.wp.com/www.corvin.cn/wp-content/uploads/2018/12/Screenshot-from-2018-12-20-180133.png?resize=360%2C240 360w, https://i1.wp.com/www.corvin.cn/wp-content/uploads/2018/12/Screenshot-from-2018-12-20-180133.png?zoom=2&amp;resize=360%2C240 720w" sizes="(max-width: 360px) 100vw, 360px" data-attachment-id="1055" data-permalink="http://www.corvin.cn/1047.html/screenshot-from-2018-12-20-180133" data-orig-file="https://i1.wp.com/www.corvin.cn/wp-content/uploads/2018/12/Screenshot-from-2018-12-20-180133.png?fit=912%2C692" data-orig-size="912,692" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="Screenshot from 2018-12-20 18:01:33" data-image-description="" data-medium-file="https://i1.wp.com/www.corvin.cn/wp-content/uploads/2018/12/Screenshot-from-2018-12-20-180133.png?fit=300%2C228" data-large-file="https://i1.wp.com/www.corvin.cn/wp-content/uploads/2018/12/Screenshot-from-2018-12-20-180133.png?fit=750%2C569" width="360" height="240">													</a>
+												</div>
+																						<div class="content">
+												<h6 class="category text-info"><a href="http://www.corvin.cn/category/robot-simulator/stdr_simulator" title="查看STDR仿真中的全部文章">STDR仿真</a> </h6>
+												<h4 class="card-title">
+													<a class="blog-item-title-link" href="http://www.corvin.cn/1047.html" title="10.在STDR中加载其他地图" rel="bookmark">
+														10.在STDR中加载其他地图													</a>
+												</h4>
+												<p class="card-description">&nbsp;0x00 概述 在前面的教程中，一直都是使用默认提供的一个<a class="moretag" href="http://www.corvin.cn/1047.html"> 阅读更多…</a></p>
+											</div>
+										</div>
+									</div>
+																	<div class="col-md-4">
+										<div class="card card-blog">
+																							<div class="card-image">
+													<a href="http://www.corvin.cn/936.html" title="9.下载stdr仿真中的测试代码">
+														<img src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/Screenshot-from-2018-10-16-160719.png" class="attachment-hestia-blog size-hestia-blog wp-post-image" alt="" srcset="https://i2.wp.com/www.corvin.cn/wp-content/uploads/2018/10/Screenshot-from-2018-10-16-160719.png?resize=360%2C240 360w, https://i2.wp.com/www.corvin.cn/wp-content/uploads/2018/10/Screenshot-from-2018-10-16-160719.png?zoom=2&amp;resize=360%2C240 720w" sizes="(max-width: 360px) 100vw, 360px" data-attachment-id="938" data-permalink="http://www.corvin.cn/936.html/screenshot-from-2018-10-16-160719" data-orig-file="https://i2.wp.com/www.corvin.cn/wp-content/uploads/2018/10/Screenshot-from-2018-10-16-160719.png?fit=926%2C968" data-orig-size="926,968" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="Screenshot from 2018-10-16 16:07:19" data-image-description="" data-medium-file="https://i2.wp.com/www.corvin.cn/wp-content/uploads/2018/10/Screenshot-from-2018-10-16-160719.png?fit=287%2C300" data-large-file="https://i2.wp.com/www.corvin.cn/wp-content/uploads/2018/10/Screenshot-from-2018-10-16-160719.png?fit=750%2C784" width="360" height="240">													</a>
+												</div>
+																						<div class="content">
+												<h6 class="category text-info"><a href="http://www.corvin.cn/category/robot-simulator/stdr_simulator" title="查看STDR仿真中的全部文章">STDR仿真</a> </h6>
+												<h4 class="card-title">
+													<a class="blog-item-title-link" href="http://www.corvin.cn/936.html" title="9.下载stdr仿真中的测试代码" rel="bookmark">
+														9.下载stdr仿真中的测试代码													</a>
+												</h4>
+												<p class="card-description">&nbsp;0x00 简要介绍 在stdr仿真这个系列教程中，前面已经<a class="moretag" href="http://www.corvin.cn/936.html"> 阅读更多…</a></p>
+											</div>
+										</div>
+									</div>
+																							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="footer-wrapper">
+						<footer class="footer footer-black footer-big">
+						<div class="container">
+								
+		<div class="content">
+			<div class="row">
+				<div class="col-md-4"><div id="blog-stats-3" class="widget blog-stats"><h5>访问统计</h5><ul><li>60,296 次</li></ul></div></div><div class="col-md-4"><div id="text-4" class="widget widget_text"><h5>备案编号</h5>			<div class="textwidget"><p>沪ICP备17051445号</p>
+</div>
+		</div></div><div class="col-md-4"><div id="text-5" class="widget widget_text">			<div class="textwidget"></div>
+		</div></div>			</div>
+		</div>
+		<hr>
+										<div class="hestia-bottom-footer-content"><ul class="footer-menu pull-left"><li class="page_item page-item-15"><a href="http://www.corvin.cn/%e4%bc%9a%e5%91%98">会员</a></li>
+<li class="page_item page-item-14"><a href="http://www.corvin.cn/%e5%8a%a8%e6%80%81">动态</a></li>
+<li class="page_item page-item-375"><a href="http://www.corvin.cn/%e7%94%a8%e6%88%b7%e7%be%a4">用户群</a></li>
+</ul>
+					<div class="copyright pull-right">
+				Hestia |由<a href="https://themeisle.com/" rel="nofollow">ThemeIsle</a>开发			</div>
+			</div>			</div>
+					</footer>
+				</div>
+	</div>
+					<!-- This site's ratings are powered by RatingWidget plugin v3.0.5 (Free version) - https://rating-widget.com/wordpress-plugin/ -->
+					<div class="rw-js-container"><script charset="utf-8" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/update_003.html"></script><script charset="utf-8" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/update.html"></script><script charset="utf-8" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/update_002.html"></script></div>
+					<!-- / RatingWidget plugin -->
+						<div style="display:none">
+	<div class="grofile-hash-map-d0fc8ec5f982617b23cb6592234863b0">
+	</div>
+	<div class="grofile-hash-map-d791e50b993a73818b5098e19c66be71">
+	</div>
+	<div class="grofile-hash-map-94f9203a3a5eb63797ff0fa4b3a4ded7">
+	</div>
+	<div class="grofile-hash-map-049588a44a30cc77a443ce2b460d1aca">
+	</div>
+	<div class="grofile-hash-map-b7bcb4091969cfc370f389a20ad76e71">
+	</div>
+	<div class="grofile-hash-map-ce74a4d42202f5604bc503eebe669545">
+	</div>
+	<div class="grofile-hash-map-f9d567a4601fba04c69496ca8b574621">
+	</div>
+	<div class="grofile-hash-map-30cc5aee3212b4600f49af194c5f4f4a">
+	</div>
+	</div>
+		<button class="hestia-scroll-to-top hestia-fade">
+			<i class="fa fa-angle-double-up" aria-hidden="true"></i>
+		</button>
+		<script type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/admin-bar.js"></script>
+<script type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/photon.js"></script>
+<script type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/comment-reply.js"></script>
+<script type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/devicepx-jetpack.js"></script>
+<script type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/gprofiles.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var WPGroHo = {"my_hash":""};
+/* ]]> */
+</script>
+<script type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/wpgroho.js"></script>
+<script type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/bootstrap.js"></script>
+<script type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/core.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var requestpost = {"ajaxurl":"http:\/\/www.corvin.cn\/wp-admin\/admin-ajax.php","disable_autoslide":"","masonry":""};
+/* ]]> */
+</script>
+<script type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/script.js"></script>
+<script type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/mootools-core-yc.js"></script>
+<script type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/EnlighterJS.js"></script>
+<script type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/wp-embed.js"></script>
+<script type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/postmessage.js"></script>
+<script type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/jquery_003.js"></script>
+<script type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/queuehandler.js"></script>
+<script async="async" type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/form.js"></script>
+	<iframe src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/master.html" scrolling="no" id="likes-master" name="likes-master" style="display:none;"></iframe>
+	<div id="likes-other-gravatars"><div class="likes-text"><span>%d</span> 博主赞过：</div><ul class="wpl-avatars sd-like-gravatars"></ul></div>
+	<script type="text/javascript">/* <![CDATA[ */EnlighterJS_Config = {"selector":{"block":"pre.EnlighterJSRAW","inline":"code.EnlighterJSRAW"},"language":"generic","theme":"enlighter","indent":2,"hover":"hoverEnabled","showLinenumbers":true,"rawButton":true,"infoButton":true,"windowButton":true,"rawcodeDoubleclick":false,"grouping":true,"cryptex":{"enabled":false,"email":"mail@example.tld"}};!function(){var a=function(a){var b="Enlighter Error: ";console.error?console.error(b+a):console.log&&console.log(b+a)};return window.addEvent?"undefined"==typeof EnlighterJS?void a("Javascript Resources not loaded yet!"):"undefined"==typeof EnlighterJS_Config?void a("Configuration not loaded yet!"):void window.addEvent("domready",function(){EnlighterJS.Util.Init(EnlighterJS_Config.selector.block,EnlighterJS_Config.selector.inline,EnlighterJS_Config)}):void a("MooTools Framework not loaded yet!")}();;/* ]]> */</script><script type="text/javascript" src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/e-201916.js" async="async" defer="defer"></script>
+<script type="text/javascript">
+	_stq = window._stq || [];
+	_stq.push([ 'view', {v:'ext',j:'1:7.1.1',blog:'136106817',post:'756',tz:'8',srv:'www.corvin.cn'} ]);
+	_stq.push([ 'clickTrackerInit', '136106817', '756' ]);
+</script>
+		<div id="wpadminbar" class="no-grav">
+							<a class="screen-reader-shortcut" href="#wp-toolbar" tabindex="1">跳至工具栏</a>
+						<div class="quicklinks" id="wp-toolbar" role="navigation" aria-label="工具栏" tabindex="0">
+				<ul id="wp-admin-bar-root-default" class="ab-top-menu">
+		<li id="wp-admin-bar-wp-logo" class="menupop"><div class="ab-item ab-empty-item" tabindex="0" aria-haspopup="true"><span class="ab-icon"></span><span class="screen-reader-text">关于WordPress</span></div><div class="ab-sub-wrapper"><ul id="wp-admin-bar-wp-logo-external" class="ab-sub-secondary ab-submenu">
+		<li id="wp-admin-bar-wporg"><a class="ab-item" href="https://cn.wordpress.org/">WordPress.org</a>		</li>
+		<li id="wp-admin-bar-documentation"><a class="ab-item" href="https://codex.wordpress.org/">文档</a>		</li>
+		<li id="wp-admin-bar-support-forums"><a class="ab-item" href="http://zh-cn.forums.wordpress.org/">支持论坛</a>		</li>
+		<li id="wp-admin-bar-feedback"><a class="ab-item" href="http://zh-cn.forums.wordpress.org/forum/suggestions">反馈</a>		</li></ul></div>		</li>
+		<li id="wp-admin-bar-bp-login"><a class="ab-item" href="http://www.corvin.cn/wp-login.php?redirect_to=http%3A%2F%2Fwww.corvin.cn%2F756.html">登录</a>		</li>
+		<li id="wp-admin-bar-admin-bar-likes-widget"><div class="ab-item ab-empty-item"></div><iframe class="admin-bar-likes-widget jetpack-likes-widget" scrolling="no" name="admin-bar-likes-widget" src="https://widgets.wp.com/likes/#blog_id=136106817&amp;post_id=756&amp;origin=http://www.corvin.cn" frameborder="0"></iframe>		</li></ul><ul id="wp-admin-bar-top-secondary" class="ab-top-secondary ab-top-menu">
+		<li id="wp-admin-bar-search" class="admin-bar-search"><div class="ab-item ab-empty-item" tabindex="-1"><form action="http://www.corvin.cn/" method="get" id="adminbarsearch" class="form-group"><input class="adminbar-input form-control" name="s" id="adminbar-search" maxlength="150" type="text"><label for="adminbar-search" class="screen-reader-text">搜索</label><input class="adminbar-button" value="搜索" type="submit"></form></div>		</li></ul>			</div>
+					</div>
+
+		
+
+
+
+
+
+<img src="4.%E5%9C%A8STDR%E4%B8%AD%E4%BD%BF%E7%94%A8amcl%E8%BF%9B%E8%A1%8C%E4%BB%BF%E7%9C%9F%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AE%9A%E4%BD%8D_files/g.gif" alt=":)" id="wpstats" width="6" height="5"><div style="display: none;" class="rw-ui-report"></div><div><i class="rw-action-loader" style="position: fixed; top: -1000px;"></i></div><div><i class="rw-action-loader" style="position: fixed; top: -1000px;"></i></div><span style="display: none; left: 341.5px; top: 470.317px;" class="rw-ui-tooltip rw-valign-top"><b></b><span class="rw-ui-tooltip-label"><nobr>6 / 10</nobr></span></span></body></html>
+<!-- Dynamic page generated in 3.820 seconds. -->
+<!-- Cached page generated by WP-Super-Cache on 2019-04-15 15:34:12 -->
+<!-- super cache -->

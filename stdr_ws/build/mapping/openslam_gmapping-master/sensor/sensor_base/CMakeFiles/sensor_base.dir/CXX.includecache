@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/feibot/fei_slam/stdr_ws/src/mapping/openslam_gmapping-master/include/gmapping/sensor/sensor_base/sensor.h
+string
+-
+map
+-
+
+/home/feibot/fei_slam/stdr_ws/src/mapping/openslam_gmapping-master/include/gmapping/sensor/sensor_base/sensorreading.h
+sensor.h
+/home/feibot/fei_slam/stdr_ws/src/mapping/openslam_gmapping-master/include/gmapping/sensor/sensor_base/sensor.h
+
+/home/feibot/fei_slam/stdr_ws/src/mapping/openslam_gmapping-master/sensor/sensor_base/sensor.cpp
+gmapping/sensor/sensor_base/sensor.h
+-
+
+/home/feibot/fei_slam/stdr_ws/src/mapping/openslam_gmapping-master/sensor/sensor_base/sensorreading.cpp
+gmapping/sensor/sensor_base/sensorreading.h
+-
+

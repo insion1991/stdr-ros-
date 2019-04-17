@@ -1,0 +1,8 @@
+prefix=/home/feibot/fei_slam/stdr_ws/devel
+
+Name: stdr_gmapping
+Description: Description of stdr_gmapping
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/feibot/fei_slam/stdr_ws/devel/lib 
+Requires: 

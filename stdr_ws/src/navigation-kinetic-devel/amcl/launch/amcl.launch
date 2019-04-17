@@ -1,0 +1,5 @@
+<launch>
+  <node pkg="amcl" type="amcl" name="amcl" respawn="true" output="screen">
+    <rosparam file="$(find amcl)/config/amcl.yaml" command="load" />
+  </node>
+</launch>

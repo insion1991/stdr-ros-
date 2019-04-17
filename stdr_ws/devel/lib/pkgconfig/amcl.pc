@@ -1,0 +1,8 @@
+prefix=/home/feibot/fei_slam/stdr_ws/devel
+
+Name: amcl
+Description: Description of amcl
+Version: 1.14.4
+Cflags: -I/home/feibot/fei_slam/stdr_ws/devel/include -I/home/feibot/fei_slam/stdr_ws/src/navigation-kinetic-devel/amcl/include
+Libs: -L/home/feibot/fei_slam/stdr_ws/devel/lib -lamcl_sensors -lamcl_map -lamcl_pf
+Requires: rosbag roscpp dynamic_reconfigure tf nav_msgs std_srvs
